@@ -1,4 +1,4 @@
-service: your-api-name
+service: documents-api
 provider:
   name: aws
   runtime: dotnetcore3.1
@@ -16,7 +16,7 @@ provider:
 
 package:
   # TODO: Rename zipfile in build.sh and build.cmd to match this
-  artifact: ./bin/release/netcoreapp3.1/your-api-name.zip
+  artifact: ./bin/release/netcoreapp3.1/documents-api.zip
 
 functions:
   DocumentsApi:

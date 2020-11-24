@@ -159,25 +159,25 @@ workflows:
     jobs:
       - check-code-formatting
       - build-and-test
-      # - assume-role-development:
-      #     context: api-assume-role-development-context
-      #     requires:
-      #       - build-and-test
-      #     filters:
-      #       branches:
-      #         only: development
-      # - terraform-init-and-apply-to-development:
-      #     requires:
-      #       - assume-role-development
-      #     filters:
-      #       branches:
-      #         only: development
-      # - deploy-to-development:
-      #     requires:
-      #       - assume-role-development
-      #     filters:
-      #       branches:
-      #         only: development
+      - assume-role-development:
+          context: api-assume-role-development-context
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: circle-ci-config
+      - terraform-init-and-apply-to-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              only: circle-ci-config
+      - deploy-to-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              only: circle-ci-config
 #   check-and-deploy-staging-and-production:
 #       jobs:
 #       - build-and-test:

@@ -4,58 +4,68 @@ Base API is a boilerplate code for being reused for new APIs for LBH
 
 ## Stack
 
-- .NET Core as a web framework.
-- nUnit as a test framework.
+-   .NET Core as a web framework.
+-   nUnit as a test framework.
 
 ## Dependencies
 
-- Universal Housing Simulator
+-   Universal Housing Simulator
 
 ## Contributing
 
 ### Setup
 
 1. Install [Docker][docker-download].
-2. Install [AWS CLI][AWS-CLI].
+2. Install [AWS CLI][aws-cli].
 3. Clone this repository.
 4. Rename the initial template.
 5. Open it in your IDE.
 
 ### Renaming
 
-The renaming of `base-api` into `SomethingElseApi` can be done by running a Renamer powershell script. To do so:
+The renaming of `documents-api` into `SomethingElseApi` can be done by running a Renamer powershell script. To do so:
+
 1. Open the powershell and navigate to this directory's root.
 2. Run the script using the following command:
+
 ```
 .\Renamer.ps1 -apiName My_Api
 ```
 
-If your ***script execution policy*** prevents you from running the script, you can temporarily ***bypass*** that with:
+If your **_script execution policy_** prevents you from running the script, you can temporarily **_bypass_** that with:
+
 ```
 powershell -noprofile -ExecutionPolicy Bypass -file .\Renamer.ps1 -apiName My_Api
 ```
 
 Or you can change your execution policy, prior to running the script, permanently with _(this disables security so, be cautious)_:
+
 ```
 Set-ExecutionPolicy Unrestricted
 ```
 
-After the renaming is done, the ***script will ask you if you want to delete it as well***, as it's useless now - It's your choice.
+After the renaming is done, the **_script will ask you if you want to delete it as well_**, as it's useless now - It's your choice.
 
 ### Development
 
 To serve the application, run it using your IDE of choice, we use Visual Studio CE and JetBrains Rider on Mac.
 
 The application can also be served locally using docker:
+
 1.  Add you security credentials to AWS CLI.
+
 ```sh
 $ aws configure
 ```
+
 2. Log into AWS ECR.
+
 ```sh
 $ aws ecr get-login --no-include-email
 ```
+
 3. Build and serve the application. It will be available in the port 3000.
+
 ```sh
 $ make build && make serve
 ```
@@ -75,7 +85,7 @@ Then we have an automated six step deployment process, which runs in CircleCI.
 5. We manually confirm a production deployment in the CircleCI workflow once we're happy with our changes in staging.
 6. The application is deployed to production.
 
-Our staging and production environments are hosted by AWS. We would deploy to production per each feature/config merged into  `master`  branch.
+Our staging and production environments are hosted by AWS. We would deploy to production per each feature/config merged into `master` branch.
 
 ### Creating A PR
 
@@ -111,39 +121,42 @@ Note: The Host name needs to be the name of the stub database docker-compose ser
 If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The restart-db make command will do this for you.
 
 ### Agreed Testing Approach
-- Use nUnit, FluentAssertions and Moq
-- Always follow a TDD approach
-- Tests should be independent of each other
-- Gateway tests should interact with a real test instance of the database
-- Test coverage should never go down
-- All use cases should be covered by E2E tests
-- Optimise when test run speed starts to hinder development
-- Unit tests and E2E tests should run in CI
-- Test database schemas should match up with production database schema
-- Have integration tests which test from the PostgreSQL database to API Gateway
+
+-   Use nUnit, FluentAssertions and Moq
+-   Always follow a TDD approach
+-   Tests should be independent of each other
+-   Gateway tests should interact with a real test instance of the database
+-   Test coverage should never go down
+-   All use cases should be covered by E2E tests
+-   Optimise when test run speed starts to hinder development
+-   Unit tests and E2E tests should run in CI
+-   Test database schemas should match up with production database schema
+-   Have integration tests which test from the PostgreSQL database to API Gateway
 
 ## Data Migrations
+
 ### A good data migration
-- Record failure logs
-- Automated
-- Reliable
-- As close to real time as possible
-- Observable monitoring in place
-- Should not affect any existing databases
+
+-   Record failure logs
+-   Automated
+-   Reliable
+-   As close to real time as possible
+-   Observable monitoring in place
+-   Should not affect any existing databases
 
 ## Contacts
 
 ### Active Maintainers
 
-- **Selwyn Preston**, Lead Developer at London Borough of Hackney (selwyn.preston@hackney.gov.uk)
-- **Mirela Georgieva**, Lead Developer at London Borough of Hackney (mirela.georgieva@hackney.gov.uk)
-- **Matt Keyworth**, Lead Developer at London Borough of Hackney (matthew.keyworth@hackney.gov.uk)
+-   **Selwyn Preston**, Lead Developer at London Borough of Hackney (selwyn.preston@hackney.gov.uk)
+-   **Mirela Georgieva**, Lead Developer at London Borough of Hackney (mirela.georgieva@hackney.gov.uk)
+-   **Matt Keyworth**, Lead Developer at London Borough of Hackney (matthew.keyworth@hackney.gov.uk)
 
 ### Other Contacts
 
-- **Rashmi Shetty**, Product Owner at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
+-   **Rashmi Shetty**, Product Owner at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
 
 [docker-download]: https://www.docker.com/products/docker-desktop
 [universal-housing-simulator]: https://github.com/LBHackney-IT/lbh-universal-housing-simulator
 [made-tech]: https://madetech.com/
-[AWS-CLI]: https://aws.amazon.com/cli/
+[aws-cli]: https://aws.amazon.com/cli/

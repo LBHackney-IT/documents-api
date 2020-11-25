@@ -1,4 +1,4 @@
-service: your-api-name
+service: documents-api
 provider:
   name: aws
   runtime: dotnetcore3.1
@@ -7,7 +7,7 @@ provider:
   region: eu-west-2
   apiKeys:
     - secureAccess:
-      - api-key-${self:service}-${self:provider.stage}
+        - api-key-${self:service}-${self:provider.stage}
   usagePlan:
     - secureAccess:
         throttle:
@@ -15,8 +15,8 @@ provider:
           rateLimit: 100
 
 package:
-# TODO: Rename zipfile in build.sh and build.cmd to match this
-  artifact: ./bin/release/netcoreapp3.1/your-api-name.zip
+  # TODO: Rename zipfile in build.sh and build.cmd to match this
+  artifact: ./bin/release/netcoreapp3.1/documents-api.zip
 
 functions:
   DocumentsApi:
@@ -24,8 +24,8 @@ functions:
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-# TODO: Create ssm variables for this API's postgres mirror then rename base-api below to match api name
-      CONNECTION_STRING: Host=${ssm:/base-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/base-api/${self:provider.stage}/postgres-port};Database=base-api-mirror;Username=${ssm:/base-api/${self:provider.stage}/postgres-username};Password=${ssm:/base-api/${self:provider.stage}/postgres-password}
+      # TODO: Create ssm variables for this API's postgres mirror then rename documents-api below to match api name
+      CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=documents-api-mirror;Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
     events:
       - http:
           path: /{proxy+}
@@ -39,7 +39,7 @@ resources:
         Path: /${self:service}/${self:provider.stage}/
         RoleName: ${self:service}-lambdaExecutionRole
         AssumeRolePolicyDocument:
-          Version: '2012-10-17'
+          Version: "2012-10-17"
           Statement:
             - Effect: Allow
               Principal:
@@ -51,7 +51,7 @@ resources:
         Policies:
           - PolicyName: manageLogs
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:
@@ -59,12 +59,12 @@ resources:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - 'Fn::Join':
-                        - ':'
-                        - - 'arn:aws:logs'
-                          - Ref: 'AWS::Region'
-                          - Ref: 'AWS::AccountId'
-                          - 'log-group:/aws/lambda/*:*:*'
+                    - "Fn::Join":
+                        - ":"
+                        - - "arn:aws:logs"
+                          - Ref: "AWS::Region"
+                          - Ref: "AWS::AccountId"
+                          - "log-group:/aws/lambda/*:*:*"
                 - Effect: "Allow"
                   Action:
                     - "s3:PutObject"
@@ -76,7 +76,7 @@ resources:
                         - "Ref": "ServerlessDeploymentBucket"
           - PolicyName: lambdaInvocation
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:

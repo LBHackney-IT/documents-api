@@ -1,8 +1,8 @@
 version: "3.2"
 
 services:
-  base-api:
-    image: base-api
+  documents-api:
+    image: documents-api
     build:
       context: DocumentsApi/
       dockerfile: ./Dockerfile
@@ -19,8 +19,8 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  base-api-test:
-    image: base-api-test
+  documents-api-test:
+    image: documents-api-test
     build:
       context: .
       dockerfile: DocumentsApi.Tests/Dockerfile

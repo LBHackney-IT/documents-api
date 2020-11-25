@@ -59,13 +59,17 @@ data "aws_ssm_parameter" "documents_postgres_hostname" {
   name = "/documents-api/staging/postgres-hostname"
 }
 
+data "aws_ssm_parameter" "documents_postgres_port" {
+  name = "/documents-api/staging/postgres-port"
+}
+
 module "postgres_db_staging" {
   source               = "github.com/LBHackney-IT/aws-hackney-common-terraform.git//modules/database/postgres"
   environment_name     = "staging"
   vpc_id               = data.aws_vpc.staging_vpc.id
   db_identifier        = "documents-api"
   db_name              = "documents_api"
-  db_port              = 5502
+  db_port              = data.aws_ssm_parameter.documents_postgres_port.value
   subnet_ids           = data.aws_subnet_ids.staging.ids
   db_engine            = "postgres"
   db_engine_version    = "11.8"

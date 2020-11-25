@@ -53,13 +53,17 @@ data "aws_ssm_parameter" "documents_postgres_username" {
   name = "/documents-api/production/postgres-username"
 }
 
+data "aws_ssm_parameter" "documents_postgres_port" {
+  name = "/documents-api/production/postgres-port"
+}
+
 module "postgres_db_production" {
   source               = "github.com/LBHackney-IT/aws-hackney-common-terraform.git//modules/database/postgres"
   environment_name     = "production"
   vpc_id               = data.aws_vpc.production_vpc.id
   db_identifier        = "documents-api"
   db_name              = "documents_api"
-  db_port              = 5500
+  db_port              = data.aws_ssm_parameter.documents_postgres_port.value
   subnet_ids           = data.aws_subnet_ids.production.ids
   db_engine            = "postgres"
   db_engine_version    = "11.8"

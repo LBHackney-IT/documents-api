@@ -178,31 +178,31 @@ workflows:
           filters:
             branches:
               only: circle-ci-config
-#   check-and-deploy-staging-and-production:
-#       jobs:
-#       - build-and-test:
-#           filters:
-#             branches:
-#               only: master
-#       - assume-role-staging:
-#           context: api-assume-role-staging-context
-#           requires:
-#               - build-and-test
-#           filters:
-#              branches:
-#                only: master
-#       - terraform-init-and-apply-to-staging:
-#           requires:
-#             - assume-role-staging
-#           filters:
-#             branches:
-#               only: master
-#       - deploy-to-staging:
-#           requires:
-#             - assume-role-staging
-#           filters:
-#             branches:
-#               only: master
+  check-and-deploy-staging-and-production:
+      jobs:
+      - build-and-test:
+          filters:
+            branches:
+              only: master
+      - assume-role-staging:
+          context: api-assume-role-staging-context
+          requires:
+              - build-and-test
+          filters:
+             branches:
+               only: master
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: master
+      - deploy-to-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: master
 #       - permit-production-terraform-release:
 #           type: approval
 #           requires:

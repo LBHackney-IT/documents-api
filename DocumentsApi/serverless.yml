@@ -29,6 +29,7 @@ functions:
           authorizer:
             arn: ${ssm:/platform-apis-lambda-authorizer-arn}
             type: request
+
 resources:
   Resources:
     lambdaExecutionRole:
@@ -80,6 +81,7 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
+
 custom:
   vpc:
     development:

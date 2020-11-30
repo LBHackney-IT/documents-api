@@ -97,6 +97,7 @@ jobs:
       - run:
           name: Run formatter check
           command: ./dotnet-format-local/dotnet-format --dry-run --check
+
   build-and-test:
     executor: docker-python
     steps:
@@ -108,11 +109,7 @@ jobs:
       - run:
           name: Run tests
           command: docker-compose run documents-api-test
-  assume-role-development:
-    executor: docker-python
-    steps:
-      - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+
   assume-role-staging:
     executor: docker-python
     steps:
@@ -123,31 +120,25 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
-  terraform-init-and-apply-to-development:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: "development"
+
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
           environment: "staging"
+
   terraform-init-and-apply-to-production:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
           environment: "production"
-  deploy-to-development:
-    executor: docker-dotnet
-    steps:
-      - deploy-lambda:
-          stage: "development"
+
   deploy-to-staging:
     executor: docker-dotnet
     steps:
       - deploy-lambda:
           stage: "staging"
+
   deploy-to-production:
     executor: docker-dotnet
     steps:
@@ -155,31 +146,9 @@ jobs:
           stage: "production"
 
 workflows:
-  check-and-deploy-development:
+  check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting
-      - build-and-test
-      - assume-role-development:
-          context: api-assume-role-development-context
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only: circle-ci-config
-      - terraform-init-and-apply-to-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: circle-ci-config
-      - deploy-to-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: circle-ci-config
-  check-and-deploy-staging-and-production:
-      jobs:
       - build-and-test:
           filters:
             branches:

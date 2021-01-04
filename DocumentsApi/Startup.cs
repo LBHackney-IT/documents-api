@@ -8,6 +8,7 @@ using DocumentsApi.V1.Infrastructure;
 using DocumentsApi.V1.UseCase;
 using DocumentsApi.V1.UseCase.Interfaces;
 using DocumentsApi.Versioning;
+using dotenv.net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -105,6 +106,13 @@ namespace DocumentsApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
+
+            var success = DotEnv.AutoConfig(5);
+            if (success)
+            {
+                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
+            }
+
             ConfigureDbContext(services);
             RegisterGateways(services);
             RegisterUseCases(services);
@@ -112,10 +120,8 @@ namespace DocumentsApi
 
         private static void ConfigureDbContext(IServiceCollection services)
         {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-
-            services.AddDbContext<DatabaseContext>(
-                opt => opt.UseNpgsql(connectionString));
+            services.AddDbContext<DocumentsContext>(
+                opt => opt.UseNpgsql(AppOptions.DatabaseConnectionString));
         }
 
         private static void RegisterGateways(IServiceCollection services)

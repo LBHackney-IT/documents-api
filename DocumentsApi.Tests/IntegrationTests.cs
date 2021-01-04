@@ -10,7 +10,7 @@ namespace DocumentsApi.Tests
     public class IntegrationTests<TStartup> where TStartup : class
     {
         protected HttpClient Client { get; private set; }
-        protected DatabaseContext DatabaseContext { get; private set; }
+        protected DocumentsContext DocumentsContext { get; private set; }
 
         private MockWebApplicationFactory<TStartup> _factory;
         private NpgsqlConnection _connection;
@@ -36,9 +36,9 @@ namespace DocumentsApi.Tests
         {
             _factory = new MockWebApplicationFactory<TStartup>(_connection);
             Client = _factory.CreateClient();
-            DatabaseContext = new DatabaseContext(_builder.Options);
-            DatabaseContext.Database.EnsureCreated();
-            _transaction = DatabaseContext.Database.BeginTransaction();
+            DocumentsContext = new DocumentsContext(_builder.Options);
+            DocumentsContext.Database.EnsureCreated();
+            _transaction = DocumentsContext.Database.BeginTransaction();
         }
 
         [TearDown]

@@ -12,7 +12,7 @@ namespace DocumentsApi.V1.Infrastructure
         {
         }
 
-        public DbSet<DatabaseEntity> DatabaseEntities { get; set; }
+        public DbSet<DocumentEntity> DocumentEntities { get; set; }
 
         public override int SaveChanges()
         {

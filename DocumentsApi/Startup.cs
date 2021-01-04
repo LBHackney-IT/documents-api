@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Infrastructure;
 using DocumentsApi.V1.UseCase;
 using DocumentsApi.V1.UseCase.Interfaces;
@@ -113,26 +112,9 @@ namespace DocumentsApi
                 Console.WriteLine("LOADED ENVIRONMENT FROM .env");
             }
 
-            ConfigureDbContext(services);
-            RegisterGateways(services);
-            RegisterUseCases(services);
-        }
-
-        private static void ConfigureDbContext(IServiceCollection services)
-        {
+            // Database Context
             services.AddDbContext<DocumentsContext>(
                 opt => opt.UseNpgsql(AppOptions.DatabaseConnectionString));
-        }
-
-        private static void RegisterGateways(IServiceCollection services)
-        {
-            services.AddScoped<IExampleGateway, ExampleGateway>();
-        }
-
-        private static void RegisterUseCases(IServiceCollection services)
-        {
-            services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

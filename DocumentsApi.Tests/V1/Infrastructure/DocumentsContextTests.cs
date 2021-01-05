@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DocumentsApi.Tests.V1.Infrastructure
 {
     [TestFixture]
-    public class DatabaseContextTest : DatabaseTests
+    public class DocumentsContextTests : DatabaseTests
     {
         private readonly Fixture _fixture = new Fixture();
 
@@ -16,6 +16,7 @@ namespace DocumentsApi.Tests.V1.Infrastructure
         public void CanGetADatabaseEntity()
         {
             var databaseEntity = _fixture.Build<DocumentEntity>()
+                .Without(x => x.Claims)
                 .Without(x => x.Id)
                 .Without(x => x.CreatedAt)
                 .Create();
@@ -23,7 +24,7 @@ namespace DocumentsApi.Tests.V1.Infrastructure
             DatabaseContext.Add(databaseEntity);
             DatabaseContext.SaveChanges();
 
-            var result = DatabaseContext.DocumentEntities.ToList().FirstOrDefault();
+            var result = DatabaseContext.Documents.ToList().FirstOrDefault();
 
             result.Should().Be(databaseEntity);
             result?.Id.Should().NotBeEmpty();

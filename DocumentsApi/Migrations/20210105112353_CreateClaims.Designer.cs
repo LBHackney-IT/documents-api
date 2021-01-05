@@ -3,15 +3,17 @@ using System;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DocumentsApi.Migrations
 {
     [DbContext(typeof(DocumentsContext))]
-    partial class DocumentsContextModelSnapshot : ModelSnapshot
+    [Migration("20210105112353_CreateClaims")]
+    partial class CreateClaims
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using DocumentsApi.V1.Infrastructure.Interfaces;
 
@@ -18,5 +19,7 @@ namespace DocumentsApi.V1.Infrastructure
 
         [Column("file_type")]
         public string FileType { get; set; }
+
+        public virtual ICollection<ClaimEntity> Claims { get; set; }
     }
 }

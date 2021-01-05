@@ -9,7 +9,10 @@ namespace DocumentsApi.V1.Factories
         {
             return new DocumentEntity
             {
-                Id = domain.Id, CreatedAt = domain.CreatedAt, FileSize = domain.FileSize, FileType = domain.FileType
+                Id = domain.Id,
+                CreatedAt = domain.CreatedAt,
+                FileSize = domain.FileSize,
+                FileType = domain.FileType
             };
         }
 

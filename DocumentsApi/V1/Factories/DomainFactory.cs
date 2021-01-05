@@ -9,7 +9,10 @@ namespace DocumentsApi.V1.Factories
         {
             return new Document
             {
-                Id = entity.Id, CreatedAt = entity.CreatedAt, FileSize = entity.FileSize, FileType = entity.FileType
+                Id = entity.Id,
+                CreatedAt = entity.CreatedAt,
+                FileSize = entity.FileSize,
+                FileType = entity.FileType
             };
         }
         public static Claim ToDomain(this ClaimEntity entity)

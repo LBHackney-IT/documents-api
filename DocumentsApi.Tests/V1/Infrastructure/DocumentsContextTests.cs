@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DocumentsApi.Tests.V1.Infrastructure
 {
     [TestFixture]
-    public class DatabaseContextTest : DatabaseTests
+    public class DocumentsContextTests : DatabaseTests
     {
         private readonly Fixture _fixture = new Fixture();
 

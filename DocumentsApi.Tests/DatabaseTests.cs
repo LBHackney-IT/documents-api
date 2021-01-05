@@ -9,17 +9,17 @@ namespace DocumentsApi.Tests
     public class DatabaseTests
     {
         private IDbContextTransaction _transaction;
-        protected DocumentsContext DocumentsContext { get; private set; }
+        protected DocumentsContext DatabaseContext { get; private set; }
 
         [SetUp]
         public void RunBeforeAnyTests()
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseNpgsql(ConnectionString.TestDatabase());
-            DocumentsContext = new DocumentsContext(builder.Options);
+            DatabaseContext = new DocumentsContext(builder.Options);
 
-            DocumentsContext.Database.EnsureCreated();
-            _transaction = DocumentsContext.Database.BeginTransaction();
+            DatabaseContext.Database.EnsureCreated();
+            _transaction = DatabaseContext.Database.BeginTransaction();
         }
 
         [TearDown]

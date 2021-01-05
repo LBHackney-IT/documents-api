@@ -14,3 +14,22 @@ CREATE TABLE documents (
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210104182103_CreateDocuments', '3.1.7');
+
+CREATE TABLE claims (
+    id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    document_id uuid NOT NULL,
+    service_area_created_by text NULL,
+    user_created_by text NULL,
+    api_created_by text NOT NULL,
+    retention_expires_at timestamp without time zone NOT NULL,
+    CONSTRAINT "PK_claims" PRIMARY KEY (id),
+    CONSTRAINT "FK_claims_documents_document_id" FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE
+);
+
+CREATE INDEX "IX_claims_document_id" ON claims (document_id);
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210105112353_CreateClaims', '3.1.7');
+
+

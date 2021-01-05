@@ -19,6 +19,45 @@ namespace DocumentsApi.Migrations
                 .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("DocumentsApi.V1.Infrastructure.ClaimEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ApiCreatedBy")
+                        .IsRequired()
+                        .HasColumnName("api_created_by")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnName("document_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("RetentionExpiresAt")
+                        .HasColumnName("retention_expires_at")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ServiceAreaCreatedBy")
+                        .HasColumnName("service_area_created_by")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserCreatedBy")
+                        .HasColumnName("user_created_by")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
+
+                    b.ToTable("claims");
+                });
+
             modelBuilder.Entity("DocumentsApi.V1.Infrastructure.DocumentEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -41,6 +80,15 @@ namespace DocumentsApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("documents");
+                });
+
+            modelBuilder.Entity("DocumentsApi.V1.Infrastructure.ClaimEntity", b =>
+                {
+                    b.HasOne("DocumentsApi.V1.Infrastructure.DocumentEntity", "Document")
+                        .WithMany("Claims")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

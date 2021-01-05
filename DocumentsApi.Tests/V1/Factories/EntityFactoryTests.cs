@@ -31,7 +31,7 @@ namespace DocumentsApi.Tests.V1.Factories
 
             domain.Id.Should().Be(entity.Id);
             domain.CreatedAt.Should().Be(entity.CreatedAt);
-            domain.Document.Should().BeEquivalentTo(domain.Document.ToEntity());
+            domain.Document.Should().BeEquivalentTo(domain.Document.ToEntity(), options => options.ExcludingMissingMembers());
             domain.ApiCreatedBy.Should().Be(entity.ApiCreatedBy);
             domain.UserCreatedBy.Should().Be(entity.UserCreatedBy);
             domain.ServiceAreaCreatedBy.Should().Be(entity.ServiceAreaCreatedBy);

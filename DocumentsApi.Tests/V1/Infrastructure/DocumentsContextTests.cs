@@ -16,6 +16,7 @@ namespace DocumentsApi.Tests.V1.Infrastructure
         public void CanGetADatabaseEntity()
         {
             var databaseEntity = _fixture.Build<DocumentEntity>()
+                .Without(x => x.Claims)
                 .Without(x => x.Id)
                 .Without(x => x.CreatedAt)
                 .Create();

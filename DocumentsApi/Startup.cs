@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Infrastructure;
 using DocumentsApi.V1.UseCase;
 using DocumentsApi.V1.UseCase.Interfaces;
 using DocumentsApi.Versioning;
+using dotenv.net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -105,28 +105,16 @@ namespace DocumentsApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
-            ConfigureDbContext(services);
-            RegisterGateways(services);
-            RegisterUseCases(services);
-        }
 
-        private static void ConfigureDbContext(IServiceCollection services)
-        {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            var success = DotEnv.AutoConfig(5);
+            if (success)
+            {
+                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
+            }
 
-            services.AddDbContext<DatabaseContext>(
-                opt => opt.UseNpgsql(connectionString));
-        }
-
-        private static void RegisterGateways(IServiceCollection services)
-        {
-            services.AddScoped<IExampleGateway, ExampleGateway>();
-        }
-
-        private static void RegisterUseCases(IServiceCollection services)
-        {
-            services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
+            // Database Context
+            services.AddDbContext<DocumentsContext>(
+                opt => opt.UseNpgsql(AppOptions.DatabaseConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

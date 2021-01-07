@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DocumentsApi.V1.Boundary.Request;
+using DocumentsApi.V1.Gateways;
+using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 using DocumentsApi.V1.UseCase;
 using DocumentsApi.V1.UseCase.Interfaces;
+using DocumentsApi.V1.Validators;
 using DocumentsApi.Versioning;
 using dotenv.net;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +45,8 @@ namespace DocumentsApi
         {
             services
                 .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddFluentValidation();
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);
@@ -114,7 +121,13 @@ namespace DocumentsApi
 
             // Database Context
             services.AddDbContext<DocumentsContext>(
-                opt => opt.UseNpgsql(AppOptions.DatabaseConnectionString));
+                opt => opt.UseLazyLoadingProxies().UseNpgsql(AppOptions.DatabaseConnectionString));
+
+            // Gateways
+            services.AddScoped<IDocumentsGateway, DocumentsGateway>();
+
+            // Use Cases
+            services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

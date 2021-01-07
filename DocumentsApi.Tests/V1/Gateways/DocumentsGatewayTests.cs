@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using AutoFixture;
 using DocumentsApi.V1.Domain;
+using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways;
+using DocumentsApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -11,7 +13,6 @@ namespace DocumentsApi.Tests.V1.Gateways
     [TestFixture]
     public class DocumentsGatewayTests : DatabaseTests
     {
-        private Fixture _fixture = new Fixture();
         private DocumentsGateway _classUnderTest;
 
         [SetUp]
@@ -23,10 +24,7 @@ namespace DocumentsApi.Tests.V1.Gateways
         [Test]
         public void CreatingADocumentShouldInsertIntoTheDatabase()
         {
-            var request = _fixture.Build<Document>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.CreateDocument();
             var query = DatabaseContext.Documents;
 
             _classUnderTest.CreateDocument(request);
@@ -44,10 +42,7 @@ namespace DocumentsApi.Tests.V1.Gateways
         [Test]
         public void CreatingADocumentShouldReturnCreatedDocument()
         {
-            var request = _fixture.Build<Document>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.CreateDocument();
 
             var created = _classUnderTest.CreateDocument(request);
 
@@ -60,11 +55,8 @@ namespace DocumentsApi.Tests.V1.Gateways
         [Test]
         public void CreatingAClaimShouldInsertIntoTheDatabase()
         {
-            var request = _fixture.Build<Claim>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
-            var query = DatabaseContext.Documents;
+            var request = TestDataHelper.CreateClaim();
+            var query = DatabaseContext.Claims;
 
             _classUnderTest.CreateClaim(request);
 
@@ -79,10 +71,7 @@ namespace DocumentsApi.Tests.V1.Gateways
         [Test]
         public void CreatingAClaimShouldReturnCreatedDocument()
         {
-            var request = _fixture.Build<Claim>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.CreateClaim();
 
             var created = _classUnderTest.CreateClaim(request);
 

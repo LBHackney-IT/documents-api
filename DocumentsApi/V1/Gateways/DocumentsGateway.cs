@@ -1,10 +1,12 @@
+using System;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Factories;
+using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 
 namespace DocumentsApi.V1.Gateways
 {
-    public class DocumentsGateway
+    public class DocumentsGateway : IDocumentsGateway
     {
         private readonly DocumentsContext _databaseContext;
 

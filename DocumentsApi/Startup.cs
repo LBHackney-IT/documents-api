@@ -130,9 +130,11 @@ namespace DocumentsApi
 
             // Gateways
             services.AddScoped<IDocumentsGateway, DocumentsGateway>();
+            services.AddScoped<IS3Gateway, S3Gateway>();
 
             // Use Cases
             services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();
+            services.AddScoped<ICreateUploadUrlUseCase, CreateUploadUrlUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

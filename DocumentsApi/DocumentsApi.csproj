@@ -30,8 +30,4 @@
     <PackageReference Include="dotenv.net" Version="2.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="V1\Boundary\Response\Exceptions" />
-  </ItemGroup>
-
 </Project>

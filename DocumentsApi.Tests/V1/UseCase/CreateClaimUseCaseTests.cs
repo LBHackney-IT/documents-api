@@ -51,7 +51,7 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             var result = _classUnderTest.Execute(request);
 
-            result.Should().BeEquivalentTo(_claim);
+            result.Should().BeEquivalentTo(_claim, opt => opt.Excluding(x => x.Document.Uploaded));
         }
 
         [Test]

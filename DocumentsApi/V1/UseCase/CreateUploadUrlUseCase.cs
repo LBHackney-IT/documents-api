@@ -26,6 +26,11 @@ namespace DocumentsApi.V1.UseCase
                 throw new NotFoundException($"Cannot find document with ID {documentId}");
             }
 
+            if (document.Uploaded)
+            {
+                throw new BadRequestException($"Document with ID {documentId} has already been uploaded.");
+            }
+
             var url = _s3Gateway.GenerateUploadUrl(document);
 
             return new UrlResponse {Url = url};

@@ -29,14 +29,27 @@ namespace DocumentsApi.Tests.V1.E2ETests
         {
             var uri = new Uri($"api/v1/documents/{Guid.NewGuid()}/upload_urls", UriKind.Relative);
             var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
-            // var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
             response.StatusCode.Should().Be(404);
         }
 
         [Test]
+        public async Task CreatingUploadUrlReturns400ForAlreadyUploadedDocument()
+        {
+            var uri = new Uri($"api/v1/documents/{_document.Id}/upload_urls", UriKind.Relative);
+            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
         public async Task CreatingUploadUrlReturnsUrlForValidDocument()
         {
+            _document.FileSize = 0;
+            _document.FileType = null;
+            DatabaseContext.Add(_document);
+            DatabaseContext.SaveChanges();
+
             var expectedUrl = "https://upload.s3.com";
             MockS3Client.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expectedUrl);
             var uri = new Uri($"api/v1/documents/{_document.Id}/upload_urls", UriKind.Relative);

@@ -35,7 +35,11 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void CreatesPresignedUrl()
         {
-            var document = _fixture.Create<Document>();
+            var document = _fixture.Build<Document>()
+                .Without(x => x.FileSize)
+                .Without(x => x.FileType)
+                .Create();
+
             _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
             _s3Gateway.Setup(x => x.GenerateUploadUrl(document));
 
@@ -47,7 +51,11 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void ReturnsPresignedUrl()
         {
-            var document = _fixture.Create<Document>();
+            var document = _fixture.Build<Document>()
+                .Without(x => x.FileSize)
+                .Without(x => x.FileType)
+                .Create();
+
             var url = new Uri("https://upload.s3.com");
             _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
             _s3Gateway.Setup(x => x.GenerateUploadUrl(document)).Returns(url);
@@ -55,6 +63,20 @@ namespace DocumentsApi.Tests.V1.UseCase
             var result = _classUnderTest.Execute(document.Id);
 
             result.Url.Should().Be(url);
+        }
+
+        [Test]
+        public void ThrowsBadRequestErrorWhenDocumentAlreadyUploaded()
+        {
+            var document = _fixture.Build<Document>()
+                .With(x => x.FileSize, 1000)
+                .With(x => x.FileType, "txt")
+                .Create();
+
+            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
+
+            Func<UrlResponse> execute = () => _classUnderTest.Execute(document.Id);
+            execute.Should().Throw<BadRequestException>();
         }
     }
 }

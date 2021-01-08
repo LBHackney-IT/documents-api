@@ -1,4 +1,7 @@
+using System;
+using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response;
+using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,46 +9,36 @@ using Microsoft.AspNetCore.Mvc;
 namespace DocumentsApi.V1.Controllers
 {
     [ApiController]
-    //TODO: Rename to match the APIs endpoint
-    [Route("api/v1/residents")]
+    [Route("api/v1/claims")]
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    //TODO: rename class to match the API name
-    public class DocumentsApiController : BaseController
+    public class ClaimsController : BaseController
     {
-        private readonly IGetAllUseCase _getAllUseCase;
-        private readonly IGetByIdUseCase _getByIdUseCase;
-        public DocumentsApiController(IGetAllUseCase getAllUseCase, IGetByIdUseCase getByIdUseCase)
-        {
-            _getAllUseCase = getAllUseCase;
-            _getByIdUseCase = getByIdUseCase;
-        }
+        private ICreateClaimUseCase _createClaimUseCase;
 
-        //TODO: add xml comments containing information that will be included in the auto generated swagger docs (https://github.com/LBHackney-IT/lbh-base-api/wiki/Controllers-and-Response-Objects)
-        /// <summary>
-        /// ...
-        /// </summary>
-        /// <response code="200">...</response>
-        /// <response code="400">Invalid Query Parameter.</response>
-        [ProducesResponseType(typeof(ResponseObjectList), StatusCodes.Status200OK)]
-        [HttpGet]
-        public IActionResult ListContacts()
+        public ClaimsController(ICreateClaimUseCase createClaimUseCase)
         {
-            return Ok(_getAllUseCase.Execute());
+            _createClaimUseCase = createClaimUseCase;
         }
 
         /// <summary>
-        /// ...
+        /// Creates a new claim and document
         /// </summary>
-        /// <response code="200">...</response>
-        /// <response code="404">No ? found for the specified ID</response>
-        [ProducesResponseType(typeof(ResponseObject), StatusCodes.Status200OK)]
-        [HttpGet]
-        //TODO: rename to match the identifier that will be used
-        [Route("{yourId}")]
-        public IActionResult ViewRecord(int yourId)
+        /// <response code="201">Saved</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpPost]
+        public IActionResult CreateClaim(ClaimRequest request)
         {
-            return Ok(_getByIdUseCase.Execute(yourId));
+            try
+            {
+                var result = _createClaimUseCase.Execute(request);
+                return Created(new Uri($"/evidence_requests/{result.Id}", UriKind.Relative), result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.ValidationResponse.Errors);
+            }
         }
     }
 }

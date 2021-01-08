@@ -21,7 +21,7 @@ namespace DocumentsApi.Tests.V1.Infrastructure
                 .Without(x => x.CreatedAt)
                 .Create();
 
-            DatabaseContext.Add(databaseEntity);
+            DatabaseContext.Documents.Add(databaseEntity);
             DatabaseContext.SaveChanges();
 
             var result = DatabaseContext.Documents.ToList().FirstOrDefault();
@@ -29,6 +29,23 @@ namespace DocumentsApi.Tests.V1.Infrastructure
             result.Should().Be(databaseEntity);
             result?.Id.Should().NotBeEmpty();
             result?.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
+        }
+
+        [Test]
+        public void CanSaveRelatedEntities()
+        {
+            var entity = _fixture.Build<ClaimEntity>()
+                .With(x => x.Document, new DocumentEntity())
+                .Create();
+
+            DatabaseContext.Claims.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            entity.Id.Should().NotBeEmpty();
+            entity.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
+            entity.Document.Id.Should().NotBeEmpty();
+
+            DatabaseContext.Documents.ToList().First().Should().Be(entity.Document);
         }
     }
 }

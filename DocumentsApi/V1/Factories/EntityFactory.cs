@@ -22,7 +22,7 @@ namespace DocumentsApi.V1.Factories
             {
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt,
-                Document = domain.Document.ToEntity(),
+                Document = domain.Document?.ToEntity(),
                 ApiCreatedBy = domain.ApiCreatedBy,
                 UserCreatedBy = domain.UserCreatedBy,
                 ServiceAreaCreatedBy = domain.ServiceAreaCreatedBy,

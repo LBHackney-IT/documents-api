@@ -33,7 +33,7 @@ namespace DocumentsApi.V1.UseCase
 
             var url = _s3Gateway.GenerateUploadUrl(document);
 
-            return new UrlResponse {Url = url};
+            return new UrlResponse { Url = url };
         }
     }
 }

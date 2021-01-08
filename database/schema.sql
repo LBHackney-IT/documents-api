@@ -32,4 +32,11 @@ CREATE INDEX "IX_claims_document_id" ON claims (document_id);
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210105112353_CreateClaims', '3.1.7');
 
+ALTER TABLE documents ALTER COLUMN file_size TYPE bigint;
+ALTER TABLE documents ALTER COLUMN file_size SET NOT NULL;
+ALTER TABLE documents ALTER COLUMN file_size DROP DEFAULT;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210108162815_ChangeFileSizeToLong', '3.1.7');
+
 

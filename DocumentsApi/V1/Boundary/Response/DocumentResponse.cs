@@ -6,7 +6,7 @@ namespace DocumentsApi.V1.Boundary.Response
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int FileSize { get; set; }
+        public long FileSize { get; set; }
         public string FileType { get; set; }
     }
 }

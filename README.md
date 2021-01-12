@@ -9,42 +9,15 @@ Base API is a boilerplate code for being reused for new APIs for LBH
 
 ## Dependencies
 
--   Universal Housing Simulator
+-   S3 Mock API (described below)
 
 ## Contributing
 
 ### Setup
 
 1. Install [Docker][docker-download].
-2. Install [AWS CLI][aws-cli].
-3. Clone this repository.
-4. Rename the initial template.
-5. Open it in your IDE.
-
-### Renaming
-
-The renaming of `documents-api` into `SomethingElseApi` can be done by running a Renamer powershell script. To do so:
-
-1. Open the powershell and navigate to this directory's root.
-2. Run the script using the following command:
-
-```
-.\Renamer.ps1 -apiName My_Api
-```
-
-If your **_script execution policy_** prevents you from running the script, you can temporarily **_bypass_** that with:
-
-```
-powershell -noprofile -ExecutionPolicy Bypass -file .\Renamer.ps1 -apiName My_Api
-```
-
-Or you can change your execution policy, prior to running the script, permanently with _(this disables security so, be cautious)_:
-
-```
-Set-ExecutionPolicy Unrestricted
-```
-
-After the renaming is done, the **_script will ask you if you want to delete it as well_**, as it's useless now - It's your choice.
+2. Clone this repository.
+4. Open it in your IDE.
 
 ### Development
 
@@ -68,6 +41,16 @@ $ aws ecr get-login --no-include-email
 
 ```sh
 $ make build && make serve
+```
+
+#### Mock S3
+
+To run this application, we need to contact S3 to create signed upload policies and download URLs. To be able to run this locally without setting up an AWS account, or to run the tests in isolation, we have used [S3Proxy](https://github.com/gaul/s3proxy).
+
+Running the tests using `make` or `docker-compose` will handle this for you, but to run outside of those (e.g. with your IDE), you'll need to have the S3 proxy running in the background:
+
+```shell script
+docker-compose run -d s3-mock
 ```
 
 ### Release process

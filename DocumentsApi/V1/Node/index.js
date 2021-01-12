@@ -7,7 +7,7 @@ const { S3Client } = require("@aws-sdk/client-s3");
  */
 module.exports = async function (callback, bucketName, key, expiry) {
     try {
-        const client = new S3Client({ region: "eu-west-2" });
+        const client = new S3Client({ region: "eu-west-2", endpoint: process.env.S3_API_ENDPOINT });
         const data = await createPresignedPost(client, {
             Bucket: bucketName,
             Key: key,

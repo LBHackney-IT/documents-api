@@ -142,7 +142,7 @@ namespace DocumentsApi
 
             // Use Cases
             services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();
-            services.AddScoped<ICreateUploadUrlUseCase, CreateUploadUrlUseCase>();
+            services.AddScoped<ICreateUploadPolicyUseCase, CreateUploadPolicyUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

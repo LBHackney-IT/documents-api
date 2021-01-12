@@ -7,12 +7,12 @@ using DocumentsApi.V1.UseCase.Interfaces;
 
 namespace DocumentsApi.V1.UseCase
 {
-    public class CreateUploadUrlUseCase : ICreateUploadUrlUseCase
+    public class CreateUploadPolicyUseCase : ICreateUploadPolicyUseCase
     {
         private IS3Gateway _s3Gateway;
         private IDocumentsGateway _documentsGateway;
 
-        public CreateUploadUrlUseCase(IS3Gateway s3Gateway, IDocumentsGateway documentsGateway)
+        public CreateUploadPolicyUseCase(IS3Gateway s3Gateway, IDocumentsGateway documentsGateway)
         {
             _s3Gateway = s3Gateway;
             _documentsGateway = documentsGateway;

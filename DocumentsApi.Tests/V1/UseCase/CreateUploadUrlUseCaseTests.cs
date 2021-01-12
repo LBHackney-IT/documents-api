@@ -12,17 +12,17 @@ using NUnit.Framework;
 namespace DocumentsApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class CreateUploadUrlUseCaseTests
+    public class CreateUploadPolicyUseCaseTests
     {
         private readonly Fixture _fixture = new Fixture();
         private readonly Mock<IS3Gateway> _s3Gateway = new Mock<IS3Gateway>();
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
-        private CreateUploadUrlUseCase _classUnderTest;
+        private CreateUploadPolicyUseCase _classUnderTest;
 
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new CreateUploadUrlUseCase(_s3Gateway.Object, _documentsGateway.Object);
+            _classUnderTest = new CreateUploadPolicyUseCase(_s3Gateway.Object, _documentsGateway.Object);
         }
 
         [Test]

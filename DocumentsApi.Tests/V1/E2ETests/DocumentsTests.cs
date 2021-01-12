@@ -26,7 +26,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         [Test]
         public async Task CreatingUploadUrlReturns404ForNonExistentDocument()
         {
-            var uri = new Uri($"api/v1/documents/{Guid.NewGuid()}/upload_urls", UriKind.Relative);
+            var uri = new Uri($"api/v1/documents/{Guid.NewGuid()}/upload_policies", UriKind.Relative);
             var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(404);
@@ -35,7 +35,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         [Test]
         public async Task CreatingUploadUrlReturns400ForAlreadyUploadedDocument()
         {
-            var uri = new Uri($"api/v1/documents/{_document.Id}/upload_urls", UriKind.Relative);
+            var uri = new Uri($"api/v1/documents/{_document.Id}/upload_policies", UriKind.Relative);
             var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(400);
@@ -49,7 +49,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             DatabaseContext.Add(_document);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/documents/{_document.Id}/upload_urls", UriKind.Relative);
+            var uri = new Uri($"api/v1/documents/{_document.Id}/upload_policies", UriKind.Relative);
             var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var policy = JsonConvert.DeserializeObject<S3UploadPolicy>(jsonString);

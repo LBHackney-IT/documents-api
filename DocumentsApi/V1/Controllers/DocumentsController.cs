@@ -13,11 +13,11 @@ namespace DocumentsApi.V1.Controllers
     [ApiVersion("1.0")]
     public class DocumentsController : BaseController
     {
-        private readonly ICreateUploadUrlUseCase _createUploadUrlUseCase;
+        private readonly ICreateUploadPolicyUseCase _createUploadPolicyUseCase;
 
-        public DocumentsController(ICreateUploadUrlUseCase createUploadUrlUseCase)
+        public DocumentsController(ICreateUploadPolicyUseCase createUploadPolicyUseCase)
         {
-            _createUploadUrlUseCase = createUploadUrlUseCase;
+            _createUploadPolicyUseCase = createUploadPolicyUseCase;
         }
 
         /// <summary>
@@ -27,12 +27,12 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
         [HttpPost]
-        [Route("{id}/upload_urls")]
-        public async Task<IActionResult> CreateUploadUrl([Required][FromRoute] Guid id)
+        [Route("{id}/upload_policies")]
+        public async Task<IActionResult> CreateUploadPolicy([Required][FromRoute] Guid id)
         {
             try
             {
-                var result = await _createUploadUrlUseCase.Execute(id).ConfigureAwait(true);
+                var result = await _createUploadPolicyUseCase.Execute(id).ConfigureAwait(true);
                 return Created(result.Url, result);
             }
             catch (NotFoundException ex)

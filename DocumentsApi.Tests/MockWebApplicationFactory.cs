@@ -4,6 +4,7 @@ using DocumentsApi;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,12 +17,10 @@ namespace DocumentsApi.Tests
         : WebApplicationFactory<TStartup> where TStartup : class
     {
         private readonly DbConnection _connection;
-        private readonly IAmazonS3 _mockS3Client;
 
-        public MockWebApplicationFactory(DbConnection connection, IAmazonS3 mockS3Client)
+        public MockWebApplicationFactory(DbConnection connection)
         {
             _connection = connection;
-            _mockS3Client = mockS3Client;
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -43,9 +42,9 @@ namespace DocumentsApi.Tests
 
             builder.ConfigureTestServices(services =>
             {
-                services.AddTransient(x => _mockS3Client);
+                var options = new AppOptions();
+                services.AddSingleton<AppOptions>(x => options);
             });
-
         }
     }
 }

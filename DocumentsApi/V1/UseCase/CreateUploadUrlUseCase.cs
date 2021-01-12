@@ -1,6 +1,7 @@
 using System;
-using DocumentsApi.V1.Boundary.Response;
+using System.Threading.Tasks;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
+using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
 
@@ -17,7 +18,7 @@ namespace DocumentsApi.V1.UseCase
             _documentsGateway = documentsGateway;
         }
 
-        public UrlResponse Execute(Guid documentId)
+        public async Task<S3UploadPolicy> Execute(Guid documentId)
         {
             var document = _documentsGateway.FindDocument(documentId);
 
@@ -31,9 +32,7 @@ namespace DocumentsApi.V1.UseCase
                 throw new BadRequestException($"Document with ID {documentId} has already been uploaded.");
             }
 
-            var url = _s3Gateway.GenerateUploadUrl(document);
-
-            return new UrlResponse { Url = url };
+            return await _s3Gateway.GenerateUploadPolicy(document).ConfigureAwait(true);
         }
     }
 }

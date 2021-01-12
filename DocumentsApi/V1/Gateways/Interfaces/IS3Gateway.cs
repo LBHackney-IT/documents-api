@@ -1,10 +1,10 @@
-using System;
+using System.Threading.Tasks;
 using DocumentsApi.V1.Domain;
 
 namespace DocumentsApi.V1.Gateways.Interfaces
 {
     public interface IS3Gateway
     {
-        public Uri GenerateUploadUrl(Document document);
+        public Task<S3UploadPolicy> GenerateUploadPolicy(Document document);
     }
 }

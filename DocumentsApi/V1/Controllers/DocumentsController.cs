@@ -1,10 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using DocumentsApi.V1.Boundary.Request;
-using DocumentsApi.V1.Boundary.Response;
+using System.Threading.Tasks;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DocumentsApi.V1.Controllers
@@ -30,11 +28,11 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="401">Request lacks valid API token</response>
         [HttpPost]
         [Route("{id}/upload_urls")]
-        public IActionResult CreateUploadUrl([Required][FromRoute] Guid id)
+        public async Task<IActionResult> CreateUploadUrl([Required][FromRoute] Guid id)
         {
             try
             {
-                var result = _createUploadUrlUseCase.Execute(id);
+                var result = await _createUploadUrlUseCase.Execute(id).ConfigureAwait(true);
                 return Created(result.Url, result);
             }
             catch (NotFoundException ex)

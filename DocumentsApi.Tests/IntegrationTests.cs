@@ -1,13 +1,9 @@
 using System.Data;
 using System.Data.Common;
 using System.Net.Http;
-using Amazon.S3;
-using AutoFixture;
-using AutoFixture.AutoMoq;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Npgsql;
 using NUnit.Framework;
 
@@ -17,7 +13,6 @@ namespace DocumentsApi.Tests
     {
         protected HttpClient Client { get; private set; }
         protected DocumentsContext DatabaseContext { get; private set; }
-        protected Mock<IAmazonS3> MockS3Client { get; private set; }
 
         private MockWebApplicationFactory<TStartup> _factory;
         private NpgsqlConnection _connection;
@@ -26,7 +21,6 @@ namespace DocumentsApi.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            MockS3Client = CreateMockS3Client();
             _connection = new NpgsqlConnection(ConnectionString.TestDatabase());
             _connection.Open();
             var npgsqlCommand = _connection.CreateCommand();
@@ -37,7 +31,7 @@ namespace DocumentsApi.Tests
         [SetUp]
         public void BaseSetup()
         {
-            _factory = new MockWebApplicationFactory<TStartup>(_connection, MockS3Client.Object);
+            _factory = new MockWebApplicationFactory<TStartup>(_connection);
             Client = _factory.CreateClient();
             DatabaseContext = _factory.Server.Host.Services.GetRequiredService<DocumentsContext>();
 
@@ -53,15 +47,5 @@ namespace DocumentsApi.Tests
             _transaction.Rollback();
             _transaction.Dispose();
         }
-
-        private static Mock<IAmazonS3> CreateMockS3Client()
-        {
-            var fixture = new Fixture()
-                .Customize(new AutoMoqCustomization());
-            var mockClient = fixture.Freeze<Mock<IAmazonS3>>();
-            fixture.Create<IAmazonS3>();
-            return mockClient;
-        }
-
     }
 }

@@ -39,8 +39,7 @@ namespace DocumentsApi
 
         public IConfiguration Configuration { get; }
         private static List<ApiVersionDescription> _apiVersions { get; set; }
-        //TODO update the below to the name of your API
-        private const string ApiName = "Your API Name";
+        private const string ApiName = "Documents API";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public static void ConfigureServices(IServiceCollection services)
@@ -121,12 +120,21 @@ namespace DocumentsApi
                 Console.WriteLine("LOADED ENVIRONMENT FROM .env");
             }
 
+            var options = AppOptions.FromEnv();
+            services.AddSingleton<AppOptions>(x => options);
+
+            /* TODO: Node being added to create signed Post Policies
+               (see this issue: https://github.com/LBHackney-IT/documents-api/pull/6)
+               Can be removed when presigned post policies are available in .NET
+             */
+            services.AddNodeServices();
+
             // Database Context
             services.AddDbContext<DocumentsContext>(
-                opt => opt.UseLazyLoadingProxies().UseNpgsql(AppOptions.DatabaseConnectionString));
+                opt => opt.UseLazyLoadingProxies().UseNpgsql(options.DatabaseConnectionString));
 
             // Transient Services
-            services.AddSingleton<IAmazonS3>(sp => new AmazonS3Client(RegionEndpoint.EUWest2));
+            services.AddTransient<IAmazonS3>(sp => new AmazonS3Client(RegionEndpoint.EUWest2));
 
             // Gateways
             services.AddScoped<IDocumentsGateway, DocumentsGateway>();

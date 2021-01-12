@@ -1,6 +1,6 @@
 using System;
+using System.Threading.Tasks;
 using AutoFixture;
-using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Gateways.Interfaces;
@@ -28,41 +28,27 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void ThrowsNotFoundErrorWhenDocumentDoesNotExist()
         {
-            Func<UrlResponse> execute = () => _classUnderTest.Execute(Guid.NewGuid());
+            Func<Task<S3UploadPolicy>> execute = async () => await _classUnderTest.Execute(Guid.NewGuid()).ConfigureAwait(true);
             execute.Should().Throw<NotFoundException>();
         }
 
         [Test]
-        public void CreatesPresignedUrl()
+        public async Task ReturnsPresignedUrl()
         {
             var document = _fixture.Build<Document>()
                 .Without(x => x.FileSize)
                 .Without(x => x.FileType)
                 .Create();
 
+            var policy = _fixture.Create<S3UploadPolicy>();
             _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
-            _s3Gateway.Setup(x => x.GenerateUploadUrl(document));
+            _s3Gateway.Setup(x => x.GenerateUploadPolicy(document)).ReturnsAsync(policy);
 
-            _classUnderTest.Execute(document.Id);
+            var result = await _classUnderTest.Execute(document.Id).ConfigureAwait(true);
+
+            result.Should().BeEquivalentTo(policy);
 
             _s3Gateway.VerifyAll();
-        }
-
-        [Test]
-        public void ReturnsPresignedUrl()
-        {
-            var document = _fixture.Build<Document>()
-                .Without(x => x.FileSize)
-                .Without(x => x.FileType)
-                .Create();
-
-            var url = new Uri("https://upload.s3.com");
-            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
-            _s3Gateway.Setup(x => x.GenerateUploadUrl(document)).Returns(url);
-
-            var result = _classUnderTest.Execute(document.Id);
-
-            result.Url.Should().Be(url);
         }
 
         [Test]
@@ -75,8 +61,8 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
 
-            Func<UrlResponse> execute = () => _classUnderTest.Execute(document.Id);
-            execute.Should().Throw<BadRequestException>();
+            Func<Task<S3UploadPolicy>> execute = () => _classUnderTest.Execute(document.Id);
+            execute.Should().ThrowAsync<BadRequestException>();
         }
     }
 }

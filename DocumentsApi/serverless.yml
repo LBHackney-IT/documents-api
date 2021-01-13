@@ -20,7 +20,7 @@ functions:
   DocumentsApi:
     name: ${self:service}-${self:provider.stage}
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
-    role: LambdaExecutionRole
+    role: lambdaExecutionRole
     environment:
       CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
     events:
@@ -34,7 +34,7 @@ functions:
 
 resources:
   Resources:
-    LambdaExecutionRole:
+    lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
         Path: /${self:service}/${self:provider.stage}/

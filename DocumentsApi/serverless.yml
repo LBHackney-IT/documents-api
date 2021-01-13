@@ -36,6 +36,8 @@ functions:
     name: ${self:service}-${self:provider.stage}
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
+    layers:
+      - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
     events:
       - http:
           path: /{proxy+}

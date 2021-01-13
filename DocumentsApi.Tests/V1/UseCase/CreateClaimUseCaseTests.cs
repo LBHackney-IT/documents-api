@@ -15,15 +15,14 @@ namespace DocumentsApi.Tests.V1.UseCase
     [TestFixture]
     public class CreateClaimUseCaseTests
     {
-        private CreateClaimUseCase _classUnderTest;
-        private Mock<IDocumentsGateway> _documentsGateway;
-        private Fixture _fixture = new Fixture();
+        private readonly CreateClaimUseCase _classUnderTest;
+        private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
+        private readonly Fixture _fixture = new Fixture();
         private Document _document;
         private Claim _claim;
 
         public CreateClaimUseCaseTests()
         {
-            _documentsGateway = new Mock<IDocumentsGateway>();
             _classUnderTest = new CreateClaimUseCase(_documentsGateway.Object);
 
             SetupMocks();
@@ -52,7 +51,7 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             var result = _classUnderTest.Execute(request);
 
-            result.Should().BeEquivalentTo(_claim);
+            result.Should().BeEquivalentTo(_claim, opt => opt.Excluding(x => x.Document.Uploaded));
         }
 
         [Test]

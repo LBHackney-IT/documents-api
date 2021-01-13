@@ -11,5 +11,9 @@ namespace DocumentsApi.V1.Boundary.Response.Exceptions
         {
             ValidationResponse = validationResponse;
         }
+
+        public BadRequestException(string message) : base(message)
+        {
+        }
     }
 }

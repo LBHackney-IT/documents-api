@@ -78,5 +78,25 @@ namespace DocumentsApi.Tests.V1.Gateways
             created.Id.Should().NotBeEmpty();
             created.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
         }
+
+        [Test]
+        public void CanFindADocument()
+        {
+            var document = TestDataHelper.CreateDocument().ToEntity();
+            DatabaseContext.Add(document);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindDocument(document.Id);
+
+            found.Should().BeEquivalentTo(document, opt => opt.ExcludingMissingMembers());
+        }
+
+        [Test]
+        public void FindingADocumentReturnsNullWhenNotFound()
+        {
+            var found = _classUnderTest.FindDocument(Guid.NewGuid());
+
+            found.Should().BeNull();
+        }
     }
 }

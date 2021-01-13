@@ -1,11 +1,15 @@
 using System.Data.Common;
+using Amazon.S3;
 using DocumentsApi;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.NodeServices;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace DocumentsApi.Tests
 {
@@ -34,6 +38,12 @@ namespace DocumentsApi.Tests
                 var dbContext = serviceProvider.GetRequiredService<DocumentsContext>();
 
                 dbContext.Database.EnsureCreated();
+            });
+
+            builder.ConfigureTestServices(services =>
+            {
+                var options = new AppOptions();
+                services.AddSingleton<AppOptions>(x => options);
             });
         }
     }

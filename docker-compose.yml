@@ -32,6 +32,8 @@ services:
       - DB_DATABASE=testdb
     links:
       - test-database
+      - s3-mock
+
   test-database:
     image: test-database
     build:
@@ -41,3 +43,10 @@ services:
       - 5432:5432
     env_file:
       - database.env
+
+  s3-mock:
+    image: andrewgaul/s3proxy
+    ports:
+      - 5555:80
+    environment:
+      - S3PROXY_AUTHORIZATION=none

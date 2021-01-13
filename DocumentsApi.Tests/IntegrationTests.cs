@@ -1,13 +1,9 @@
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Net.Http;
-using AutoFixture;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Npgsql;
 using NUnit.Framework;
 

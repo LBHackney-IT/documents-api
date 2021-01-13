@@ -1,3 +1,4 @@
+using System;
 using DocumentsApi.V1.Domain;
 
 namespace DocumentsApi.V1.Gateways.Interfaces
@@ -6,5 +7,6 @@ namespace DocumentsApi.V1.Gateways.Interfaces
     {
         public Document CreateDocument(Document request);
         public Claim CreateClaim(Claim request);
+        public Document FindDocument(Guid id);
     }
 }

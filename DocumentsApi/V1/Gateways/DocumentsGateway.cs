@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways.Interfaces;
@@ -31,6 +32,11 @@ namespace DocumentsApi.V1.Gateways
             _databaseContext.SaveChanges();
 
             return entity.ToDomain();
+        }
+
+        public Document FindDocument(Guid id)
+        {
+            return _databaseContext.Documents.Find(id)?.ToDomain();
         }
     }
 }

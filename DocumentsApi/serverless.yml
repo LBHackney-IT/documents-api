@@ -10,6 +10,8 @@ provider:
         throttle:
           burstLimit: 200
           rateLimit: 100
+  environment:
+    BUCKET_NAME: ${self:service}-${self:provider.stage}-documents
 
 package:
   artifact: ./bin/release/netcoreapp3.1/documents-api.zip
@@ -18,7 +20,7 @@ functions:
   DocumentsApi:
     name: ${self:service}-${self:provider.stage}
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
-    role: lambdaExecutionRole
+    role: LambdaExecutionRole
     environment:
       CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
     events:
@@ -32,7 +34,7 @@ functions:
 
 resources:
   Resources:
-    lambdaExecutionRole:
+    LambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
         Path: /${self:service}/${self:provider.stage}/
@@ -81,6 +83,31 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
+          - PolicyName: documentsBucketAccess
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Effect: "Allow"
+                Resource:
+                  - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
+    DocumentsBucket:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
+      Properties:
+        AccessControl: Private
+        BucketName: ${self:provider.environment.BUCKET_NAME}
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
 
 custom:
   vpc:

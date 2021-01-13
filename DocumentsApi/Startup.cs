@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Amazon;
+using Amazon.S3;
 using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Gateways.Interfaces;
@@ -122,6 +124,9 @@ namespace DocumentsApi
             // Database Context
             services.AddDbContext<DocumentsContext>(
                 opt => opt.UseLazyLoadingProxies().UseNpgsql(AppOptions.DatabaseConnectionString));
+
+            // Transient Services
+            services.AddSingleton<IAmazonS3>(sp => new AmazonS3Client(RegionEndpoint.EUWest2));
 
             // Gateways
             services.AddScoped<IDocumentsGateway, DocumentsGateway>();

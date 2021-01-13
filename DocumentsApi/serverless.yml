@@ -11,11 +11,12 @@ provider:
           burstLimit: 200
           rateLimit: 100
   environment:
-    BUCKET_NAME: ${self:service}-${self:provider.stage}-documents
+    CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
+    BUCKET_NAME: ${self:service}-${self:provider.stage}-bucket
   s3:
     documentsBucket:
       accessControl: Private
-      bucketName: ${self:provider.environment.BUCKET_NAME}
+      name: ${self:provider.environment.BUCKET_NAME}
       bucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -28,14 +29,13 @@ provider:
 
 package:
   artifact: ./bin/release/netcoreapp3.1/documents-api.zip
+  individually: true
 
 functions:
   DocumentsApi:
     name: ${self:service}-${self:provider.stage}
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
-    environment:
-      CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
     events:
       - http:
           path: /{proxy+}
@@ -44,6 +44,14 @@ functions:
           authorizer:
             arn: ${ssm:/platform-apis-lambda-authorizer-arn}
             type: request
+  DocumentsS3Function:
+    name: ${self:service}-${self:provider.stage}-s3
+    handler: DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated
+    role: lambdaExecutionRole
+    events:
+      - s3:
+          bucket: documentsBucket
+          event: s3:ObjectCreated:*
 
 resources:
   Resources:

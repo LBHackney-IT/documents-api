@@ -34,4 +34,9 @@
     <PackageReference Include="dotenv.net" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="V1/Node/index.js" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="V1/Node/node_modules/**" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

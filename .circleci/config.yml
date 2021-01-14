@@ -68,11 +68,16 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_13.x | bash -
+            curl -sL https://deb.nodesource.com/setup_12.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install serverless CLI
           command: npm i -g serverless
+      - run:
+          name: Install NodeServices packages
+          command: |
+            cd ./DocumentsApi/V1/Node
+            npm install
       - run:
           name: Build lambda
           command: |

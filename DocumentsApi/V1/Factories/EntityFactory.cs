@@ -12,7 +12,8 @@ namespace DocumentsApi.V1.Factories
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt,
                 FileSize = domain.FileSize,
-                FileType = domain.FileType
+                FileType = domain.FileType,
+                UploadedAt = domain.UploadedAt
             };
         }
 

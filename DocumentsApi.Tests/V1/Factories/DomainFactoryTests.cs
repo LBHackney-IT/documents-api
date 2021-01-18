@@ -74,6 +74,5 @@ namespace DocumentsApi.Tests.V1.Factories
             domain.ServiceAreaCreatedBy.Should().Be(entity.ServiceAreaCreatedBy);
             domain.RetentionExpiresAt.Should().Be(entity.RetentionExpiresAt);
         }
-
     }
 }

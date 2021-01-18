@@ -44,8 +44,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         [Test]
         public async Task CreatingUploadUrlReturnsUrlForValidDocument()
         {
-            _document.FileSize = 0;
-            _document.FileType = null;
+            _document.UploadedAt = null;
             DatabaseContext.Add(_document);
             DatabaseContext.SaveChanges();
 

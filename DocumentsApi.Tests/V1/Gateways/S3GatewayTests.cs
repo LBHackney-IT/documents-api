@@ -1,5 +1,7 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
+using Amazon.S3.Model;
 using AutoFixture;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Gateways;
@@ -42,6 +44,20 @@ namespace DocumentsApi.Tests.V1.Gateways
             result.Should().BeEquivalentTo(expectedPolicy);
 
             _node.VerifyAll();
+        }
+
+        [Test]
+        public async Task CanGetObjectContentType()
+        {
+            var key = "i am an object key";
+            var expectedContentType = "image/png";
+            var response = new GetObjectMetadataResponse();
+            response.Headers.ContentType = expectedContentType;
+
+            _s3.Setup(x => x.GetObjectMetadataAsync(_options.DocumentsBucketName, key, default(CancellationToken))).ReturnsAsync(response);
+
+            var result = await _classUnderTest.GetObjectContentType(key).ConfigureAwait(true);
+            result.Should().Be(expectedContentType);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
-            var s3Event = CreateEvent(new List<Guid> {id1, id2});
+            var s3Event = TestDataHelper.CreateS3Event(new List<Guid> {id1, id2});
 
             var document1 = CreateDocument(id1);
             var document2 = CreateDocument(id2);
@@ -62,7 +62,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         public async Task SkipsIfDocumentIsAlreadyUploaded()
         {
             var id = Guid.NewGuid();
-            var s3Event = CreateEvent(new List<Guid> {id});
+            var s3Event = TestDataHelper.CreateS3Event(new List<Guid> {id});
 
             var document = _fixture.Create<Document>();
             var contentType1 = "image/jpeg";
@@ -79,7 +79,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         public async Task SkipsIfDocumentNonExistent()
         {
             var id = Guid.NewGuid();
-            var s3Event = CreateEvent(new List<Guid> {id});
+            var s3Event = TestDataHelper.CreateS3Event(new List<Guid> {id});
 
             var document = CreateDocument(id);
             var contentType1 = "image/jpeg";
@@ -95,7 +95,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         public async Task SkipsIfErrorOccurs()
         {
             var id = Guid.NewGuid();
-            var s3Event = CreateEvent(new List<Guid> {id});
+            var s3Event = TestDataHelper.CreateS3Event(new List<Guid> {id});
 
             var document = CreateDocument(id);
 
@@ -104,23 +104,6 @@ namespace DocumentsApi.Tests.V1.UseCase
             await _classUnderTest.ExecuteAsync(s3Event).ConfigureAwait(true);
 
             _documentsGateway.Verify(dg => dg.CreateDocument(document), Times.Never);
-        }
-
-        private S3Event CreateEvent(List<Guid> ids)
-        {
-            var records = ids.ConvertAll(id =>
-            {
-                var record = _fixture.Create<S3EventNotification.S3EventNotificationRecord>();
-                record.S3.Object.Key = id.ToString();
-
-                return record;
-            });
-
-            var s3Event = _fixture.Build<S3Event>()
-                .With(x => x.Records, records)
-                .Create();
-
-            return s3Event;
         }
 
         private Document CreateDocument(Guid id)

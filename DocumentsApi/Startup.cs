@@ -3,25 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Amazon;
-using Amazon.S3;
-using DocumentsApi.V1.Boundary.Request;
-using DocumentsApi.V1.Gateways;
-using DocumentsApi.V1.Gateways.Interfaces;
-using DocumentsApi.V1.Infrastructure;
-using DocumentsApi.V1.UseCase;
-using DocumentsApi.V1.UseCase.Interfaces;
-using DocumentsApi.V1.Validators;
 using DocumentsApi.Versioning;
 using dotenv.net;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -120,29 +109,7 @@ namespace DocumentsApi
                 Console.WriteLine("LOADED ENVIRONMENT FROM .env");
             }
 
-            var options = AppOptions.FromEnv();
-            services.AddSingleton<AppOptions>(x => options);
-
-            /* TODO: Node being added to create signed Post Policies
-               (see this issue: https://github.com/LBHackney-IT/documents-api/pull/6)
-               Can be removed when presigned post policies are available in .NET
-             */
-            services.AddNodeServices();
-
-            // Database Context
-            services.AddDbContext<DocumentsContext>(
-                opt => opt.UseLazyLoadingProxies().UseNpgsql(options.DatabaseConnectionString));
-
-            // Transient Services
-            services.AddTransient<IAmazonS3>(sp => new AmazonS3Client(RegionEndpoint.EUWest2));
-
-            // Gateways
-            services.AddScoped<IDocumentsGateway, DocumentsGateway>();
-            services.AddScoped<IS3Gateway, S3Gateway>();
-
-            // Use Cases
-            services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();
-            services.AddScoped<ICreateUploadPolicyUseCase, CreateUploadPolicyUseCase>();
+            ServiceConfigurator.ConfigureServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

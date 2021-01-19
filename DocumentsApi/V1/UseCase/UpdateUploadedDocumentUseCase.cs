@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Amazon.Lambda.S3Events;
 using Amazon.S3.Util;
@@ -21,10 +22,9 @@ namespace DocumentsApi.V1.UseCase
 
         public async Task ExecuteAsync(S3Event s3Event)
         {
-            foreach (var record in s3Event.Records)
-            {
-                await UpdateDocument(record).ConfigureAwait(true);
-            }
+            var tasks = s3Event.Records.Select(UpdateDocument);
+
+            await Task.WhenAll(tasks).ConfigureAwait(true);
         }
 
         // Catch everything because this runs asynchronously
@@ -38,8 +38,6 @@ namespace DocumentsApi.V1.UseCase
             {
                 var size = record.S3.Object.Size;
                 var uploadedAt = record.EventTime;
-                var type = await _s3Gateway.GetObjectContentType(id).ConfigureAwait(true);
-
                 var document = _documentsGateway.FindDocument(new Guid(id));
 
                 if (document == null)
@@ -54,6 +52,8 @@ namespace DocumentsApi.V1.UseCase
                     return;
                 }
 
+                var type = await _s3Gateway.GetObjectContentType(id).ConfigureAwait(true);
+
                 document.UploadedAt = uploadedAt;
                 document.FileSize = size;
                 document.FileType = type;
@@ -64,7 +64,7 @@ namespace DocumentsApi.V1.UseCase
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to process document with ID {id} | {ex.GetType()} {ex.Message}");
-                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex);
             }
         }
     }

@@ -11,7 +11,7 @@ namespace DocumentsApi.V1.Gateways
 {
     public class S3Gateway : IS3Gateway
     {
-        private IAmazonS3 _s3;
+        private readonly IAmazonS3 _s3;
         private readonly INodeServices _nodeServices;
         private readonly AppOptions _options;
 

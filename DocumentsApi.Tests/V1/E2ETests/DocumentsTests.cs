@@ -45,7 +45,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
         public async Task CreatingUploadUrlReturnsUrlForValidDocument()
         {
             _document.UploadedAt = null;
-            DatabaseContext.Add(_document);
             DatabaseContext.SaveChanges();
 
             var uri = new Uri($"api/v1/documents/{_document.Id}/upload_policies", UriKind.Relative);

@@ -30,8 +30,8 @@ namespace DocumentsApi
 
             // Transient Services
             AmazonS3Config s3Config;
-            if (options.AwsS3Endpoint != null) s3Config = new AmazonS3Config() {ServiceURL = options.AwsS3Endpoint};
-            else s3Config = new AmazonS3Config() {RegionEndpoint = RegionEndpoint.EUWest2};
+            if (options.AwsS3Endpoint != null) s3Config = new AmazonS3Config() { ServiceURL = options.AwsS3Endpoint };
+            else s3Config = new AmazonS3Config() { RegionEndpoint = RegionEndpoint.EUWest2 };
 
             services.AddTransient<IAmazonS3>(sp => new AmazonS3Client(s3Config));
 

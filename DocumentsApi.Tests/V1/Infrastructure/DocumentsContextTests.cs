@@ -41,11 +41,28 @@ namespace DocumentsApi.Tests.V1.Infrastructure
             DatabaseContext.Claims.Add(entity);
             DatabaseContext.SaveChanges();
 
-            entity.Id.Should().NotBeEmpty();
-            entity.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
+            entity.Document.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
             entity.Document.Id.Should().NotBeEmpty();
 
             DatabaseContext.Documents.ToList().First().Should().Be(entity.Document);
+        }
+
+        [Test]
+        public void DoesNotOverwriteExistingAttributes()
+        {
+            var id = Guid.NewGuid();
+            var createdAt = DateTime.Today.AddDays(-3);
+            var entity = _fixture.Build<DocumentEntity>()
+                .Without(x => x.Claims)
+                .With(x => x.Id, id)
+                .With(x => x.CreatedAt, createdAt)
+                .Create();
+
+            DatabaseContext.Documents.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            entity.Id.Should().Be(id);
+            entity.CreatedAt.Should().Be(createdAt);
         }
     }
 }

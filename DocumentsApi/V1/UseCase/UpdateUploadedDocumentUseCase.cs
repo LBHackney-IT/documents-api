@@ -58,7 +58,7 @@ namespace DocumentsApi.V1.UseCase
                 document.FileSize = size;
                 document.FileType = type;
 
-                _documentsGateway.CreateDocument(document);
+                _documentsGateway.SaveDocument(document);
                 Console.WriteLine($"Completed processing document with ID {id}");
             }
             catch (Exception ex)

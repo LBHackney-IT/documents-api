@@ -25,8 +25,8 @@ namespace DocumentsApi.V1.Infrastructure
             foreach (var entityEntry in entries)
             {
                 var entity = ((IEntity) entityEntry.Entity);
-                if (entity.CreatedAt == null) entity.CreatedAt = DateTime.Now;
-                if (entity.Id == null) entity.Id = Guid.NewGuid();
+                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.Now;
+                if (entity.Id == default) entity.Id = Guid.NewGuid();
             }
 
             return base.SaveChanges();

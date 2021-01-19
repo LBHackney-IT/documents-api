@@ -17,12 +17,12 @@ namespace DocumentsApi.V1.Gateways
             _databaseContext = databaseContext;
         }
 
-        public Document CreateDocument(Document request)
+        public Document SaveDocument(Document request)
         {
             var entity = request.ToEntity();
 
             _databaseContext.Documents.Add(entity);
-            if (request.Id != null) _databaseContext.Entry(entity).State = EntityState.Modified;
+            if (request.Id != default) _databaseContext.Entry(entity).State = EntityState.Modified;
             _databaseContext.SaveChanges();
 
             return entity.ToDomain();
@@ -31,7 +31,9 @@ namespace DocumentsApi.V1.Gateways
         public Claim CreateClaim(Claim request)
         {
             var entity = request.ToEntity();
+
             _databaseContext.Claims.Add(entity);
+            if (request.Id != default) _databaseContext.Entry(entity).State = EntityState.Modified;
             _databaseContext.SaveChanges();
 
             return entity.ToDomain();

@@ -39,22 +39,22 @@ namespace DocumentsApi.Tests.V1.UseCase
             var contentType1 = "image/jpeg";
             var contentType2 = "image/png";
 
-            _s3Gateway.Setup(x => x.GetObjectContentType(id1.ToString())).ReturnsAsync(contentType1);
-            _s3Gateway.Setup(x => x.GetObjectContentType(id2.ToString())).ReturnsAsync(contentType2);
+            _s3Gateway.Setup(x => x.GetObjectContentType(id1.ToString())).ReturnsAsync(contentType1).Verifiable();
+            _s3Gateway.Setup(x => x.GetObjectContentType(id2.ToString())).ReturnsAsync(contentType2).Verifiable();
 
             _documentsGateway.Setup(x => x.FindDocument(id1)).Returns(document1);
             _documentsGateway.Setup(x => x.FindDocument(id2)).Returns(document2);
 
-            _documentsGateway.Setup(x => x.CreateDocument(It.Is<Document>(doc =>
+            _documentsGateway.Setup(x => x.SaveDocument(It.Is<Document>(doc =>
                 doc.Id == id1 && doc.FileType == contentType1 && doc.FileSize == s3Event.Records[0].S3.Object.Size &&
                 doc.UploadedAt == s3Event.Records[0].EventTime)));
-            _documentsGateway.Setup(x => x.CreateDocument(It.Is<Document>(doc =>
+            _documentsGateway.Setup(x => x.SaveDocument(It.Is<Document>(doc =>
                 doc.Id == id2 && doc.FileType == contentType2 && doc.FileSize == s3Event.Records[1].S3.Object.Size &&
                 doc.UploadedAt == s3Event.Records[1].EventTime)));
 
             await _classUnderTest.ExecuteAsync(s3Event).ConfigureAwait(true);
 
-            _s3Gateway.VerifyAll();
+            _s3Gateway.Verify();
             _documentsGateway.VerifyAll();
         }
 
@@ -72,7 +72,7 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             await _classUnderTest.ExecuteAsync(s3Event).ConfigureAwait(true);
 
-            _documentsGateway.Verify(dg => dg.CreateDocument(document), Times.Never);
+            _documentsGateway.Verify(dg => dg.SaveDocument(document), Times.Never);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             await _classUnderTest.ExecuteAsync(s3Event).ConfigureAwait(true);
 
-            _documentsGateway.Verify(dg => dg.CreateDocument(document), Times.Never);
+            _documentsGateway.Verify(dg => dg.SaveDocument(document), Times.Never);
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             await _classUnderTest.ExecuteAsync(s3Event).ConfigureAwait(true);
 
-            _documentsGateway.Verify(dg => dg.CreateDocument(document), Times.Never);
+            _documentsGateway.Verify(dg => dg.SaveDocument(document), Times.Never);
         }
 
         private Document CreateDocument(Guid id)

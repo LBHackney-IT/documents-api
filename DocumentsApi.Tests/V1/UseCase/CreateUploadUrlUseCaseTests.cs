@@ -36,8 +36,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         public async Task ReturnsPresignedUrl()
         {
             var document = _fixture.Build<Document>()
-                .Without(x => x.FileSize)
-                .Without(x => x.FileType)
+                .Without(x => x.UploadedAt)
                 .Create();
 
             var policy = _fixture.Create<S3UploadPolicy>();

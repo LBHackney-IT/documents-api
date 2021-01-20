@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using Amazon.Lambda.S3Events;
+using Amazon.S3.Util;
 using AutoFixture;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Factories;
@@ -26,5 +30,23 @@ namespace DocumentsApi.Tests.V1
                 .With(x => x.Document, document)
                 .Create();
         }
+
+        public static S3Event CreateS3Event(List<Guid> ids)
+        {
+            var records = ids.ConvertAll(id =>
+            {
+                var record = _fixture.Create<S3EventNotification.S3EventNotificationRecord>();
+                record.S3.Object.Key = id.ToString();
+
+                return record;
+            });
+
+            var s3Event = _fixture.Build<S3Event>()
+                .With(x => x.Records, records)
+                .Create();
+
+            return s3Event;
+        }
+
     }
 }

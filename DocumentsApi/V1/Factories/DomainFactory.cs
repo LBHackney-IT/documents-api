@@ -13,7 +13,8 @@ namespace DocumentsApi.V1.Factories
                 Id = entity.Id,
                 CreatedAt = entity.CreatedAt,
                 FileSize = entity.FileSize,
-                FileType = entity.FileType
+                FileType = entity.FileType,
+                UploadedAt = entity.UploadedAt
             };
         }
         public static Claim ToDomain(this ClaimEntity entity)

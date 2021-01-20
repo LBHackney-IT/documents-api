@@ -43,7 +43,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"fileSize\":0," +
-                                  "\"fileType\":null" +
+                                  "\"fileType\":null," +
+                                  "\"uploadedAt\":null" +
                               "}," +
                               "\"serviceAreaCreatedBy\":\"development-team-staging\"," +
                               "\"userCreatedBy\":\"staff@test.hackney.gov.uk\"," +

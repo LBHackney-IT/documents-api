@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using DocumentsApi.V1.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
 
 namespace DocumentsApi.V1.Infrastructure
 {
@@ -24,8 +25,8 @@ namespace DocumentsApi.V1.Infrastructure
             foreach (var entityEntry in entries)
             {
                 var entity = ((IEntity) entityEntry.Entity);
-                entity.CreatedAt = DateTime.Now;
-                entity.Id = Guid.NewGuid();
+                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.Now;
+                if (entity.Id == default) entity.Id = Guid.NewGuid();
             }
 
             return base.SaveChanges();

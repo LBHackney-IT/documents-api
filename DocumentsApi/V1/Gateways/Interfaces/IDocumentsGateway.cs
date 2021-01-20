@@ -5,7 +5,7 @@ namespace DocumentsApi.V1.Gateways.Interfaces
 {
     public interface IDocumentsGateway
     {
-        public Document CreateDocument(Document request);
+        public Document SaveDocument(Document request);
         public Claim CreateClaim(Claim request);
         public Document FindDocument(Guid id);
     }

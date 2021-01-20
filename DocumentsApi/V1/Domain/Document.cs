@@ -8,7 +8,8 @@ namespace DocumentsApi.V1.Domain
         public DateTime CreatedAt { get; set; }
         public long FileSize { get; set; }
         public string FileType { get; set; }
+        public DateTime? UploadedAt { get; set; }
 
-        public bool Uploaded => FileSize > 0 && FileType != null;
+        public bool Uploaded => UploadedAt != null;
     }
 }

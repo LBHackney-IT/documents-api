@@ -11,7 +11,7 @@ namespace DocumentsApi.V1.Gateways
 {
     public class S3Gateway : IS3Gateway
     {
-        private IAmazonS3 _s3;
+        private readonly IAmazonS3 _s3;
         private readonly INodeServices _nodeServices;
         private readonly AppOptions _options;
 
@@ -32,6 +32,12 @@ namespace DocumentsApi.V1.Gateways
              */
             var policyString = await _nodeServices.InvokeAsync<string>("V1/Node/index.js", _options.DocumentsBucketName, document.Id.ToString(), UrlExpirySeconds).ConfigureAwait(true);
             return JsonConvert.DeserializeObject<S3UploadPolicy>(policyString);
+        }
+
+        public async Task<string> GetObjectContentType(string key)
+        {
+            var meta = await _s3.GetObjectMetadataAsync(_options.DocumentsBucketName, key).ConfigureAwait(true);
+            return meta.Headers.ContentType;
         }
     }
 }

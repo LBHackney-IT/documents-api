@@ -1,10 +1,7 @@
 using System;
 using System.Linq;
-using AutoFixture;
-using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways;
-using DocumentsApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -27,7 +24,7 @@ namespace DocumentsApi.Tests.V1.Gateways
             var request = TestDataHelper.CreateDocument();
             var query = DatabaseContext.Documents;
 
-            _classUnderTest.CreateDocument(request);
+            _classUnderTest.SaveDocument(request);
 
             query.Count()
                 .Should()
@@ -44,7 +41,7 @@ namespace DocumentsApi.Tests.V1.Gateways
         {
             var request = TestDataHelper.CreateDocument();
 
-            var created = _classUnderTest.CreateDocument(request);
+            var created = _classUnderTest.SaveDocument(request);
 
             created.FileSize.Should().Be(request.FileSize);
             created.FileType.Should().Be(request.FileType);

@@ -20,6 +20,9 @@ namespace DocumentsApi.V1.Infrastructure
         [Column("file_type")]
         public string FileType { get; set; }
 
+        [Column("uploaded_at")]
+        public DateTime? UploadedAt { get; set; }
+
         public virtual ICollection<ClaimEntity> Claims { get; set; }
     }
 }

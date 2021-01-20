@@ -30,6 +30,9 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=mypassword
       - DB_DATABASE=documents_api_test
+      - S3_API_ENDPOINT=http://s3-mock:80
+    env_file:
+      - .env.example
     links:
       - test-database
       - s3-mock
@@ -39,8 +42,6 @@ services:
     build:
       context: .
       dockerfile: database/Dockerfile
-    ports:
-      - 5432:5432
     env_file:
       - database.env
 

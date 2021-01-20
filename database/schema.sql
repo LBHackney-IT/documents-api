@@ -39,4 +39,9 @@ ALTER TABLE documents ALTER COLUMN file_size DROP DEFAULT;
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210108162815_ChangeFileSizeToLong', '3.1.7');
 
+ALTER TABLE documents ADD uploaded_at timestamp without time zone NULL;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210118145413_AddUploadedAtToDocuments', '3.1.7');
+
 

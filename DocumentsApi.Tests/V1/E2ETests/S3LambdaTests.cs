@@ -65,12 +65,18 @@ namespace DocumentsApi.Tests.V1.E2ETests
         private static async Task CreateTestS3Object(string id)
         {
             var options = AppOptions.FromEnv();
-            var s3Config = new AmazonS3Config() {ServiceURL = options.AwsS3Endpoint};
+            var s3Config = new AmazonS3Config() { ServiceURL = options.AwsS3Endpoint };
             var client = new AmazonS3Client(s3Config);
 
-            var bucketExists = await AmazonS3Util.DoesS3BucketExistV2Async(client, options.DocumentsBucketName).ConfigureAwait(true);
-            if (!bucketExists) await client.PutBucketAsync(new PutBucketRequest {BucketName = options.DocumentsBucketName})
-                .ConfigureAwait(true);
+            try
+            {
+                await client.PutBucketAsync(new PutBucketRequest { BucketName = options.DocumentsBucketName })
+                    .ConfigureAwait(true);
+            }
+            catch (AmazonS3Exception)
+            {
+                Console.WriteLine("Test bucket already exists");
+            }
 
             await client.PutObjectAsync(new PutObjectRequest
             {

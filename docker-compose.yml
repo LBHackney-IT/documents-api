@@ -51,4 +51,5 @@ services:
       - 5555:80
     environment:
       - S3PROXY_AUTHORIZATION=none
+      - S3PROXY_CORS_ALLOW_ALL=true
       - LOG_LEVEL=debug

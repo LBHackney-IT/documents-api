@@ -7,6 +7,12 @@ Base API is a boilerplate code for being reused for new APIs for LBH
 -   .NET Core as a web framework.
 -   nUnit as a test framework.
 
+
+## What does it do?
+
+[**🚀 Swagger**](https://app.swaggerhub.com/apis-docs/Hackney/documents-api/1.0.0) ([Edit it here](https://app.swaggerhub.com/apis/Hackney/documents-api/1.0.0))
+
+
 ## Dependencies
 
 -   S3 Mock API (described below)

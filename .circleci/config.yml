@@ -220,7 +220,6 @@ workflows:
             branches:
               only:
                 - main
-                - prod-deploy
       - terraform-init-and-apply-to-staging:
           requires:
             - assume-role-staging

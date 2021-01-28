@@ -59,6 +59,17 @@ Running the tests using `make` or `docker-compose` will handle this for you, but
 docker-compose run -d s3-mock
 ```
 
+You will also need to initialize your s3-mock which can be done by running the test _DocumentsApi.Tests/V1/E2ETests/S3LambdaTests.cs_
+
+#### NPM
+
+We currently have a JavaScript library to create signed Post Policies, so an additional step is needed to download the relevant package and dependencies.
+
+```shell script
+cd DocumentsApi/V1/Node
+npm install
+```
+
 ### Release process
 
 We use a pull request workflow, where changes are made on a branch and approved by one or more other maintainers before the developer can merge into `master` branch.

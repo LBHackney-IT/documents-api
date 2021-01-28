@@ -232,7 +232,7 @@ workflows:
             - assume-role-staging
 
       # Production deploy
-      - permit-production-terraform-release:
+      - permit-production-release:
           type: approval
           requires:
             - deploy-to-staging
@@ -246,10 +246,6 @@ workflows:
       - migrate-database-production:
           requires:
             - terraform-init-and-apply-to-production
-      - permit-production-release:
-          type: approval
-          requires:
-            - assume-role-production
       - deploy-to-production:
           requires:
-            - permit-production-release
+            - terraform-init-and-apply-to-production

@@ -1,6 +1,6 @@
-# LBH Base API
+# Documents API
 
-Base API is a boilerplate code for being reused for new APIs for LBH
+Documents API is a Platform API to securely and easily store and retrieve documents.
 
 ## Stack
 

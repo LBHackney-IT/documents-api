@@ -30,21 +30,6 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 To serve the application, run it using your IDE of choice, we use Visual Studio CE and JetBrains Rider on Mac.
 
 The application can also be served locally using docker:
-
-1.  Add you security credentials to AWS CLI.
-
-```sh
-$ aws configure
-```
-
-2. Log into AWS ECR.
-
-```sh
-$ aws ecr get-login --no-include-email
-```
-
-3. Build and serve the application. It will be available in the port 3000.
-
 ```sh
 $ make build && make serve
 ```
@@ -70,6 +55,28 @@ cd DocumentsApi/V1/Node
 npm install
 ```
 
+### S3 Lambda Function
+
+This application contains two lambda functions—an API, and a function which is triggered when objects are created in the S3 bucket, which can be found in `DocumentsApi/V1/S3EntryPoint.cs`.
+
+#### Test the S3 Lambda function with the Staging AWS Account
+
+1. Install [AWS lambda test tool](e18ebff8-2a46-4ee3-8d27-c36706ac006f): `dotnet tool install -g Amazon.Lambda.TestTool-3.1`
+2. Create a document in the staging S3 bucket with the key ``e18ebff8-2a46-4ee3-8d27-c36706ac006f``
+3. Create the equivalent record in your local database:
+    ```shell script
+    psql --database documents_api -f database/s3-test-seed.sql
+    ```
+4. Run the test:
+    ```shell script
+    bin/dotnet lambda-test-tool-3.1 --no-ui \
+      --profile AWS_PROFILE_NAME \
+      --path `pwd`/DocumentsApi \
+      --function-handler DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated \
+      --payload `pwd`/DocumentsApi.Tests/Fixtures/s3-object-created-event.json \
+      --region eu-west-2a
+    ```
+
 ### Release process
 
 We use a pull request workflow, where changes are made on a branch and approved by one or more other maintainers before the developer can merge into `master` branch.
@@ -79,13 +86,11 @@ We use a pull request workflow, where changes are made on a branch and approved 
 Then we have an automated six step deployment process, which runs in CircleCI.
 
 1. Automated tests (nUnit) are run to ensure the release is of good quality.
-2. The application is deployed to development automatically, where we check our latest changes work well.
-3. We manually confirm a staging deployment in the CircleCI workflow once we're happy with our changes in development.
-4. The application is deployed to staging.
+4. The application is deployed to staging automatically.
 5. We manually confirm a production deployment in the CircleCI workflow once we're happy with our changes in staging.
 6. The application is deployed to production.
 
-Our staging and production environments are hosted by AWS. We would deploy to production per each feature/config merged into `master` branch.
+Our staging and production environments are hosted by AWS. We would deploy to production per each feature/config merged into `main` branch.
 
 ### Creating A PR
 
@@ -157,6 +162,5 @@ If changes to the database schema are made then the docker image for the databas
 -   **Rashmi Shetty**, Product Owner at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
 
 [docker-download]: https://www.docker.com/products/docker-desktop
-[universal-housing-simulator]: https://github.com/LBHackney-IT/lbh-universal-housing-simulator
 [made-tech]: https://madetech.com/
 [aws-cli]: https://aws.amazon.com/cli/

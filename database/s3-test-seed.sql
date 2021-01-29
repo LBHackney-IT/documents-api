@@ -1,0 +1,1 @@
+INSERT INTO "public"."documents"("id", "created_at", "file_size", "file_type", "uploaded_at") VALUES('e18ebff8-2a46-4ee3-8d27-c36706ac006f', '2021-01-29 11:55:00.000000', 0, 'NULL', 'NULL') RETURNING "id", "created_at", "file_size", "file_type", "uploaded_at";

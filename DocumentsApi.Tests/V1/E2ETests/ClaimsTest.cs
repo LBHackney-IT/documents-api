@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentsApi.V1.Boundary.Response;
+using DocumentsApi.V1.Factories;
 using FluentAssertions;
 using FluentAssertions.Common;
 using Newtonsoft.Json;
@@ -73,5 +75,34 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(400);
         }
+
+
+        [Test]
+        public async Task FindingAValidClaimReturnsDocumentResponse()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            DatabaseContext.Add(claim);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/claims/{claim.Id}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<ClaimResponse>(jsonString);
+
+            response.StatusCode.Should().Be(200);
+
+            result.Should().BeEquivalentTo(claim.ToDomain().ToResponse());
+            result.Document.Should().BeEquivalentTo(claim.Document.ToDomain().ToResponse());
+        }
+
+        [Test]
+        public async Task FindingAnInvalidDocumentReturns404()
+        {
+            var uri = new Uri($"api/v1/claims/{Guid.NewGuid()}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+        }
+
     }
 }

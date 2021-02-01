@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
@@ -15,10 +16,12 @@ namespace DocumentsApi.V1.Controllers
     public class ClaimsController : BaseController
     {
         private ICreateClaimUseCase _createClaimUseCase;
+        private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
 
-        public ClaimsController(ICreateClaimUseCase createClaimUseCase)
+        public ClaimsController(ICreateClaimUseCase createClaimUseCase, IFindClaimByIdUseCase findClaimByIdUseCase)
         {
             _createClaimUseCase = createClaimUseCase;
+            _findClaimByIdUseCase = findClaimByIdUseCase;
         }
 
         /// <summary>
@@ -40,5 +43,27 @@ namespace DocumentsApi.V1.Controllers
                 return BadRequest(ex.ValidationResponse.Errors);
             }
         }
+
+        /// <summary>
+        /// Get a claim
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="404">Claim not found</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult FindClaim([Required][FromRoute] Guid id)
+        {
+            try
+            {
+                var result = _findClaimByIdUseCase.Execute(id);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
     }
 }

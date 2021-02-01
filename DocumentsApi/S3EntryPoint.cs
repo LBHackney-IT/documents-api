@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
@@ -12,22 +11,30 @@ namespace DocumentsApi
 {
     public class S3EntryPoint
     {
-        private IUpdateUploadedDocumentUseCase _useCase;
+        private readonly ServiceProvider _serviceProvider;
 
-        public S3EntryPoint(Action<ServiceCollection>? configureServices = null)
+        public S3EntryPoint()
         {
             var serviceCollection = new ServiceCollection();
             ServiceConfigurator.ConfigureServices(serviceCollection);
-            configureServices?.Invoke(serviceCollection);
 
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            _useCase = serviceProvider.GetService<IUpdateUploadedDocumentUseCase>();
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+        }
+
+        public S3EntryPoint(Action<ServiceCollection> configureTestServices)
+        {
+            var serviceCollection = new ServiceCollection();
+            ServiceConfigurator.ConfigureServices(serviceCollection);
+            configureTestServices?.Invoke(serviceCollection);
+
+            _serviceProvider = serviceCollection.BuildServiceProvider();
         }
 
         public async Task DocumentCreated(S3Event s3Event, ILambdaContext context)
         {
             Console.WriteLine($"Processing event with Request ID {context.AwsRequestId}");
-            await _useCase.ExecuteAsync(s3Event).ConfigureAwait(true);
+            var useCase = _serviceProvider.GetService<IUpdateUploadedDocumentUseCase>();
+            await useCase.ExecuteAsync(s3Event).ConfigureAwait(true);
             Console.WriteLine($"Processed event with Request ID {context.AwsRequestId}");
         }
     }

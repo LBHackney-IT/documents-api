@@ -1,0 +1,39 @@
+{
+   "Records":[
+      {
+         "eventVersion":"2.2",
+         "eventSource":"aws:s3",
+         "awsRegion":"eu-west-2",
+         "eventTime":"2021-01-29T12:00:00Z",
+         "eventName":"ObjectCreated:Put",
+         "userIdentity":{
+            "principalId":"Amazon-customer-ID-of-the-user-who-caused-the-event"
+         },
+         "requestParameters":{
+            "sourceIPAddress":"ip-address-where-request-came-from"
+         },
+         "responseElements":{
+            "x-amz-request-id": "EXAMPLE123456789",
+            "x-amz-id-2": "EXAMPLE123/5678abcdefghijklambdaisawesome/mnopqrstuvwxyzABCDEFGH"
+         },
+         "s3":{
+            "s3SchemaVersion":"1.0",
+            "configurationId":"90db28b4-126a-4c42-98e9-81824f4b3001",
+            "bucket":{
+               "name":"documents-api-staging-bucket",
+               "ownerIdentity":{
+                  "principalId":"Amazon-customer-ID-of-the-bucket-owner"
+               },
+               "arn":"arn:aws:s3:::documents-api-staging-bucket"
+            },
+            "object":{
+               "key":"e18ebff8-2a46-4ee3-8d27-c36706ac006f",
+               "size":"253",
+               "eTag":"0123456789abcdef0123456789abcdef",
+               "versionId": null,
+               "sequencer": null
+            }
+         }
+      }
+   ]
+}

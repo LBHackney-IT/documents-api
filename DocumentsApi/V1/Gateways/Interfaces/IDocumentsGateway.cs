@@ -8,5 +8,6 @@ namespace DocumentsApi.V1.Gateways.Interfaces
         public Document SaveDocument(Document request);
         public Claim CreateClaim(Claim request);
         public Document FindDocument(Guid id);
+        public Claim FindClaim(Guid id);
     }
 }

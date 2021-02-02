@@ -47,5 +47,14 @@ namespace DocumentsApi.V1.Gateways
             _databaseContext.Entry(entity).State = EntityState.Detached;
             return entity.ToDomain();
         }
+
+        public Claim FindClaim(Guid id)
+        {
+            var entity = _databaseContext.Claims.Find(id);
+            if (entity == null) return null;
+
+            _databaseContext.Entry(entity).State = EntityState.Detached;
+            return entity.ToDomain();
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CreatingUploadUrlReturns404ForNonExistentDocument()
+        public async Task CreatingUploadPolicyReturns404ForNonExistentDocument()
         {
             var uri = new Uri($"api/v1/documents/{Guid.NewGuid()}/upload_policies", UriKind.Relative);
             var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
@@ -33,7 +33,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CreatingUploadUrlReturns400ForAlreadyUploadedDocument()
+        public async Task CreatingUploadPolicyReturns400ForAlreadyUploadedDocument()
         {
             var uri = new Uri($"api/v1/documents/{_document.Id}/upload_policies", UriKind.Relative);
             var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
@@ -42,7 +42,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CreatingUploadUrlReturnsUrlForValidDocument()
+        public async Task CreatingUploadPolicyReturnsPolicyForValidDocument()
         {
             _document.UploadedAt = null;
             DatabaseContext.SaveChanges();
@@ -58,7 +58,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
             policy.Fields["acl"].Should().Be("private");
             policy.Fields["X-Amz-Server-Side-Encryption"].Should().Be("AES256");
             policy.Fields["X-Amz-Algorithm"].Should().Be("AWS4-HMAC-SHA256");
-
 
             policy.Fields.Should().ContainKeys("bucket", "X-Amz-Credential", "X-Amz-Date", "Policy", "X-Amz-Signature");
         }

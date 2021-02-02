@@ -95,5 +95,25 @@ namespace DocumentsApi.Tests.V1.Gateways
 
             found.Should().BeNull();
         }
+
+        [Test]
+        public void CanFindAClaim()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            DatabaseContext.Add(claim);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindClaim(claim.Id);
+
+            found.Should().BeEquivalentTo(claim, opt => opt.ExcludingMissingMembers());
+        }
+
+        [Test]
+        public void FindingAClaimReturnsNullWhenNotFound()
+        {
+            var found = _classUnderTest.FindClaim(Guid.NewGuid());
+
+            found.Should().BeNull();
+        }
     }
 }

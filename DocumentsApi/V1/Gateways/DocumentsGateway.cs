@@ -52,6 +52,8 @@ namespace DocumentsApi.V1.Gateways
         {
             var entity = _databaseContext.Claims.Find(id);
             if (entity == null) return null;
+            var document = _databaseContext.Documents.Find(entity.DocumentId);
+            entity.Document = document;
 
             _databaseContext.Entry(entity).State = EntityState.Detached;
             return entity.ToDomain();

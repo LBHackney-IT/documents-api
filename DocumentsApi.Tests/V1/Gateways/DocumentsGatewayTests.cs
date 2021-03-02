@@ -100,12 +100,15 @@ namespace DocumentsApi.Tests.V1.Gateways
         public void CanFindAClaim()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();
+            var document = TestDataHelper.CreateDocument().ToEntity();
+            DatabaseContext.Add(document);
             DatabaseContext.Add(claim);
             DatabaseContext.SaveChanges();
 
             var found = _classUnderTest.FindClaim(claim.Id);
 
             found.Should().BeEquivalentTo(claim, opt => opt.ExcludingMissingMembers());
+            found.Document.Should().BeEquivalentTo(claim.Document.ToDomain());
         }
 
         [Test]

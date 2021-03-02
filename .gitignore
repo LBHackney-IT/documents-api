@@ -60,6 +60,7 @@ bin/
 tmp/
 .vs/
 /documents-api.Tests/Properties/launchSettings.json
+/DocumentsApi/V1/Node/node_modules
 
 .fake
 .ionide

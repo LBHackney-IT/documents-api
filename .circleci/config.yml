@@ -142,7 +142,7 @@ jobs:
           command: dotnet tool install dotnet-format --tool-path ./dotnet-format-local/
       - run:
           name: Run formatter check
-          command: ./dotnet-format-local/dotnet-format --dry-run --check
+          command: ./dotnet-format-local/dotnet-format --check
 
   build-and-test:
     executor: docker-python
@@ -203,7 +203,6 @@ jobs:
       - migrate-database:
           stage: "production"
 
-
 workflows:
   check-and-deploy-staging-and-production:
     jobs:
@@ -215,7 +214,7 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-staging-context
           requires:
-              - build-and-test
+            - build-and-test
           filters:
             branches:
               only:
@@ -238,7 +237,7 @@ workflows:
       - assume-role-production:
           context: api-assume-role-production-context
           requires:
-              - permit-production-release
+            - permit-production-release
       - terraform-init-and-apply-to-production:
           requires:
             - assume-role-production

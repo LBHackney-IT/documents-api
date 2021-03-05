@@ -10,6 +10,7 @@ provider:
         throttle:
           burstLimit: 200
           rateLimit: 100
+  timeout: 30
   environment:
     CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password~true}
     BUCKET_NAME: ${self:service}-${self:provider.stage}-bucket

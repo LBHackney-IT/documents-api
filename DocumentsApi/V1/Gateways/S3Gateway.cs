@@ -59,7 +59,7 @@ namespace DocumentsApi.V1.Gateways
             }
             catch (AmazonS3Exception e)
             {
-                Console.WriteLine("Error when retrieving the presigned URL: ", e.Message);
+                Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
             }
             return urlString;
         }

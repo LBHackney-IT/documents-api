@@ -17,11 +17,17 @@ namespace DocumentsApi.V1.Controllers
     {
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
+        private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
 
-        public ClaimsController(ICreateClaimUseCase createClaimUseCase, IFindClaimByIdUseCase findClaimByIdUseCase)
+        public ClaimsController(
+            ICreateClaimUseCase createClaimUseCase,
+            IFindClaimByIdUseCase findClaimByIdUseCase,
+            IDownloadDocumentUseCase downloadDocumentUseCase
+        )
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
+            _downloadDocumentUseCase = downloadDocumentUseCase;
         }
 
         /// <summary>
@@ -58,6 +64,27 @@ namespace DocumentsApi.V1.Controllers
             {
                 var result = _findClaimByIdUseCase.Execute(id);
                 return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new claim and document
+        /// </summary>
+        /// <response code="201">Saved</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpPost]
+        [Route("{claimId}/download_links")]
+        public IActionResult DownloadDocument([FromRoute] Guid claimId, [Required][FromBody] Guid documentId)
+        {
+            try
+            {
+                var result = _downloadDocumentUseCase.Execute(documentId);
+                return Created(new Uri($"/claims/{claimId}/download_links", UriKind.Relative), result);
             }
             catch (NotFoundException ex)
             {

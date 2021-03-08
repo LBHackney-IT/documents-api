@@ -6,6 +6,8 @@ using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
+using Amazon.S3.Model;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -38,6 +40,28 @@ namespace DocumentsApi.V1.Gateways
         {
             var meta = await _s3.GetObjectMetadataAsync(_options.DocumentsBucketName, key).ConfigureAwait(true);
             return meta.Headers.ContentType;
+        }
+
+        // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
+        [SuppressMessage("ReSharper", "CA1055")]
+        public string GeneratePreSignedDownloadUrl(Document document)
+        {
+            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
+            {
+                BucketName = _options.DocumentsBucketName,
+                Key = document.Id.ToString(),
+                Expires = DateTime.Now.AddMinutes(10)
+            };
+            var urlString = "";
+            try
+            {
+                urlString = _s3.GetPreSignedURL(request);
+            }
+            catch (AmazonS3Exception e)
+            {
+                Console.WriteLine("Error when retrieving the presigned URL: ", e.Message);
+            }
+            return urlString;
         }
     }
 }

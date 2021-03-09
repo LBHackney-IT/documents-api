@@ -5,6 +5,6 @@ namespace DocumentsApi.V1.UseCase.Interfaces
 {
     public interface IDownloadDocumentUseCase
     {
-        public string Execute(Guid documentId);
+        public string Execute(string documentId);
     }
 }

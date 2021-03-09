@@ -16,13 +16,14 @@ namespace DocumentsApi.V1.UseCase
             _documentsGateway = documentsGateway;
         }
 
-        public string Execute(Guid documentId)
+        public string Execute(string documentId)
         {
-            var document = _documentsGateway.FindDocument(documentId);
+            var documentGuid = new Guid(documentId);
+            var document = _documentsGateway.FindDocument(documentGuid);
 
             if (document == null)
             {
-                throw new NotFoundException($"Cannot find document with ID: {documentId}");
+                throw new NotFoundException($"Cannot find document with ID: {documentGuid}");
             }
 
             return _s3Gateway.GeneratePreSignedDownloadUrl(document);

@@ -104,5 +104,40 @@ namespace DocumentsApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(404);
         }
 
+        [Test]
+        public async Task ReturnsDownloadUrlWhenDocumentIsFound()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            claim.Id = Guid.NewGuid();
+            var document = TestDataHelper.CreateDocument().ToEntity();
+            DatabaseContext.Add(document);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/claims/{claim.Id}/download_links", UriKind.Relative);
+            string body = "{" +
+                          $"\"documentId\": \"{document.Id}\"" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(201);
+        }
+
+        [Test]
+        public async Task Returns404WhenCannotFindDocument()
+        {
+            var claimId = Guid.NewGuid();
+            var documentId = Guid.NewGuid();
+            var uri = new Uri($"api/v1/claims/{claimId}/download_links", UriKind.Relative);
+            string body = "{" +
+                          $"\"documentId\": \"{documentId}\"" +
+                          "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+        }
+
     }
 }

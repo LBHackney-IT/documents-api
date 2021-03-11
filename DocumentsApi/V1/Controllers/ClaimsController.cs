@@ -90,6 +90,10 @@ namespace DocumentsApi.V1.Controllers
             {
                 return NotFound(ex.Message);
             }
+            catch (ArgumentException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
     }

@@ -26,7 +26,18 @@ namespace DocumentsApi.V1.UseCase
                 throw new NotFoundException($"Cannot find document with ID: {documentGuid}");
             }
 
-            return _s3Gateway.GeneratePreSignedDownloadUrl(document);
+            var result = "";
+
+            try
+            {
+                result = _s3Gateway.GeneratePreSignedDownloadUrl(document);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
+            }
+
+            return result;
         }
     }
 }

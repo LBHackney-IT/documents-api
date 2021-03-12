@@ -44,6 +44,7 @@ namespace DocumentsApi.V1.Gateways
 
         // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
         [SuppressMessage("ReSharper", "CA1055")]
+        [SuppressMessage("ReSharper", "CA2200")]
         public string GeneratePreSignedDownloadUrl(Document document)
         {
             GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
@@ -60,6 +61,7 @@ namespace DocumentsApi.V1.Gateways
             catch (AmazonS3Exception e)
             {
                 Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
+                throw e;
             }
             return urlString;
         }

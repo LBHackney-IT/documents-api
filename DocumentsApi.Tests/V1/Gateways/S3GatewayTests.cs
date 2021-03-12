@@ -79,9 +79,9 @@ namespace DocumentsApi.Tests.V1.Gateways
         {
             var document = TestDataHelper.CreateDocument();
             document.Id = Guid.NewGuid();
-            _s3.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Throws<ArgumentNullException>();
+            _s3.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Throws(new AmazonS3Exception("Error retrieving download url"));
             Func<string> testDelegate = () => _classUnderTest.GeneratePreSignedDownloadUrl(document);
-            testDelegate.Should().Throw<ArgumentNullException>();
+            testDelegate.Should().Throw<AmazonS3Exception>();
         }
     }
 }

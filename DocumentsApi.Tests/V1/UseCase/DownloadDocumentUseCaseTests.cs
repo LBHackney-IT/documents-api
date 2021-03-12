@@ -7,6 +7,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using DocumentsApi.V1.Domain;
+using Amazon.S3;
 
 namespace DocumentsApi.Tests.V1.UseCase
 {
@@ -47,6 +48,19 @@ namespace DocumentsApi.Tests.V1.UseCase
             Func<string> execute = () => _classUnderTest.Execute(documentId.ToString());
 
             execute.Should().Throw<NotFoundException>();
+        }
+
+        [Test]
+        public void ThrowsAmazonS3ExceptionIfCannotRetrieveDownloadLink()
+        {
+            var documentId = Guid.NewGuid();
+            var document = TestDataHelper.CreateDocument();
+            document.Id = documentId;
+            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
+            _s3Gateway.Setup(x => x.GeneratePreSignedDownloadUrl(It.IsAny<Document>())).Throws(new AmazonS3Exception("Error retrieving the download link"));
+            Func<string> execute = () => _classUnderTest.Execute(documentId.ToString());
+
+            execute.Should().Throw<AmazonS3Exception>();
         }
     }
 }

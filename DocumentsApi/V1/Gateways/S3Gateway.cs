@@ -58,7 +58,7 @@ namespace DocumentsApi.V1.Gateways
             {
                 urlString = _s3.GetPreSignedURL(request);
             }
-            catch (ArgumentException e)
+            catch (AmazonS3Exception e)
             {
                 Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
                 throw e;

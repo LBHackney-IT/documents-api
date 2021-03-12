@@ -6,6 +6,7 @@ using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Amazon.S3;
 
 namespace DocumentsApi.V1.Controllers
 {
@@ -90,9 +91,9 @@ namespace DocumentsApi.V1.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (ArgumentException e)
+            catch (AmazonS3Exception e)
             {
-                return NotFound(e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 

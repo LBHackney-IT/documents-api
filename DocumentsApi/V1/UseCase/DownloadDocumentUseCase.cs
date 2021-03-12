@@ -2,6 +2,8 @@ using System;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
+using Amazon.S3;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DocumentsApi.V1.UseCase
 {
@@ -16,6 +18,7 @@ namespace DocumentsApi.V1.UseCase
             _documentsGateway = documentsGateway;
         }
 
+        [SuppressMessage("ReSharper", "CA2200")]
         public string Execute(string documentId)
         {
             var documentGuid = new Guid(documentId);
@@ -32,9 +35,10 @@ namespace DocumentsApi.V1.UseCase
             {
                 result = _s3Gateway.GeneratePreSignedDownloadUrl(document);
             }
-            catch (ArgumentException e)
+            catch (AmazonS3Exception e)
             {
                 Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
+                throw e;
             }
 
             return result;

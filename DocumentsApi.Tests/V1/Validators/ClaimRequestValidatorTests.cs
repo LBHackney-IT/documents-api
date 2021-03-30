@@ -66,7 +66,7 @@ namespace DocumentsApi.Tests.V1.Validators
         public void FailsWithInvalidRetentionDateInPast()
         {
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.RetentionExpiresAt, DateTime.Now.AddDays(-1))
+                .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(-1))
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeFalse();
@@ -76,7 +76,7 @@ namespace DocumentsApi.Tests.V1.Validators
         public void ValidatesAValidRequest()
         {
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.RetentionExpiresAt, DateTime.Now.AddDays(1))
+                .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(1))
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();

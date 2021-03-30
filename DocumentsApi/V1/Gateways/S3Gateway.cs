@@ -51,7 +51,7 @@ namespace DocumentsApi.V1.Gateways
             {
                 BucketName = _options.DocumentsBucketName,
                 Key = document.Id.ToString(),
-                Expires = DateTime.Now.AddMinutes(10)
+                Expires = DateTime.UtcNow.AddMinutes(10)
             };
             var urlString = "";
             try

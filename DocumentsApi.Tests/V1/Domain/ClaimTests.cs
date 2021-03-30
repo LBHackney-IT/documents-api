@@ -11,7 +11,7 @@ namespace DocumentsApi.Tests.V1.Domain
         [Test]
         public void ExpiresIsTrueWhenExpired()
         {
-            var claim = new Claim { RetentionExpiresAt = DateTime.Now.AddDays(-2) };
+            var claim = new Claim { RetentionExpiresAt = DateTime.UtcNow.AddDays(-2) };
 
             claim.Expired.Should().BeTrue();
         }
@@ -19,7 +19,7 @@ namespace DocumentsApi.Tests.V1.Domain
         [Test]
         public void ExpiresIsFalseWhenNotExpired()
         {
-            var claim = new Claim { RetentionExpiresAt = DateTime.Now.AddDays(2) };
+            var claim = new Claim { RetentionExpiresAt = DateTime.UtcNow.AddDays(2) };
 
             claim.Expired.Should().BeFalse();
         }

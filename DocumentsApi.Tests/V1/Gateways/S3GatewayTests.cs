@@ -67,7 +67,7 @@ namespace DocumentsApi.Tests.V1.Gateways
             var documentId = Guid.NewGuid();
             var document = TestDataHelper.CreateDocument();
             document.Id = documentId;
-            document.UploadedAt = DateTime.Now;
+            document.UploadedAt = DateTime.UtcNow;
             var expected = "www.google.com";
             _s3.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expected);
             var result = _classUnderTest.GeneratePreSignedDownloadUrl(document);

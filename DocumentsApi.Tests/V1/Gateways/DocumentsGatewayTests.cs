@@ -46,7 +46,7 @@ namespace DocumentsApi.Tests.V1.Gateways
             created.FileSize.Should().Be(request.FileSize);
             created.FileType.Should().Be(request.FileType);
             created.Id.Should().NotBeEmpty();
-            created.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
+            created.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, 1000);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace DocumentsApi.Tests.V1.Gateways
             var created = _classUnderTest.CreateClaim(request);
 
             created.Id.Should().NotBeEmpty();
-            created.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
+            created.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, 1000);
         }
 
         [Test]

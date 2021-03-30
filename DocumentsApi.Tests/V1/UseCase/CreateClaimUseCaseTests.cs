@@ -32,7 +32,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         public void CreatesAClaim()
         {
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.RetentionExpiresAt, DateTime.Now.AddDays(1))
+                .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(1))
                 .Create();
 
             Func<ClaimResponse> execute = () => _classUnderTest.Execute(request);
@@ -46,7 +46,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         public void ReturnsAClaimResponse()
         {
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.RetentionExpiresAt, DateTime.Now.AddDays(1))
+                .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(1))
                 .Create();
 
             var result = _classUnderTest.Execute(request);

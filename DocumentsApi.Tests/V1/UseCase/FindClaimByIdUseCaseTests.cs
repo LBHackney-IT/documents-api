@@ -49,7 +49,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             var claim = TestDataHelper.CreateClaim();
             claim.Id = Guid.NewGuid();
-            claim.RetentionExpiresAt = DateTime.Now.AddDays(-2);
+            claim.RetentionExpiresAt = DateTime.UtcNow.AddDays(-2);
             _documentsGateway.Setup(x => x.FindClaim(claim.Id)).Returns(claim);
 
             Func<ClaimResponse> execute = () => _classUnderTest.Execute(claim.Id);

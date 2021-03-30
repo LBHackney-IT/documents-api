@@ -28,7 +28,7 @@ namespace DocumentsApi.Tests.V1.Infrastructure
 
             result.Should().Be(databaseEntity);
             result?.Id.Should().NotBeEmpty();
-            result?.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
+            result?.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, 1000);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace DocumentsApi.Tests.V1.Infrastructure
             DatabaseContext.Claims.Add(entity);
             DatabaseContext.SaveChanges();
 
-            entity.Document.CreatedAt.Should().BeCloseTo(DateTime.Now, 1000);
+            entity.Document.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, 1000);
             entity.Document.Id.Should().NotBeEmpty();
 
             DatabaseContext.Documents.ToList().First().Should().Be(entity.Document);

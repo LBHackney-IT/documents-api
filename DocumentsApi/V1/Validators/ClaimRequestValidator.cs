@@ -11,7 +11,7 @@ namespace DocumentsApi.V1.Validators
             RuleFor(x => x.ServiceAreaCreatedBy).NotEmpty().NotNull();
             RuleFor(x => x.UserCreatedBy).NotEmpty().NotNull();
             RuleFor(x => x.ApiCreatedBy).NotEmpty().NotNull();
-            RuleFor(x => x.RetentionExpiresAt).NotNull().GreaterThan(DateTime.Now);
+            RuleFor(x => x.RetentionExpiresAt).NotNull().GreaterThan(DateTime.UtcNow);
         }
     }
 }

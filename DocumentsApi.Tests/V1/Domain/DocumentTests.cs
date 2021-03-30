@@ -19,7 +19,7 @@ namespace DocumentsApi.Tests.V1.Domain
         [Test]
         public void UploadedIsTrueWhenFileIsAlreadyUploaded()
         {
-            _classUnderTest.UploadedAt = DateTime.Now;
+            _classUnderTest.UploadedAt = DateTime.UtcNow;
 
             _classUnderTest.Uploaded.Should().BeTrue();
         }

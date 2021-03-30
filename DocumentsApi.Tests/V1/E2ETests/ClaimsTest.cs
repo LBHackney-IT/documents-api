@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Factories;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -18,7 +17,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         public async Task CanCreateClaimsWithValidParams()
         {
             var uri = new Uri($"api/v1/claims", UriKind.Relative);
-            var retentionExpiresAt = DateTime.Now.AddDays(3);
+            var retentionExpiresAt = DateTime.UtcNow.AddDays(3);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(retentionExpiresAt);
             string body = "{" +
                 "\"serviceAreaCreatedBy\": \"development-team-staging\"," +
@@ -36,8 +35,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var created = DatabaseContext.Claims.First();
             var document = DatabaseContext.Documents.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
-            var formattedDocumentCreatedAt = JsonConvert.SerializeObject(document.CreatedAt.ToDateTimeOffset());
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedDocumentCreatedAt = JsonConvert.SerializeObject(document.CreatedAt);
             string expected = "{" +
                               $"\"id\":\"{created.Id}\"," +
                               $"\"createdAt\":{formattedCreatedAt}," +
@@ -61,7 +60,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         public async Task ReturnsBadRequestWithInvalidParams()
         {
             var uri = new Uri($"api/v1/claims", UriKind.Relative);
-            var retentionExpiresAt = DateTime.Now.AddDays(3);
+            var retentionExpiresAt = DateTime.UtcNow.AddDays(3);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(retentionExpiresAt);
             string body = "{" +
                           "\"serviceAreaCreatedBy\": \"development-team-staging\"," +

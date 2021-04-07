@@ -29,6 +29,7 @@ namespace DocumentsApi.Tests.V1
                 .Without(x => x.CreatedAt)
                 .With(x => x.Document, document)
                 .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(2))
+                .With(x => x.ValidUntil, DateTime.UtcNow.AddDays(2))
                 .Create();
         }
 

@@ -45,6 +45,7 @@ namespace DocumentsApi.V1.UseCase
                 ServiceAreaCreatedBy = request.ServiceAreaCreatedBy,
                 UserCreatedBy = request.UserCreatedBy,
                 RetentionExpiresAt = request.RetentionExpiresAt,
+                ValidUntil = DateTime.UtcNow.AddMonths(3), // temporary until we source it from ClaimRequest
                 // TODO: Support creating claims for existing documents
                 Document = new Document()
             };

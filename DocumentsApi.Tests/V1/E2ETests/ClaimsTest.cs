@@ -36,6 +36,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var document = DatabaseContext.Documents.First();
 
             var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedValidUntil = JsonConvert.SerializeObject(created.ValidUntil);
             var formattedDocumentCreatedAt = JsonConvert.SerializeObject(document.CreatedAt);
             string expected = "{" +
                               $"\"id\":\"{created.Id}\"," +
@@ -50,7 +51,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"serviceAreaCreatedBy\":\"development-team-staging\"," +
                               "\"userCreatedBy\":\"staff@test.hackney.gov.uk\"," +
                               "\"apiCreatedBy\":\"evidence-api\"," +
-                              $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}" +
+                              $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
+                              $"\"validUntil\":{formattedValidUntil}" +
                               "}";
 
             json.Should().Be(expected);

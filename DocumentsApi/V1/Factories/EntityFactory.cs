@@ -27,7 +27,8 @@ namespace DocumentsApi.V1.Factories
                 ApiCreatedBy = domain.ApiCreatedBy,
                 UserCreatedBy = domain.UserCreatedBy,
                 ServiceAreaCreatedBy = domain.ServiceAreaCreatedBy,
-                RetentionExpiresAt = domain.RetentionExpiresAt
+                RetentionExpiresAt = domain.RetentionExpiresAt,
+                ValidUntil = domain.ValidUntil
             };
         }
     }

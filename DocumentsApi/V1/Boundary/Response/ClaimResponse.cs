@@ -12,5 +12,6 @@ namespace DocumentsApi.V1.Boundary.Response
         public string UserCreatedBy { get; set; }
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
+        public DateTime ValidUntil { get; set; }
     }
 }

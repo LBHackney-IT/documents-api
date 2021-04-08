@@ -41,7 +41,8 @@ namespace DocumentsApi.Tests.V1.UseCase
             result.ValidUntil.Should().Be(validUntil);
         }
 
-        [Test] public void ThrowsAnErrorWhenRequestIsInvalid()
+        [Test]
+        public void ThrowsAnErrorWhenRequestIsInvalid()
         {
             // Arrange
             var id = Guid.NewGuid();

@@ -1,10 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using DocumentsApi.V1.Boundary.Request;
-using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Amazon.S3;
 
@@ -19,16 +17,19 @@ namespace DocumentsApi.V1.Controllers
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
         private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
+        private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
-            IDownloadDocumentUseCase downloadDocumentUseCase
+            IDownloadDocumentUseCase downloadDocumentUseCase,
+            IUpdateClaimStateUseCase updateClaimStateUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
             _downloadDocumentUseCase = downloadDocumentUseCase;
+            _updateClaimStateUseCase = updateClaimStateUseCase;
         }
 
         /// <summary>
@@ -65,6 +66,32 @@ namespace DocumentsApi.V1.Controllers
             {
                 var result = _findClaimByIdUseCase.Execute(id);
                 return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Updates the state of a claim
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Claim not found</response>
+        [HttpPatch]
+        [Route("{id}")]
+        public IActionResult UpdateClaimState([Required][FromRoute] Guid id, [FromBody] ClaimUpdateRequest request)
+        {
+            try
+            {
+                var result = _updateClaimStateUseCase.Execute(id, request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (NotFoundException ex)
             {

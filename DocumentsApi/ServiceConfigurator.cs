@@ -1,4 +1,3 @@
-using System;
 using Amazon;
 using Amazon.S3;
 using DocumentsApi.V1.Gateways;
@@ -45,6 +44,7 @@ namespace DocumentsApi
             services.AddScoped<IUpdateUploadedDocumentUseCase, UpdateUploadedDocumentUseCase>();
             services.AddScoped<IFindClaimByIdUseCase, FindClaimByIdUseCase>();
             services.AddScoped<IDownloadDocumentUseCase, DownloadDocumentUseCase>();
+            services.AddScoped<IUpdateClaimStateUseCase, UpdateClaimStateUseCase>();
         }
     }
 }

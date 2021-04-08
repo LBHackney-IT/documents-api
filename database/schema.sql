@@ -44,4 +44,7 @@ ALTER TABLE documents ADD uploaded_at timestamp without time zone NULL;
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210118145413_AddUploadedAtToDocuments', '3.1.7');
 
+ALTER TABLE claims ADD valid_until timestamp without time zone NOT NULL;
 
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210407123814_AddValidUntilToClaims', '3.1.7');

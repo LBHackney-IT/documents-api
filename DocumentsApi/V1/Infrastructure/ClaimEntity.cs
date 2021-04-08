@@ -37,5 +37,9 @@ namespace DocumentsApi.V1.Infrastructure
         [Required]
         [Column("retention_expires_at")]
         public DateTime RetentionExpiresAt { get; set; }
+
+        [Required]
+        [Column("valid_until")]
+        public DateTime ValidUntil { get; set; }
     }
 }

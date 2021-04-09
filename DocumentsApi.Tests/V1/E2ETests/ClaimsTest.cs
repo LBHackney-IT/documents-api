@@ -170,6 +170,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 opts => opts.Excluding(x => x.ValidUntil));
             result.ValidUntil.Should().Be(validUntil);
             result.Document.Should().BeEquivalentTo(claim.Document.ToDomain().ToResponse());
+            // Check we have persisted the updated claim with a different ValidUntil date
+            DatabaseContext.Claims.Find(claim.Id).ValidUntil.Should().Be(validUntil);
         }
 
         [Test]

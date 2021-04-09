@@ -61,6 +61,7 @@ namespace DocumentsApi.V1.Gateways
         public Claim SaveClaim(Claim request)
         {
             var entity = request.ToEntity();
+            _databaseContext.Entry(entity).State = EntityState.Modified;
             _databaseContext.SaveChanges();
 
             return entity.ToDomain();

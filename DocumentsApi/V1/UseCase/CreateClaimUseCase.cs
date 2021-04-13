@@ -6,7 +6,6 @@ using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways.Interfaces;
-using DocumentsApi.V1.Infrastructure;
 using DocumentsApi.V1.UseCase.Interfaces;
 using DocumentsApi.V1.Validators;
 
@@ -45,7 +44,7 @@ namespace DocumentsApi.V1.UseCase
                 ServiceAreaCreatedBy = request.ServiceAreaCreatedBy,
                 UserCreatedBy = request.UserCreatedBy,
                 RetentionExpiresAt = request.RetentionExpiresAt,
-                ValidUntil = DateTime.UtcNow.AddMonths(3), // temporary until we source it from ClaimRequest
+                ValidUntil = request.ValidUntil,
                 // TODO: Support creating claims for existing documents
                 Document = new Document()
             };

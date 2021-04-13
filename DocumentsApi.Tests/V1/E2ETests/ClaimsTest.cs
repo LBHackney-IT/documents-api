@@ -17,13 +17,14 @@ namespace DocumentsApi.Tests.V1.E2ETests
         public async Task CanCreateClaimsWithValidParams()
         {
             var uri = new Uri($"api/v1/claims", UriKind.Relative);
-            var retentionExpiresAt = DateTime.UtcNow.AddDays(3);
-            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(retentionExpiresAt);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
+            var formattedValidUntil = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(4));
             string body = "{" +
                 "\"serviceAreaCreatedBy\": \"development-team-staging\"," +
                 "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
                 "\"apiCreatedBy\": \"evidence-api\"," +
-                $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}" +
+                $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
+                $"\"validUntil\": {formattedValidUntil}" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -36,7 +37,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var document = DatabaseContext.Documents.First();
 
             var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
-            var formattedValidUntil = JsonConvert.SerializeObject(created.ValidUntil);
             var formattedDocumentCreatedAt = JsonConvert.SerializeObject(document.CreatedAt);
             string expected = "{" +
                               $"\"id\":\"{created.Id}\"," +
@@ -137,6 +137,62 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
 
+            response.StatusCode.Should().Be(404);
+        }
+
+        [Test]
+        public async Task CanUpdateClaimWithValidParams()
+        {
+            // Arrange
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            DatabaseContext.Add(claim);
+            DatabaseContext.SaveChanges();
+
+            var validUntil = DateTime.UtcNow.AddDays(4);
+            var formattedValidUntil = JsonConvert.SerializeObject(validUntil);
+            string body = "{" +
+                          $"\"validUntil\": {formattedValidUntil}" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/claims/{claim.Id}", UriKind.Relative);
+
+            // Act
+            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+
+            // Assert
+            response.StatusCode.Should().Be(200);
+
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<ClaimResponse>(json);
+
+            result.Should().BeEquivalentTo(claim.ToDomain().ToResponse(),
+                opts => opts.Excluding(x => x.ValidUntil));
+            result.ValidUntil.Should().Be(validUntil);
+            result.Document.Should().BeEquivalentTo(claim.Document.ToDomain().ToResponse());
+            // Check we have persisted the updated claim with a different ValidUntil date
+            DatabaseContext.Claims.Find(claim.Id).ValidUntil.Should().Be(validUntil);
+        }
+
+        [Test]
+        public async Task Returns404WhenCannotFindClaim()
+        {
+            // Arrange - do not persist the claim
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+
+            var validUntil = DateTime.UtcNow.AddDays(4);
+            var formattedValidUntil = JsonConvert.SerializeObject(validUntil);
+            string body = "{" +
+                          $"\"validUntil\": {formattedValidUntil}" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/claims/{claim.Id}", UriKind.Relative);
+
+            // Act
+            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+
+            // Assert
             response.StatusCode.Should().Be(404);
         }
 

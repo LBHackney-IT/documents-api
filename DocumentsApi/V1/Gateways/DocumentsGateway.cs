@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways.Interfaces;
@@ -56,6 +55,15 @@ namespace DocumentsApi.V1.Gateways
             entity.Document = document;
 
             _databaseContext.Entry(entity).State = EntityState.Detached;
+            return entity.ToDomain();
+        }
+
+        public Claim SaveClaim(Claim request)
+        {
+            var entity = request.ToEntity();
+            _databaseContext.Entry(entity).State = EntityState.Modified;
+            _databaseContext.SaveChanges();
+
             return entity.ToDomain();
         }
     }

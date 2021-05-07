@@ -161,11 +161,11 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_STAGING
-  assume-role-production:
-    executor: docker-python
-    steps:
-      - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_PRODUCTION
+  # assume-role-production:
+  #   executor: docker-python
+  #   steps:
+  #     - assume-role-and-persist-workspace:
+  #         aws-account: $AWS_ACCOUNT_PRODUCTION
 
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
@@ -173,11 +173,11 @@ jobs:
       - terraform-init-then-apply:
           environment: "staging"
 
-  terraform-init-and-apply-to-production:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: "production"
+  # terraform-init-and-apply-to-production:
+  #   executor: docker-terraform
+  #   steps:
+  #     - terraform-init-then-apply:
+  #         environment: "production"
 
   deploy-to-staging:
     executor: docker-dotnet
@@ -185,11 +185,11 @@ jobs:
       - deploy-lambda:
           stage: "staging"
 
-  deploy-to-production:
-    executor: docker-dotnet
-    steps:
-      - deploy-lambda:
-          stage: "production"
+  # deploy-to-production:
+  #   executor: docker-dotnet
+  #   steps:
+  #     - deploy-lambda:
+  #         stage: "production"
 
   migrate-database-staging:
     executor: docker-dotnet
@@ -197,11 +197,11 @@ jobs:
       - migrate-database:
           stage: "staging"
 
-  migrate-database-production:
-    executor: docker-dotnet
-    steps:
-      - migrate-database:
-          stage: "production"
+  # migrate-database-production:
+  #   executor: docker-dotnet
+  #   steps:
+  #     - migrate-database:
+  #         stage: "production"
 
 workflows:
   check-and-deploy-staging-and-production:
@@ -212,7 +212,7 @@ workflows:
 
       # Staging deploy
       - assume-role-staging:
-          context: api-assume-role-staging-context
+          context: api-assume-role-document-evidence-store-staging-context
           requires:
             - build-and-test
           filters:
@@ -227,23 +227,23 @@ workflows:
             - terraform-init-and-apply-to-staging
       - deploy-to-staging:
           requires:
-            - assume-role-staging
+            - terraform-init-and-apply-to-staging
 
       # Production deploy
-      - permit-production-release:
-          type: approval
-          requires:
-            - deploy-to-staging
-      - assume-role-production:
-          context: api-assume-role-production-context
-          requires:
-            - permit-production-release
-      - terraform-init-and-apply-to-production:
-          requires:
-            - assume-role-production
-      - migrate-database-production:
-          requires:
-            - terraform-init-and-apply-to-production
-      - deploy-to-production:
-          requires:
-            - terraform-init-and-apply-to-production
+      # - permit-production-release:
+      #     type: approval
+      #     requires:
+      #       - deploy-to-staging
+      # - assume-role-production:
+      #     context: api-assume-role-production-context
+      #     requires:
+      #       - permit-production-release
+      # - terraform-init-and-apply-to-production:
+      #     requires:
+      #       - assume-role-production
+      # - migrate-database-production:
+      #     requires:
+      #       - terraform-init-and-apply-to-production
+      # - deploy-to-production:
+      #     requires:
+      #       - terraform-init-and-apply-to-production

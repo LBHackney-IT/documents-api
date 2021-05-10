@@ -66,7 +66,7 @@ data "aws_ssm_parameter" "documents_postgres_port" {
 module "postgres_db_staging" {
   source               = "github.com/LBHackney-IT/aws-hackney-common-terraform.git//modules/database/postgres"
   environment_name     = "staging"
-  vpc_id               = data.aws_vpc.staging_vpc.id
+  # vpc_id               = data.aws_vpc.staging_vpc.id
   db_identifier        = "documents-api"
   db_name              = "documents_api"
   db_port              = data.aws_ssm_parameter.documents_postgres_port.value

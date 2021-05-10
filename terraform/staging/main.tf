@@ -31,19 +31,19 @@ terraform {
 
 /*    VPC SET UP    */
 
-data "aws_vpc" "staging_vpc" {
-  tags = {
-    Name = "vpc-staging-apis-staging"
-  }
-}
+# data "aws_vpc" "staging_vpc" {
+#   tags = {
+#     Name = "vpc-staging-apis-staging"
+#   }
+# }
 
-data "aws_subnet_ids" "staging" {
-  vpc_id = data.aws_vpc.staging_vpc.id
-  filter {
-    name   = "tag:Type"
-    values = ["private"]
-  }
-}
+# data "aws_subnet_ids" "staging" {
+#   vpc_id = data.aws_vpc.staging_vpc.id
+#   filter {
+#     name   = "tag:Type"
+#     values = ["private"]
+#   }
+# }
 
 /*    POSTGRES SET UP    */
 

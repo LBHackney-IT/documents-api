@@ -63,23 +63,23 @@ data "aws_ssm_parameter" "documents_postgres_port" {
   name = "/documents-api/staging/postgres-port"
 }
 
-module "postgres_db_staging" {
-  source               = "github.com/LBHackney-IT/aws-hackney-common-terraform.git//modules/database/postgres"
-  environment_name     = "staging"
-  # vpc_id               = data.aws_vpc.staging_vpc.id
-  db_identifier        = "documents-api"
-  db_name              = "documents_api"
-  db_port              = data.aws_ssm_parameter.documents_postgres_port.value
-  subnet_ids           = data.aws_subnet_ids.staging.ids
-  db_engine            = "postgres"
-  db_engine_version    = "11.10"
-  db_instance_class    = "db.t2.small"
-  db_allocated_storage = 40
-  maintenance_window   = "sun:10:00-sun:10:30"
-  db_username          = data.aws_ssm_parameter.documents_postgres_username.value
-  db_password          = data.aws_ssm_parameter.documents_postgres_db_password.value
-  storage_encrypted    = true
-  multi_az             = false //only true if production deployment
-  publicly_accessible  = false
-  project_name         = "platform apis"
-}
+# module "postgres_db_staging" {
+#   source               = "github.com/LBHackney-IT/aws-hackney-common-terraform.git//modules/database/postgres"
+#   environment_name     = "staging"
+#   vpc_id               = data.aws_vpc.staging_vpc.id
+#   db_identifier        = "documents-api"
+#   db_name              = "documents_api"
+#   db_port              = data.aws_ssm_parameter.documents_postgres_port.value
+#   subnet_ids           = data.aws_subnet_ids.staging.ids
+#   db_engine            = "postgres"
+#   db_engine_version    = "11.10"
+#   db_instance_class    = "db.t2.small"
+#   db_allocated_storage = 40
+#   maintenance_window   = "sun:10:00-sun:10:30"
+#   db_username          = data.aws_ssm_parameter.documents_postgres_username.value
+#   db_password          = data.aws_ssm_parameter.documents_postgres_db_password.value
+#   storage_encrypted    = true
+#   multi_az             = false //only true if production deployment
+#   publicly_accessible  = false
+#   project_name         = "platform apis"
+# }

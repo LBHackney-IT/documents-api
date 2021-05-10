@@ -34,15 +34,13 @@ provider:
               - POST
             AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
 
-package:
-  artifact: ./bin/release/netcoreapp3.1/documents-api.zip
-  individually: true
-
 functions:
   DocumentsApi:
     name: ${self:service}-${self:provider.stage}
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
+    package:
+      artifact: ./bin/release/netcoreapp3.1/documents-api.zip
     layers:
       - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
     events:
@@ -56,10 +54,24 @@ functions:
     name: ${self:service}-${self:provider.stage}-s3
     handler: DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated
     role: lambdaExecutionRole
+    package:
+      artifact: ./bin/release/netcoreapp3.1/documents-api.zip
     events:
       - s3:
           bucket: documentsBucket
           event: s3:ObjectCreated:*
+  DocumentsOrchestrator:
+    runtime: python3.8
+    name: ${self:service}-${self:provider.stage}-documents-orchestrator
+    handler: lambda-orchestrator.lambda_handler
+    package:
+      artifact: lambda-orchestrator.zip
+    role: lambdaExecutionRole
+    events:
+      - s3:
+          bucket: documentsBucket
+          event: s3:ObjectCreated:*
+          prefix: pre-scan
 
 resources:
   Resources:

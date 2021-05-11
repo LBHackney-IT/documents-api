@@ -34,6 +34,10 @@ provider:
               - POST
             AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
 
+package:
+  artifact: ./bin/release/netcoreapp3.1/documents-api.zip
+  individually: true
+
 functions:
   DocumentsApi:
     name: ${self:service}-${self:provider.stage}

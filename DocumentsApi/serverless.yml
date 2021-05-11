@@ -60,10 +60,6 @@ functions:
     role: lambdaExecutionRole
     package:
       artifact: ./bin/release/netcoreapp3.1/documents-api.zip
-    events:
-      - s3:
-          bucket: documentsBucket
-          event: s3:ObjectCreated:*
   DocumentsOrchestrator:
     runtime: python3.8
     name: ${self:service}-${self:provider.stage}-documents-orchestrator

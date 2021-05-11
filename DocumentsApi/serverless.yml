@@ -2,7 +2,7 @@ service: documents-api
 provider:
   name: aws
   runtime: dotnetcore3.1
-  # vpc: ${self:custom.vpc.${opt:stage}}
+  vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
   usagePlan:
@@ -141,13 +141,13 @@ custom:
       - "http://*.hackney.gov.uk:3000"
     production:
       - "https://*.hackney.gov.uk"
-  # vpc:
-  #   staging:
-  #     securityGroupIds:
-  #       - sg-043c906f42139293d
-  #     subnetIds:
-  #       - subnet-06d3de1bd9181b0d7
-  #       - subnet-0ed7d7713d1127656
+   vpc:
+     staging:
+       securityGroupIds:
+         - sg-099dcf9e7ab2ad118
+       subnetIds:
+         - subnet-0aa5f484db1aa801c
+         - subnet-012870b02db9a3bf8
   #   production:
   #     securityGroupIds:
   #       - sg-060458cddaaa2742a

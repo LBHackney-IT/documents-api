@@ -49,8 +49,12 @@ def lambda_handler(event, context):
    print("Deleting the originial file")
    print("s3_client.delete_object", bucket_name, file_key_name)
    s3_client.delete_object(Bucket=bucket_name, Key=file_key_name)
-
    # now we can delete the file in the pre_scan bucket as it has been copied to post_scan
+
+   response = s3_client.invoke(
+       FunctionName = 'arn:aws:lambda:eu-west-2:549011513230:function:documents-api-staging-s3'
+   )
+   print("s3_client.invoke", response)
 
    return {
        'statusCode': 200,

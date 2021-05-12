@@ -141,13 +141,13 @@ custom:
       - "http://*.hackney.gov.uk:3000"
     production:
       - "https://*.hackney.gov.uk"
-   vpc:
-     staging:
-       securityGroupIds:
-         - sg-099dcf9e7ab2ad118
-       subnetIds:
-         - subnet-0aa5f484db1aa801c
-         - subnet-012870b02db9a3bf8
+    vpc:
+      staging:
+        securityGroupIds:
+          - sg-099dcf9e7ab2ad118
+        subnetIds:
+          - subnet-0aa5f484db1aa801c
+          - subnet-012870b02db9a3bf8
   #   production:
   #     securityGroupIds:
   #       - sg-060458cddaaa2742a

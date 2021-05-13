@@ -32,7 +32,7 @@ namespace DocumentsApi.V1.Gateways
                (see this issue: https://github.com/LBHackney-IT/documents-api/pull/6)
                Can be removed when presigned post policies are available in .NET
              */
-            var policyString = await _nodeServices.InvokeAsync<string>("V1/Node/index.js", _options.DocumentsBucketName, document.Id.ToString(), UrlExpirySeconds).ConfigureAwait(true);
+            var policyString = await _nodeServices.InvokeAsync<string>("V1/Node/index.js", _options.DocumentsBucketName, "pre-scan/" + document.Id.ToString(), UrlExpirySeconds).ConfigureAwait(true);
             return JsonConvert.DeserializeObject<S3UploadPolicy>(policyString);
         }
 
@@ -50,7 +50,7 @@ namespace DocumentsApi.V1.Gateways
             GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
             {
                 BucketName = _options.DocumentsBucketName,
-                Key = document.Id.ToString(),
+                Key = "clean/" + document.Id.ToString(),
                 Expires = DateTime.UtcNow.AddMinutes(10)
             };
             var urlString = "";

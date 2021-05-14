@@ -52,14 +52,15 @@ def lambda_handler(event, context):
    print("s3_client.delete_object", bucket_name, file_key_name)
    s3_client.delete_object(Bucket=bucket_name, Key=file_key_name)
 
+   print("Invoking documents-api-malware-scan-successful", clean_file_key_name)
    event['Records'][0]['s3']['object']['key'] = clean_file_key_name
    response = lambda_client.invoke(
-       FunctionName = 'arn:aws:lambda:eu-west-2:549011513230:function:documents-api-staging-s3',
+       FunctionName = 'documents-api-malware-scan-successful',
        Payload = json.dumps(event)
    )
    print("lambda_client.invoke", response)
 
    return {
        'statusCode': 200,
-       'body': json.dumps('Hello from S3 events Lambda!')
+       'body': json.dumps('Document Orchestrator finished successfully')
    }

@@ -40,7 +40,7 @@ package:
 
 functions:
   # DocumentsApi:
-  #   name: ${self:service}-${self:provider.stage}
+  #   name: ${self:service}
   #   handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
   #   role: lambdaExecutionRole
   #   package:
@@ -54,15 +54,15 @@ functions:
   #         authorizer:
   #           arn: ${ssm:/platform-apis-lambda-authorizer-arn}
   #           type: request
-  DocumentsS3Function:
-    name: ${self:service}-${self:provider.stage}-s3
+  DocumentsMalwareScanSuccessfulFunction:
+    name: ${self:service}-malware-scan-successful
     handler: DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated
     role: lambdaExecutionRole
     package:
       artifact: ./bin/release/netcoreapp3.1/documents-api.zip
   DocumentsOrchestrator:
     runtime: python3.8
-    name: ${self:service}-${self:provider.stage}-documents-orchestrator
+    name: ${self:service}-documents-orchestrator
     handler: lambda-orchestrator.lambda_handler
     package:
       artifact: lambda-orchestrator.zip

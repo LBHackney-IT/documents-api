@@ -131,6 +131,7 @@ resources:
                 Action:
                   - s3:GetObject
                   - s3:PutObject
+                  - s3:DeleteObject
                 Effect: "Allow"
                 Resource:
                   - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"

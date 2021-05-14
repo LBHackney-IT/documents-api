@@ -38,7 +38,7 @@ namespace DocumentsApi.Tests.V1.Gateways
             var expectedPolicy = _fixture.Create<S3UploadPolicy>();
             var expectedPolicyString = JsonConvert.SerializeObject(expectedPolicy);
             _node
-                .Setup(x => x.InvokeAsync<string>("V1/Node/index.js", _options.DocumentsBucketName, document.Id.ToString(), 3600))
+                .Setup(x => x.InvokeAsync<string>("V1/Node/index.js", _options.DocumentsBucketName, "pre-scan/" + document.Id.ToString(), 3600))
                 .ReturnsAsync(expectedPolicyString);
 
             var result = await _classUnderTest.GenerateUploadPolicy(document).ConfigureAwait(true);

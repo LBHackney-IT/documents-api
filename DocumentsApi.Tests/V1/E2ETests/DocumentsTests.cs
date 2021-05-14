@@ -54,7 +54,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(201);
 
-            policy.Fields["key"].Should().Be(_document.Id.ToString());
+            policy.Fields["key"].Should().Be("pre-scan/" + _document.Id.ToString());
             policy.Fields["acl"].Should().Be("private");
             policy.Fields["X-Amz-Server-Side-Encryption"].Should().Be("AES256");
             policy.Fields["X-Amz-Algorithm"].Should().Be("AWS4-HMAC-SHA256");

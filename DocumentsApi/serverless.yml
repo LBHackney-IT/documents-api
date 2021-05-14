@@ -130,7 +130,9 @@ resources:
               Statement:
                 Action:
                   - s3:GetObject
+                  - s3:GetObjectTagging
                   - s3:PutObject
+                  - s3:PutObjectTagging
                   - s3:DeleteObject
                 Effect: "Allow"
                 Resource:

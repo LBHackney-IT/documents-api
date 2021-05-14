@@ -71,7 +71,7 @@ functions:
       - s3:
           bucket: documentsBucket
           event: s3:ObjectCreated:*
-          prefix: pre-scan
+          prefix: pre-scan/
 
 resources:
   Resources:

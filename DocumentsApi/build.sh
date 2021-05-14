@@ -20,4 +20,4 @@ fi
 dotnet restore
 dotnet lambda package --configuration release --framework netcoreapp3.1 --output-package ./bin/release/netcoreapp3.1/documents-api.zip
 
-zip -rv lambda-orchestrator.zip python/
+cd python && zip -rv ../lambda-orchestrator.zip ./*

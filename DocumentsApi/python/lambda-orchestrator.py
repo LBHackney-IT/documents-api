@@ -2,8 +2,9 @@ import json
 import boto3
 import botocore
 
-# boto3 S3 initialization
-s3_client = boto3.client("s3", verify=False)
+# boto3 initialization
+s3_client = boto3.client("s3", verify=False) # todo remove verify once https cert is configured
+lambda_client = boto3.client("lambda")
 
 def lambda_handler(event, context):
    # event contains all information about uploaded object
@@ -26,14 +27,15 @@ def lambda_handler(event, context):
        print("s3_client.download_file", bucket_name, file_key_name, download_path)
        s3_client.download_file(bucket_name, file_key_name, download_path);
 
-   except:
+   except Exception as e:
+        print('An exception occurred: {}'.format(e))
         print("There was an error when attempting to download the file, moving to quarantine")
 
         quarantine_file_key_name = file_key_name.replace('pre-scan/', 'quarantine/')
         print("s3_client.copy_object", copy_source_object, bucket_name, quarantine_file_key_name)
         s3_client.copy_object(CopySource=copy_source_object, Bucket=bucket_name, Key=quarantine_file_key_name)
 
-        print("Deleting the originial file")
+        print("Deleting the original file")
         print("s3_client.delete_object", bucket_name, file_key_name)
         s3_client.delete_object(Bucket=bucket_name, Key=file_key_name)
         return {
@@ -46,15 +48,16 @@ def lambda_handler(event, context):
    print("s3_client.copy_object", copy_source_object, bucket_name, clean_file_key_name)
    s3_client.copy_object(CopySource=copy_source_object, Bucket=bucket_name, Key=clean_file_key_name)
 
-   print("Deleting the originial file")
+   print("Deleting the original file")
    print("s3_client.delete_object", bucket_name, file_key_name)
    s3_client.delete_object(Bucket=bucket_name, Key=file_key_name)
-   # now we can delete the file in the pre_scan bucket as it has been copied to post_scan
 
-   response = s3_client.invoke(
-       FunctionName = 'arn:aws:lambda:eu-west-2:549011513230:function:documents-api-staging-s3'
+   event['Records'][0]['s3']['object']['key'] = clean_file_key_name
+   response = lambda_client.invoke(
+       FunctionName = 'arn:aws:lambda:eu-west-2:549011513230:function:documents-api-staging-s3',
+       Payload = json.dumps(event)
    )
-   print("s3_client.invoke", response)
+   print("lambda_client.invoke", response)
 
    return {
        'statusCode': 200,

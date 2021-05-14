@@ -31,39 +31,43 @@ namespace DocumentsApi.V1.UseCase
         [SuppressMessage("ReSharper", "CA1031")]
         private async Task UpdateDocument(S3EventNotification.S3EventNotificationRecord record)
         {
-            var id = record.S3.Object.Key;
-            Console.WriteLine($"Processing document with ID {id}");
+            var documentKey = record.S3.Object.Key;
+            Console.WriteLine($"Processing key {documentKey}");
+
+            var splitArray = documentKey.Split('/');
+            var documentId = splitArray.Length > 1 ? splitArray[1] : splitArray[0];
+            Console.WriteLine($"Processing document with ID {documentId}");
 
             try
             {
                 var size = record.S3.Object.Size;
                 var uploadedAt = record.EventTime;
-                var document = _documentsGateway.FindDocument(new Guid(id));
+                var document = _documentsGateway.FindDocument(new Guid(documentId));
 
                 if (document == null)
                 {
-                    Console.WriteLine($"Could not find document with ID {id}");
+                    Console.WriteLine($"Could not find document with ID {documentId}");
                     return;
                 }
 
                 if (document.Uploaded)
                 {
-                    Console.WriteLine($"Document with ID {id} has already been uploaded");
+                    Console.WriteLine($"Document with ID {documentId} has already been uploaded");
                     return;
                 }
 
-                var type = await _s3Gateway.GetObjectContentType(id).ConfigureAwait(true);
+                var type = await _s3Gateway.GetObjectContentType(documentId).ConfigureAwait(true);
 
                 document.UploadedAt = uploadedAt;
                 document.FileSize = size;
                 document.FileType = type;
 
                 _documentsGateway.SaveDocument(document);
-                Console.WriteLine($"Completed processing document with ID {id}");
+                Console.WriteLine($"Completed processing document with ID {documentId}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to process document with ID {id} | {ex.GetType()} {ex.Message}");
+                Console.WriteLine($"Failed to process document with ID {documentId} | {ex.GetType()} {ex.Message}");
                 Console.WriteLine(ex);
             }
         }

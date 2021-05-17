@@ -54,6 +54,9 @@ functions:
           authorizer:
             arn: ${ssm:/platform-apis-lambda-authorizer-arn}
             type: request
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            managedExternally: true
   DocumentsMalwareScanSuccessfulFunction:
     name: ${self:service}-malware-scan-successful
     handler: DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated

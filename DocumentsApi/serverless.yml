@@ -39,21 +39,21 @@ package:
   individually: true
 
 functions:
-  # DocumentsApi:
-  #   name: ${self:service}
-  #   handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
-  #   role: lambdaExecutionRole
-  #   package:
-  #     artifact: ./bin/release/netcoreapp3.1/documents-api.zip
-  #   layers:
-  #     - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
-  #   events:
-  #     - http:
-  #         path: /{proxy+}
-  #         method: ANY
-  #         authorizer:
-  #           arn: ${ssm:/platform-apis-lambda-authorizer-arn}
-  #           type: request
+  DocumentsApi:
+    name: ${self:service}
+    handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
+    role: lambdaExecutionRole
+    package:
+      artifact: ./bin/release/netcoreapp3.1/documents-api.zip
+    layers:
+      - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          authorizer:
+            arn: ${ssm:/platform-apis-lambda-authorizer-arn}
+            type: request
   DocumentsMalwareScanSuccessfulFunction:
     name: ${self:service}-malware-scan-successful
     handler: DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated

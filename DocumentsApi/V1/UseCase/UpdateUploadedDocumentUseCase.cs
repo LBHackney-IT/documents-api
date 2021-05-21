@@ -56,7 +56,7 @@ namespace DocumentsApi.V1.UseCase
                     return;
                 }
 
-                var type = await _s3Gateway.GetObjectContentType(documentId).ConfigureAwait(true);
+                var type = await _s3Gateway.GetObjectContentType(documentKey).ConfigureAwait(true);
 
                 document.UploadedAt = uploadedAt;
                 document.FileSize = size;

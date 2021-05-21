@@ -145,7 +145,7 @@ resources:
 custom:
   corsDomains:
     staging:
-      - "http://*.hackney.gov.uk:3000"
+      - "https://*.hackney.gov.uk"
     production:
       - "https://*.hackney.gov.uk"
   vpc:

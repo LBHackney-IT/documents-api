@@ -139,11 +139,11 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_STAGING
-  # assume-role-production:
-  #   executor: docker-python
-  #   steps:
-  #     - assume-role-and-persist-workspace:
-  #         aws-account: $AWS_ACCOUNT_PRODUCTION
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRODUCTION
 
   deploy-to-staging:
     executor: docker-dotnet
@@ -151,11 +151,11 @@ jobs:
       - deploy-lambda:
           stage: "staging"
 
-  # deploy-to-production:
-  #   executor: docker-dotnet
-  #   steps:
-  #     - deploy-lambda:
-  #         stage: "production"
+  deploy-to-production:
+    executor: docker-dotnet
+    steps:
+      - deploy-lambda:
+          stage: "production"
 
   migrate-database-staging:
     executor: docker-dotnet
@@ -163,11 +163,11 @@ jobs:
       - migrate-database:
           stage: "staging"
 
-  # migrate-database-production:
-  #   executor: docker-dotnet
-  #   steps:
-  #     - migrate-database:
-  #         stage: "production"
+  migrate-database-production:
+    executor: docker-dotnet
+    steps:
+      - migrate-database:
+          stage: "production"
 
 workflows:
   check-and-deploy-staging-and-production:
@@ -193,17 +193,17 @@ workflows:
             - assume-role-staging
 
       # Production deploy
-      # - permit-production-release:
-      #     type: approval
-      #     requires:
-      #       - deploy-to-staging
-      # - assume-role-production:
-      #     context: api-assume-role-production-context
-      #     requires:
-      #       - permit-production-release
-      # - migrate-database-production:
-      #     requires:
-      #       - assume-role-production
-      # - deploy-to-production:
-      #     requires:
-      #       - assume-role-production
+      - permit-production-release:
+          type: approval
+          requires:
+            - deploy-to-staging
+      - assume-role-production:
+          context: api-assume-role-document-evidence-store-production-context
+          requires:
+            - permit-production-release
+      - migrate-database-production:
+          requires:
+            - assume-role-production
+      - deploy-to-production:
+          requires:
+            - assume-role-production

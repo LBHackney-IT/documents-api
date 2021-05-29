@@ -2,11 +2,24 @@ import json
 import boto3
 import botocore
 
-# boto3 initialization
-s3_client = boto3.client("s3", verify=False) # todo remove verify once https cert is configured
-lambda_client = boto3.client("lambda")
+# Disable SSL certificate checking here because we need to retrieve the certificate from SSM
+# Ignore any InsecureRequestWarning in the lambda logs
+ssm_client = boto3.client('ssm', verify=False)
 
 def lambda_handler(event, context):
+   # Retrieve SSL certificate from SSM
+   ssl_certificate = ssm_client.get_parameter(Name='palo-alto-ssl-certificate')
+   # Write it to a file because 'verify' requires the certificate from the file system for our S3 client
+   # We cannot simply pass it as a string
+   ssl_certificate_file = '/tmp/palo-alto-ssl-certificate.crt'
+   f = open(ssl_certificate_file, 'w')
+   f.write(ssl_certificate['Parameter']['Value'])
+   f.close()
+
+   # Configure clients to use the SSL certificate we just wrote to
+   s3_client = boto3.client('s3', verify=ssl_certificate_file)
+   lambda_client = boto3.client("lambda", verify=ssl_certificate_file)
+
    # event contains all information about uploaded object
    print("Event :", event)
 

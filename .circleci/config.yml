@@ -190,7 +190,7 @@ workflows:
             - assume-role-staging
       - deploy-to-staging:
           requires:
-            - assume-role-staging
+            - migrate-database-staging
 
       # Production deploy
       - permit-production-release:
@@ -206,4 +206,4 @@ workflows:
             - assume-role-production
       - deploy-to-production:
           requires:
-            - assume-role-production
+            - migrate-database-production

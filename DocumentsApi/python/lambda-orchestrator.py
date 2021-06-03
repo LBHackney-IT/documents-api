@@ -2,23 +2,12 @@ import json
 import boto3
 import botocore
 
-# Disable SSL certificate checking here because otherwise we cannot make requests to SSM
-# Ignore any InsecureRequestWarning in the lambda logs
-ssm_client = boto3.client('ssm', verify=False)
-
 def lambda_handler(event, context):
-   # Retrieve SSL certificate from SSM
-   ssl_certificate = ssm_client.get_parameter(Name='palo-alto-ssl-certificate')
-   # Write it to a file because 'verify' requires the certificate to be provided in a file path
-   # We cannot simply pass it as a string
-   ssl_certificate_file = '/tmp/palo-alto-ssl-certificate.crt'
-   f = open(ssl_certificate_file, 'w')
-   f.write(ssl_certificate['Parameter']['Value'])
-   f.close()
-
-   # Configure clients to use the SSL certificate file we just created
-   s3_client = boto3.client('s3', verify=ssl_certificate_file)
-   lambda_client = boto3.client("lambda", verify=ssl_certificate_file)
+   # Disable SSL for this instance of the client so that when we call 'download_file' then Palo Altos is able to scan the payload for malware
+   s3_client_no_ssl = boto3.client('s3', use_ssl=False)
+   # Enable SSL for other S3 operations
+   s3_client = boto3.client('s3')
+   lambda_client = boto3.client("lambda")
 
    # event contains all information about uploaded object
    print("Event :", event)
@@ -37,7 +26,7 @@ def lambda_handler(event, context):
        # Get filename only and prepend with tmp as this is the only ephemeral storage lambdas have
        download_path = '/tmp/' + file_key_name.split('/')[-1]
        print("s3_client.download_file", bucket_name, file_key_name, download_path)
-       s3_client.download_file(bucket_name, file_key_name, download_path)
+       s3_client_no_ssl.download_file(bucket_name, file_key_name, download_path)
 
    except Exception as e:
         print('An exception occurred: {}'.format(e))

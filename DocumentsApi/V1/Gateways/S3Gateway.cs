@@ -6,8 +6,7 @@ using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
-using Amazon.S3.Model;
-using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -42,28 +41,27 @@ namespace DocumentsApi.V1.Gateways
             return meta.Headers.ContentType;
         }
 
-        // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
-        [SuppressMessage("ReSharper", "CA1055")]
-        [SuppressMessage("ReSharper", "CA2200")]
-        public string GeneratePreSignedDownloadUrl(Document document)
+        public async Task<Stream> GetObject(Document document)
         {
-            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
-            {
-                BucketName = _options.DocumentsBucketName,
-                Key = "clean/" + document.Id.ToString(),
-                Expires = DateTime.UtcNow.AddSeconds(30)
-            };
-            var urlString = "";
             try
             {
-                urlString = _s3.GetPreSignedURL(request);
+                var s3Object = await _s3.GetObjectAsync(_options.DocumentsBucketName, "clean/" + document.Id.ToString()).ConfigureAwait(true);
+                using (var getObjectResponse = s3Object)
+                {
+                    using (var responseStream = getObjectResponse.ResponseStream)
+                    {
+                        var stream = new MemoryStream();
+                        await responseStream.CopyToAsync(stream);
+                        stream.Position = 0;
+                        return stream;
+                    }
+                }
             }
             catch (AmazonS3Exception e)
             {
-                Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
+                Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
                 throw e;
             }
-            return urlString;
         }
     }
 }

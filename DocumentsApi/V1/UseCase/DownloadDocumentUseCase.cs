@@ -4,6 +4,8 @@ using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Amazon.S3;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace DocumentsApi.V1.UseCase
 {
@@ -19,25 +21,24 @@ namespace DocumentsApi.V1.UseCase
         }
 
         [SuppressMessage("ReSharper", "CA2200")]
-        public string Execute(string documentId)
+        public Task<Stream> Execute(Guid documentId)
         {
-            var documentGuid = new Guid(documentId);
-            var document = _documentsGateway.FindDocument(documentGuid);
+            var document = _documentsGateway.FindDocument(documentId);
 
             if (document == null)
             {
-                throw new NotFoundException($"Cannot find document with ID: {documentGuid}");
+                throw new NotFoundException($"Cannot find document with ID: {documentId}");
             }
 
-            var result = "";
+            Task<Stream> result;
 
             try
             {
-                result = _s3Gateway.GeneratePreSignedDownloadUrl(document);
+                result = _s3Gateway.GetObject(document);
             }
             catch (AmazonS3Exception e)
             {
-                Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
+                Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
                 throw e;
             }
 

@@ -9,5 +9,6 @@ namespace DocumentsApi.V1.Gateways.Interfaces
         public Task<S3UploadPolicy> GenerateUploadPolicy(Document document);
         public Task<string> GetObjectContentType(string key);
         public Task<Stream> GetObject(Document document);
+        public Task<Stream> GetObjectFromLocal();
     }
 }

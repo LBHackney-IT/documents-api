@@ -17,9 +17,10 @@ namespace DocumentsApi.V1.Controllers
         private readonly ICreateUploadPolicyUseCase _createUploadPolicyUseCase;
         private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
 
-        public DocumentsController(ICreateUploadPolicyUseCase createUploadPolicyUseCase)
+        public DocumentsController(ICreateUploadPolicyUseCase createUploadPolicyUseCase, IDownloadDocumentUseCase downloadDocumentUseCase)
         {
             _createUploadPolicyUseCase = createUploadPolicyUseCase;
+            _downloadDocumentUseCase = downloadDocumentUseCase;
         }
 
         /// <summary>

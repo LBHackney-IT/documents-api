@@ -51,7 +51,7 @@ namespace DocumentsApi.V1.Gateways
                     using (var responseStream = getObjectResponse.ResponseStream)
                     {
                         var stream = new MemoryStream();
-                        await responseStream.CopyToAsync(stream);
+                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
                         stream.Position = 0;
                         return stream;
                     }
@@ -60,7 +60,31 @@ namespace DocumentsApi.V1.Gateways
             catch (AmazonS3Exception e)
             {
                 Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
-                throw e;
+                throw;
+            }
+        }
+
+        public async Task<Stream> GetObjectFromLocal()
+        {
+            try
+            {
+                string path = "/Users/bogdan/Desktop/demo1.jpeg";
+                var file = File.Open(path, System.IO.FileMode.Open);
+                using (var getObjectResponse = file)
+                {
+                    using (var responseStream = file)
+                    {
+                        var stream = new MemoryStream();
+                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
+                        stream.Position = 0;
+                        return stream;
+                    }
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("Error when retrieving the local file: '{0}' ", e.Message);
+                throw;
             }
         }
     }

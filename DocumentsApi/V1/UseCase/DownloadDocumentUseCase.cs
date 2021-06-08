@@ -34,7 +34,8 @@ namespace DocumentsApi.V1.UseCase
 
             try
             {
-                result = _s3Gateway.GetObject(document);
+                //result = _s3Gateway.GetObject(document);
+                result = _s3Gateway.GetObjectFromLocal();
             }
             catch (AmazonS3Exception e)
             {

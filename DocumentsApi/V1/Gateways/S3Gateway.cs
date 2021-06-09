@@ -7,6 +7,7 @@ using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
 using System.IO;
+using System.Text;
 using Amazon.S3.Model;
 
 namespace DocumentsApi.V1.Gateways
@@ -51,16 +52,13 @@ namespace DocumentsApi.V1.Gateways
                     BucketName = _options.DocumentsBucketName,
                     Key = "clean/" + document.Id
                 };
-                ResponseHeaderOverrides responseHeaders = new ResponseHeaderOverrides();
-                responseHeaders.ContentType = "application/octet-stream";
-                request.ResponseHeaderOverrides = responseHeaders;
                 using (GetObjectResponse response = await _s3.GetObjectAsync(request).ConfigureAwait(true))
-                using (Stream responseStream = response.ResponseStream)
                 {
-                    var stream = new MemoryStream();
-                    responseStream.CopyTo(stream);
-                    stream.Position = 0;
-                    return stream;
+                    using (Stream responseStream = response.ResponseStream)
+                    using (StreamReader reader = new StreamReader(responseStream))
+                    {
+                        return new MemoryStream(Encoding.UTF8.GetBytes(reader.ReadToEnd()));
+                    }
                 }
             }
             catch (AmazonS3Exception e)

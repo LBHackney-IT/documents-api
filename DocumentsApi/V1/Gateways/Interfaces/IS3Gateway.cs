@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using DocumentsApi.V1.Domain;
-using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace DocumentsApi.V1.Gateways.Interfaces
 {
@@ -8,9 +8,7 @@ namespace DocumentsApi.V1.Gateways.Interfaces
     {
         public Task<S3UploadPolicy> GenerateUploadPolicy(Document document);
         public Task<string> GetObjectContentType(string key);
-
-        // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
-        [SuppressMessage("ReSharper", "CA1055")]
-        public string GeneratePreSignedDownloadUrl(Document document);
+        public Task<Stream> GetObject(Document document);
+        public Task<Stream> GetObjectFromLocal();
     }
 }

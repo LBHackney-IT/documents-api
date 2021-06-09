@@ -4,7 +4,6 @@ using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Amazon.S3;
 
 namespace DocumentsApi.V1.Controllers
 {
@@ -16,19 +15,16 @@ namespace DocumentsApi.V1.Controllers
     {
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
-        private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
-            IDownloadDocumentUseCase downloadDocumentUseCase,
             IUpdateClaimStateUseCase updateClaimStateUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
-            _downloadDocumentUseCase = downloadDocumentUseCase;
             _updateClaimStateUseCase = updateClaimStateUseCase;
         }
 
@@ -98,31 +94,5 @@ namespace DocumentsApi.V1.Controllers
                 return NotFound(ex.Message);
             }
         }
-
-        /// <summary>
-        /// Creates a download link for a document
-        /// </summary>
-        /// <response code="201">Saved</response>
-        /// <response code="400">Request contains invalid parameters</response>
-        /// <response code="401">Request lacks valid API token</response>
-        [HttpPost]
-        [Route("{claimId}/download_links")]
-        public IActionResult DownloadDocument([FromRoute] Guid claimId, [Required][FromBody] DownloadDocumentRequest request)
-        {
-            try
-            {
-                var result = _downloadDocumentUseCase.Execute(request.DocumentId);
-                return Created(new Uri($"/claims/{claimId}/download_links", UriKind.Relative), result);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (AmazonS3Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
-        }
-
     }
 }

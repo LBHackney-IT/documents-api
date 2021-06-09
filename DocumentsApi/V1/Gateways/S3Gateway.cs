@@ -6,8 +6,7 @@ using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
-using Amazon.S3.Model;
-using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -42,28 +41,53 @@ namespace DocumentsApi.V1.Gateways
             return meta.Headers.ContentType;
         }
 
-        // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
-        [SuppressMessage("ReSharper", "CA1055")]
-        [SuppressMessage("ReSharper", "CA2200")]
-        public string GeneratePreSignedDownloadUrl(Document document)
+        public async Task<Stream> GetObject(Document document)
         {
-            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
-            {
-                BucketName = _options.DocumentsBucketName,
-                Key = "clean/" + document.Id.ToString(),
-                Expires = DateTime.UtcNow.AddSeconds(30)
-            };
-            var urlString = "";
             try
             {
-                urlString = _s3.GetPreSignedURL(request);
+                var key = "clean/" + document.Id;
+                var s3Object = await _s3.GetObjectAsync(_options.DocumentsBucketName, key).ConfigureAwait(true);
+                using (var getObjectResponse = s3Object)
+                {
+                    using (var responseStream = getObjectResponse.ResponseStream)
+                    {
+                        var stream = new MemoryStream();
+                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
+                        stream.Position = 0;
+                        return stream;
+                    }
+                }
             }
             catch (AmazonS3Exception e)
             {
-                Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
-                throw e;
+                Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
+                throw;
             }
-            return urlString;
+        }
+
+        // remove once we finish testing
+        public async Task<Stream> GetObjectFromLocal()
+        {
+            try
+            {
+                string path = "/Users/bogdan/Desktop/demo1.jpeg";
+                var file = File.Open(path, System.IO.FileMode.Open);
+                using (var getObjectResponse = file)
+                {
+                    using (var responseStream = file)
+                    {
+                        var stream = new MemoryStream();
+                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
+                        stream.Position = 0;
+                        return stream;
+                    }
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("Error when retrieving the local file: '{0}' ", e.Message);
+                throw;
+            }
         }
     }
 }

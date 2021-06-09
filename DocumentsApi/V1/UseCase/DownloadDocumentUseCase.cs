@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
@@ -19,7 +20,7 @@ namespace DocumentsApi.V1.UseCase
             _documentsGateway = documentsGateway;
         }
 
-        public Tuple<Document, Task<byte[]>> Execute(Guid documentId)
+        public Tuple<Document, Task<Stream>> Execute(Guid documentId)
         {
             var document = _documentsGateway.FindDocument(documentId);
 
@@ -31,7 +32,7 @@ namespace DocumentsApi.V1.UseCase
             try
             {
                 var result = _s3Gateway.GetObject(document);
-                return new Tuple<Document, Task<byte[]>>(document, result);
+                return new Tuple<Document, Task<Stream>>(document, result);
             }
             catch (AmazonS3Exception e)
             {

@@ -42,7 +42,7 @@ namespace DocumentsApi.V1.Gateways
             return meta.Headers.ContentType;
         }
 
-        public async Task<byte[]> GetObject(Document document)
+        public async Task<Stream> GetObject(Document document)
         {
             try
             {
@@ -51,20 +51,24 @@ namespace DocumentsApi.V1.Gateways
                     BucketName = _options.DocumentsBucketName,
                     Key = "clean/" + document.Id
                 };
+                ResponseHeaderOverrides responseHeaders = new ResponseHeaderOverrides();
+                responseHeaders.ContentType = document.FileType;
+                responseHeaders.ContentDisposition = "attachment; filename=testing" + document.FileType;
+                request.ResponseHeaderOverrides = responseHeaders;
                 var s3Object = await _s3.GetObjectAsync(request).ConfigureAwait(true);
                 Console.WriteLine("s3Object.ResponseStream.Length: '{0}'", s3Object.ResponseStream.Length);
                 Console.WriteLine("s3Object.ResponseStream.CanRead: '{0}'", s3Object.ResponseStream.CanRead);
                 Console.WriteLine("s3Object.ResponseStream: '{0}'", s3Object.ResponseStream);
-                using (var response = s3Object)
+                using (GetObjectResponse response = s3Object)
                 {
                     using (Stream responseStream = response.ResponseStream)
                     {
                         var stream = new MemoryStream();
-                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
+                        responseStream.CopyTo(stream);
                         stream.Position = 0;
                         Console.WriteLine("stream.Length: '{0}'", stream.Length);
                         Console.WriteLine("stream.CanRead: '{0}'", stream.CanRead);
-                        return stream.ToArray();
+                        return stream;
                     }
                 }
             }

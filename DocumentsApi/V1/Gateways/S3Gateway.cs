@@ -52,7 +52,9 @@ namespace DocumentsApi.V1.Gateways
                     Key = "clean/" + document.Id
                 };
                 var s3Object = await _s3.GetObjectAsync(request).ConfigureAwait(true);
-                Console.WriteLine("s3Object.ContentLength: '{0}'", s3Object.ContentLength);
+                Console.WriteLine("s3Object.ResponseStream.Length: '{0}'", s3Object.ResponseStream.Length);
+                Console.WriteLine("s3Object.ResponseStream.CanRead: '{0}'", s3Object.ResponseStream.CanRead);
+                Console.WriteLine("s3Object.ResponseStream: '{0}'", s3Object.ResponseStream);
                 using (var response = s3Object)
                 {
                     using (Stream responseStream = response.ResponseStream)
@@ -60,6 +62,8 @@ namespace DocumentsApi.V1.Gateways
                         var stream = new MemoryStream();
                         await responseStream.CopyToAsync(stream).ConfigureAwait(true);
                         stream.Position = 0;
+                        Console.WriteLine("stream.Length: '{0}'", stream.Length);
+                        Console.WriteLine("stream.CanRead: '{0}'", stream.CanRead);
                         return stream;
                     }
                 }

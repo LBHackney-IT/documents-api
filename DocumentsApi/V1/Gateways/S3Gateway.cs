@@ -46,12 +46,19 @@ namespace DocumentsApi.V1.Gateways
         {
             try
             {
-                var key = "clean/" + document.Id;
-                using (var responseStream = await _s3.GetObjectStreamAsync(_options.DocumentsBucketName, key, null)
-                    .ConfigureAwait(true))
+                GetObjectRequest request = new GetObjectRequest
+                {
+                    BucketName = _options.DocumentsBucketName,
+                    Key = "clean/" + document.Id
+                };
+                ResponseHeaderOverrides responseHeaders = new ResponseHeaderOverrides();
+                responseHeaders.ContentType = "application/octet-stream";
+                request.ResponseHeaderOverrides = responseHeaders;
+                using (GetObjectResponse response = await _s3.GetObjectAsync(request).ConfigureAwait(true))
+                using (Stream responseStream = response.ResponseStream)
                 {
                     var stream = new MemoryStream();
-                    await responseStream.CopyToAsync(stream).ConfigureAwait(true);
+                    responseStream.CopyTo(stream);
                     stream.Position = 0;
                     return stream;
                 }

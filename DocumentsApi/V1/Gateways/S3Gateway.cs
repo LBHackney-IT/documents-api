@@ -51,7 +51,7 @@ namespace DocumentsApi.V1.Gateways
                     BucketName = _options.DocumentsBucketName,
                     Key = "clean/" + document.Id
                 };
-                using (GetObjectResponse response = await _s3.GetObjectAsync(request))
+                using (GetObjectResponse response = await _s3.GetObjectAsync(request).ConfigureAwait(true))
                 {
                     using (Stream responseStream = response.ResponseStream)
                     {

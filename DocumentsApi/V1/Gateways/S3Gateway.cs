@@ -55,21 +55,13 @@ namespace DocumentsApi.V1.Gateways
                 responseHeaders.ContentType = document.FileType;
                 responseHeaders.ContentDisposition = "attachment; filename=testing" + document.FileType;
                 request.ResponseHeaderOverrides = responseHeaders;
-                var s3Object = await _s3.GetObjectAsync(request).ConfigureAwait(true);
-                Console.WriteLine("s3Object.ResponseStream.Length: '{0}'", s3Object.ResponseStream.Length);
-                Console.WriteLine("s3Object.ResponseStream.CanRead: '{0}'", s3Object.ResponseStream.CanRead);
-                Console.WriteLine("s3Object.ResponseStream: '{0}'", s3Object.ResponseStream);
-                using (GetObjectResponse response = s3Object)
+                using (GetObjectResponse response = await _s3.GetObjectAsync(request).ConfigureAwait(true))
+                using (Stream responseStream = response.ResponseStream)
                 {
-                    using (Stream responseStream = response.ResponseStream)
-                    {
-                        var stream = new MemoryStream();
-                        responseStream.CopyTo(stream);
-                        stream.Position = 0;
-                        Console.WriteLine("stream.Length: '{0}'", stream.Length);
-                        Console.WriteLine("stream.CanRead: '{0}'", stream.CanRead);
-                        return stream;
-                    }
+                    var stream = new MemoryStream();
+                    responseStream.CopyTo(stream);
+                    stream.Position = 0;
+                    return stream;
                 }
             }
             catch (AmazonS3Exception e)

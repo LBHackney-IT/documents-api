@@ -7,6 +7,7 @@ using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
 using System.IO;
+using Amazon.S3.Model;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -45,15 +46,17 @@ namespace DocumentsApi.V1.Gateways
         {
             try
             {
-                var key = "clean/" + document.Id;
-                var s3Object = await _s3.GetObjectAsync(_options.DocumentsBucketName, key).ConfigureAwait(true);
-                using (var getObjectResponse = s3Object)
+                GetObjectRequest request = new GetObjectRequest
                 {
-                    using (var responseStream = getObjectResponse.ResponseStream)
+                    BucketName = _options.DocumentsBucketName,
+                    Key = "clean/" + document.Id
+                };
+                using (GetObjectResponse response = await _s3.GetObjectAsync(request))
+                {
+                    using (Stream responseStream = response.ResponseStream)
                     {
                         var stream = new MemoryStream();
-                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
-                        stream.Position = 0;
+                        responseStream.CopyTo(stream);
                         return stream;
                     }
                 }

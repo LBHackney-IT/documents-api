@@ -51,12 +51,15 @@ namespace DocumentsApi.V1.Gateways
                     BucketName = _options.DocumentsBucketName,
                     Key = "clean/" + document.Id
                 };
-                using (GetObjectResponse response = await _s3.GetObjectAsync(request).ConfigureAwait(true))
+                var s3Object = await _s3.GetObjectAsync(request).ConfigureAwait(true);
+                Console.WriteLine("s3Object.ContentLength: '{0}'", s3Object.ContentLength);
+                using (var response = s3Object)
                 {
                     using (Stream responseStream = response.ResponseStream)
                     {
                         var stream = new MemoryStream();
-                        responseStream.CopyTo(stream);
+                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
+                        stream.Position = 0;
                         return stream;
                     }
                 }

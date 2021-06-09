@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
@@ -49,19 +50,26 @@ namespace DocumentsApi.V1.Controllers
         }
 
         /// <summary>
-        /// Creates a download link for a document
+        /// Retrieves the document
         /// </summary>
-        /// <response code="201">Saved</response>
+        /// <response code="200">Found</response>
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
+        /// <response code="500">Amazon S3 exception</response>
         [HttpGet]
         [Route("{documentId}")]
-        public IActionResult GetDocument([FromRoute] Guid documentId)
+        public async Task<IActionResult> GetDocument([FromRoute] Guid documentId)
         {
             try
             {
                 var result = _downloadDocumentUseCase.Execute(documentId);
-                return Created(new Uri($"/documents/{documentId}", UriKind.Relative), result);
+                var documentStream = await result.Item2.ConfigureAwait(true);
+                Response.Headers.Add("Content-Disposition", new ContentDisposition
+                {
+                    FileName = "Document" + result.Item1.FileType,
+                    Inline = false
+                }.ToString());
+                return File(documentStream, result.Item1.FileType);
             }
             catch (NotFoundException ex)
             {

@@ -45,7 +45,8 @@ namespace DocumentsApi.V1.Gateways
         {
             try
             {
-                var s3Object = await _s3.GetObjectAsync(_options.DocumentsBucketName, "clean/" + document.Id.ToString()).ConfigureAwait(true);
+                var key = "clean/" + document.Id;
+                var s3Object = await _s3.GetObjectAsync(_options.DocumentsBucketName, key).ConfigureAwait(true);
                 using (var getObjectResponse = s3Object)
                 {
                     using (var responseStream = getObjectResponse.ResponseStream)
@@ -64,6 +65,7 @@ namespace DocumentsApi.V1.Gateways
             }
         }
 
+        // remove once we finish testing
         public async Task<Stream> GetObjectFromLocal()
         {
             try

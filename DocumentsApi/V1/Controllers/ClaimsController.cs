@@ -15,19 +15,16 @@ namespace DocumentsApi.V1.Controllers
     {
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
-        private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
-            IDownloadDocumentUseCase downloadDocumentUseCase,
             IUpdateClaimStateUseCase updateClaimStateUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
-            _downloadDocumentUseCase = downloadDocumentUseCase;
             _updateClaimStateUseCase = updateClaimStateUseCase;
         }
 

@@ -42,7 +42,7 @@ namespace DocumentsApi.V1.Gateways
             return meta.Headers.ContentType;
         }
 
-        public async Task<Stream> GetObject(Document document)
+        public async Task<byte[]> GetObject(Document document)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace DocumentsApi.V1.Gateways
                         stream.Position = 0;
                         Console.WriteLine("stream.Length: '{0}'", stream.Length);
                         Console.WriteLine("stream.CanRead: '{0}'", stream.CanRead);
-                        return stream;
+                        return stream.ToArray();
                     }
                 }
             }

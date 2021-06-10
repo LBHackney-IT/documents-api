@@ -128,12 +128,6 @@ namespace DocumentsApi
             var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
             _apiVersions = api.ApiVersionDescriptions.ToList();
 
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
-                await next().ConfigureAwait(true);
-            });
-
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {

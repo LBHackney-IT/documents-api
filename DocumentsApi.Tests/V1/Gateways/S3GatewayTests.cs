@@ -61,27 +61,27 @@ namespace DocumentsApi.Tests.V1.Gateways
             result.Should().Be(expectedContentType);
         }
 
-        // [Test]
-        // public void CanGeneratePreSignedDownloadUrl()
-        // {
-        //     var documentId = Guid.NewGuid();
-        //     var document = TestDataHelper.CreateDocument();
-        //     document.Id = documentId;
-        //     document.UploadedAt = DateTime.UtcNow;
-        //     var expected = "www.google.com";
-        //     _s3.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expected);
-        //     var result = _classUnderTest.GeneratePreSignedDownloadUrl(document);
-        //     result.Should().Be(expected);
-        // }
-        //
-        // [Test]
-        // public void ThrowsExceptionWhenCannotGenerateDownloadUrl()
-        // {
-        //     var document = TestDataHelper.CreateDocument();
-        //     document.Id = Guid.NewGuid();
-        //     _s3.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Throws(new AmazonS3Exception("Error retrieving download url"));
-        //     Func<string> testDelegate = () => _classUnderTest.GeneratePreSignedDownloadUrl(document);
-        //     testDelegate.Should().Throw<AmazonS3Exception>();
-        // }
+        [Test]
+        public void CanGetObject()
+        {
+            var documentId = Guid.NewGuid();
+            var document = TestDataHelper.CreateDocument();
+            document.Id = documentId;
+            document.UploadedAt = DateTime.UtcNow;
+            var expected = new GetObjectResponse();
+            _s3.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
+            var result = _classUnderTest.GetObject(document);
+            result.Should().Be(expected);
+        }
+
+        [Test]
+        public void ThrowsExceptionWhenCannotGetObject()
+        {
+            var document = TestDataHelper.CreateDocument();
+            document.Id = Guid.NewGuid();
+            _s3.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), It.IsAny<CancellationToken>())).Throws(new AmazonS3Exception("Error retrieving the document"));
+            Func<GetObjectResponse> testDelegate = () => _classUnderTest.GetObject(document);
+            testDelegate.Should().Throw<AmazonS3Exception>();
+        }
     }
 }

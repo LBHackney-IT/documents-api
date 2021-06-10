@@ -6,8 +6,6 @@ using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
-using System.IO;
-using System.Text;
 using Amazon.S3.Model;
 
 namespace DocumentsApi.V1.Gateways
@@ -57,31 +55,6 @@ namespace DocumentsApi.V1.Gateways
             catch (AmazonS3Exception e)
             {
                 Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
-                throw;
-            }
-        }
-
-        // remove once we finish testing
-        public async Task<Stream> GetObjectFromLocal()
-        {
-            try
-            {
-                string path = "/Users/neilmendum/Downloads/logo.png";
-                var file = File.Open(path, System.IO.FileMode.Open);
-                using (var getObjectResponse = file)
-                {
-                    using (var responseStream = file)
-                    {
-                        var stream = new MemoryStream();
-                        await responseStream.CopyToAsync(stream).ConfigureAwait(true);
-                        stream.Position = 0;
-                        return stream;
-                    }
-                }
-            }
-            catch (FileNotFoundException e)
-            {
-                Console.WriteLine("Error when retrieving the local file: '{0}' ", e.Message);
                 throw;
             }
         }

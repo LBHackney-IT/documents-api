@@ -4,9 +4,7 @@ using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Amazon.S3;
-using System.Threading.Tasks;
 using Amazon.S3.Model;
-using DocumentsApi.V1.Domain;
 
 namespace DocumentsApi.V1.UseCase
 {
@@ -21,7 +19,7 @@ namespace DocumentsApi.V1.UseCase
             _documentsGateway = documentsGateway;
         }
 
-        public Tuple<Document, string> Execute(Guid documentId)
+        public string Execute(Guid documentId)
         {
             var document = _documentsGateway.FindDocument(documentId);
 
@@ -33,7 +31,8 @@ namespace DocumentsApi.V1.UseCase
             try
             {
                 var result = _s3Gateway.GetObject(document);
-                return new Tuple<Document, string>(document, EncodeStreamToBase64(result));
+                var documentAsBase64 = EncodeStreamToBase64(result);
+                return documentAsBase64;
             }
             catch (AmazonS3Exception e)
             {
@@ -42,21 +41,7 @@ namespace DocumentsApi.V1.UseCase
             }
         }
 
-        private static string EncodeStreamToBase64(Stream stream, string contentType)
-        {
-            using (Stream responseStream = stream)
-            {
-                byte[] bytes;
-                using (var memoryStream = new MemoryStream())
-                {
-                    responseStream.CopyTo(memoryStream);
-                    bytes = memoryStream.ToArray();
-                }
-                return $"data:{contentType};base64," + Convert.ToBase64String(bytes);
-            }
-        }
-
-        private static string EncodeStreamToBase64(GetObjectResponse s3Response)
+        public static string EncodeStreamToBase64(GetObjectResponse s3Response)
         {
             if (s3Response.ResponseStream != null)
             {
@@ -71,10 +56,8 @@ namespace DocumentsApi.V1.UseCase
                     return $"data:{s3Response.Headers.ContentType};base64," + Convert.ToBase64String(bytes);
                 }
             }
-            else
-            {
-                return string.Empty;
-            }
+
+            return string.Empty;
         }
     }
 }

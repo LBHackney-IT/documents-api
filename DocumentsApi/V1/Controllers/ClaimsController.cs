@@ -1,8 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Mime;
-using System.Threading.Tasks;
-using Amazon.S3;
 using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
@@ -19,19 +16,16 @@ namespace DocumentsApi.V1.Controllers
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
-        private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
-            IUpdateClaimStateUseCase updateClaimStateUseCase,
-            IDownloadDocumentUseCase downloadDocumentUseCase
+            IUpdateClaimStateUseCase updateClaimStateUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
             _updateClaimStateUseCase = updateClaimStateUseCase;
-            _downloadDocumentUseCase = downloadDocumentUseCase;
         }
 
         /// <summary>
@@ -98,34 +92,6 @@ namespace DocumentsApi.V1.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the document
-        /// </summary>
-        /// <response code="200">Found</response>
-        /// <response code="400">Request contains invalid parameters</response>
-        /// <response code="401">Request lacks valid API token</response>
-        /// <response code="500">Amazon S3 exception</response>
-        [HttpGet]
-        [Route("{documentId}/download")]
-        [Produces("application/json")]
-        public IActionResult GetDocument([FromRoute] Guid documentId)
-        {
-            try
-            {
-                var result = _downloadDocumentUseCase.Execute(documentId);
-                var documentAsString = result.Item2;
-                return Ok(documentAsString);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (AmazonS3Exception e)
-            {
-                return StatusCode(500, e.Message);
             }
         }
     }

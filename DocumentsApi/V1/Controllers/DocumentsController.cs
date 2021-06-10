@@ -1,11 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Mime;
 using System.Threading.Tasks;
+using Amazon.S3;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Amazon.S3;
 
 namespace DocumentsApi.V1.Controllers
 {
@@ -50,7 +49,7 @@ namespace DocumentsApi.V1.Controllers
         }
 
         /// <summary>
-        /// Retrieves the document
+        /// Retrieves the document in base64 representation
         /// </summary>
         /// <response code="200">Found</response>
         /// <response code="400">Request contains invalid parameters</response>
@@ -58,18 +57,13 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="500">Amazon S3 exception</response>
         [HttpGet]
         [Route("{documentId}")]
+        [Produces("application/json")]
         public IActionResult GetDocument([FromRoute] Guid documentId)
         {
             try
             {
                 var result = _downloadDocumentUseCase.Execute(documentId);
-                var documentAsString = result.Item2;
-                Response.Headers.Add("Content-Disposition", new ContentDisposition
-                {
-                    FileName = "Document" + result.Item1.FileType,
-                    Inline = false
-                }.ToString());
-                return File(documentAsString, result.Item1.FileType);
+                return Ok(result);
             }
             catch (NotFoundException ex)
             {

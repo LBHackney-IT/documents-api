@@ -79,7 +79,7 @@ namespace DocumentsApi.Tests.V1.Gateways
         {
             var document = TestDataHelper.CreateDocument();
             document.Id = Guid.NewGuid();
-            _s3.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), It.IsAny<CancellationToken>())).Throws(new AmazonS3Exception("Error retrieving download url"));
+            _s3.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), It.IsAny<CancellationToken>())).Throws(new AmazonS3Exception("Error retrieving the document"));
             Func<GetObjectResponse> testDelegate = () => _classUnderTest.GetObject(document);
             testDelegate.Should().Throw<AmazonS3Exception>();
         }

@@ -58,13 +58,13 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsAmazonS3ExceptionIfCannotRetrieveDownloadLink()
+        public void ThrowsAmazonS3ExceptionIfCannotRetrieveDocument()
         {
             var documentId = Guid.NewGuid();
             var document = TestDataHelper.CreateDocument();
             document.Id = documentId;
             _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
-            _s3Gateway.Setup(x => x.GetObject(document)).Throws(new AmazonS3Exception("Error retrieving the download link"));
+            _s3Gateway.Setup(x => x.GetObject(document)).Throws(new AmazonS3Exception("Error retrieving the document"));
             Func<string> execute = () => _classUnderTest.Execute(documentId);
 
             execute.Should().Throw<AmazonS3Exception>();

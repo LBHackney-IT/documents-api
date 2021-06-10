@@ -43,7 +43,7 @@ namespace DocumentsApi.V1.Gateways
             return meta.Headers.ContentType;
         }
 
-        public async Task<Stream> GetObject(Document document)
+        public GetObjectResponse GetObject(Document document)
         {
             try
             {
@@ -52,14 +52,7 @@ namespace DocumentsApi.V1.Gateways
                     BucketName = _options.DocumentsBucketName,
                     Key = "clean/" + document.Id
                 };
-                using (GetObjectResponse response = await _s3.GetObjectAsync(request).ConfigureAwait(true))
-                {
-                    using (Stream responseStream = response.ResponseStream)
-                    using (StreamReader reader = new StreamReader(responseStream))
-                    {
-                        return new MemoryStream(Encoding.UTF8.GetBytes(reader.ReadToEnd()));
-                    }
-                }
+                return _s3.GetObjectAsync(request).Result;
             }
             catch (AmazonS3Exception e)
             {
@@ -73,7 +66,7 @@ namespace DocumentsApi.V1.Gateways
         {
             try
             {
-                string path = "/Users/bogdan/Desktop/demo1.jpeg";
+                string path = "/Users/neilmendum/Downloads/logo.png";
                 var file = File.Open(path, System.IO.FileMode.Open);
                 using (var getObjectResponse = file)
                 {

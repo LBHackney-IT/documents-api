@@ -52,7 +52,7 @@ namespace DocumentsApi.V1.UseCase
                     responseStream.CopyTo(memoryStream);
                     bytes = memoryStream.ToArray();
                 }
-                return $"data:{contentType};base64,"+Convert.ToBase64String(bytes);
+                return $"data:{contentType};base64," + Convert.ToBase64String(bytes);
             }
         }
 
@@ -68,7 +68,7 @@ namespace DocumentsApi.V1.UseCase
                         responseStream.CopyTo(memoryStream);
                         bytes = memoryStream.ToArray();
                     }
-                    return $"data:{s3Response.Headers.ContentType};base64,"+Convert.ToBase64String(bytes);
+                    return $"data:{s3Response.Headers.ContentType};base64," + Convert.ToBase64String(bytes);
                 }
             }
             else

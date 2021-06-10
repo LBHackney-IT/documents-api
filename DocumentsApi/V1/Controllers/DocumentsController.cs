@@ -58,18 +58,18 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="500">Amazon S3 exception</response>
         [HttpGet]
         [Route("{documentId}")]
-        public async Task<IActionResult> GetDocument([FromRoute] Guid documentId)
+        public IActionResult GetDocument([FromRoute] Guid documentId)
         {
             try
             {
                 var result = _downloadDocumentUseCase.Execute(documentId);
-                var documentStream = await result.Item2.ConfigureAwait(true);
+                var documentAsString = result.Item2;
                 Response.Headers.Add("Content-Disposition", new ContentDisposition
                 {
                     FileName = "Document" + result.Item1.FileType,
                     Inline = false
                 }.ToString());
-                return File(documentStream, result.Item1.FileType);
+                return File(documentAsString, result.Item1.FileType);
             }
             catch (NotFoundException ex)
             {

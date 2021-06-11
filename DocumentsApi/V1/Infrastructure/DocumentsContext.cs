@@ -15,6 +15,7 @@ namespace DocumentsApi.V1.Infrastructure
 
         public DbSet<DocumentEntity> Documents { get; set; }
         public DbSet<ClaimEntity> Claims { get; set; }
+        public DbSet<MigrationEntity> AppliedMigrations { get; set; }
 
         public override int SaveChanges()
         {

@@ -9,14 +9,8 @@ namespace DocumentsApi.V1.Infrastructure
 
     public class DocumentsContext : DbContext
     {
-        private readonly AppOptions _appOptions;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseNpgsql(_appOptions.DatabaseConnectionString).AddXRayInterceptor();
-
-        public DocumentsContext(DbContextOptions options, AppOptions appAppOptions) : base(options)
+        public DocumentsContext(DbContextOptions options) : base(options)
         {
-            _appOptions = appAppOptions;
         }
 
         public DbSet<DocumentEntity> Documents { get; set; }

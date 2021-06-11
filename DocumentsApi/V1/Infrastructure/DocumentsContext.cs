@@ -9,6 +9,9 @@ namespace DocumentsApi.V1.Infrastructure
 
     public class DocumentsContext : DbContext
     {
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseNpgsql(AppOptions.FromEnv().DatabaseConnectionString).AddXRayInterceptor();
+
         public DocumentsContext(DbContextOptions options) : base(options)
         {
         }

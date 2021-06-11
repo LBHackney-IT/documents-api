@@ -25,7 +25,7 @@ namespace DocumentsApi
 
             // Database Context
             services.AddDbContext<DocumentsContext>(
-                opt => opt.UseNpgsql(options.DatabaseConnectionString).AddXRayInterceptor(true));
+                opt => opt.UseLazyLoadingProxies().UseNpgsql(options.DatabaseConnectionString));
 
             // Transient Services
             AmazonS3Config s3Config;

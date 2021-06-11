@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using DocumentsApi.Versioning;
 using dotenv.net;
 using FluentValidation.AspNetCore;
@@ -24,6 +25,8 @@ namespace DocumentsApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            AWSSDKHandler.RegisterXRayForAllServices();
         }
 
         public IConfiguration Configuration { get; }

@@ -7,7 +7,6 @@ using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
 using Amazon.S3.Model;
-using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -16,16 +15,14 @@ namespace DocumentsApi.V1.Gateways
         private readonly IAmazonS3 _s3;
         private readonly INodeServices _nodeServices;
         private readonly AppOptions _options;
-        private readonly ILogger<S3Gateway> _logger;
 
         private const int UrlExpirySeconds = 3600;
 
-        public S3Gateway(IAmazonS3 amazonS3, INodeServices nodeServices, AppOptions options, ILogger<S3Gateway> logger)
+        public S3Gateway(IAmazonS3 amazonS3, INodeServices nodeServices, AppOptions options)
         {
             _s3 = amazonS3;
             _nodeServices = nodeServices;
             _options = options;
-            _logger = logger;
         }
 
         public async Task<S3UploadPolicy> GenerateUploadPolicy(Document document)
@@ -57,7 +54,7 @@ namespace DocumentsApi.V1.Gateways
             }
             catch (AmazonS3Exception e)
             {
-                _logger.LogError(e, e.Message);
+                Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
                 throw;
             }
         }

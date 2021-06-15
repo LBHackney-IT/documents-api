@@ -12,7 +12,6 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
-using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.Gateways
 {
@@ -22,7 +21,6 @@ namespace DocumentsApi.Tests.V1.Gateways
         private readonly Fixture _fixture = new Fixture();
         private readonly Mock<IAmazonS3> _s3 = new Mock<IAmazonS3>();
         private readonly Mock<INodeServices> _node = new Mock<INodeServices>();
-        private readonly Mock<ILogger<S3Gateway>> _logger = new Mock<ILogger<S3Gateway>>();
         private S3Gateway _classUnderTest;
         private AppOptions _options;
 
@@ -30,7 +28,7 @@ namespace DocumentsApi.Tests.V1.Gateways
         public void SetUp()
         {
             _options = _fixture.Create<AppOptions>();
-            _classUnderTest = new S3Gateway(_s3.Object, _node.Object, _options, _logger.Object);
+            _classUnderTest = new S3Gateway(_s3.Object, _node.Object, _options);
         }
 
         [Test]

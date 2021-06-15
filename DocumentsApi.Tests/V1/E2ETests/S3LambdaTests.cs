@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Amazon.S3.Util;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Infrastructure;
 using FluentAssertions;
@@ -14,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.E2ETests
 {
@@ -23,7 +21,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
     {
         private S3EntryPoint _handler;
         private readonly Mock<ILambdaContext> _lambdaContext = new Mock<ILambdaContext>();
-        private readonly Mock<ILogger<S3EntryPoint>> _logger = new Mock<ILogger<S3EntryPoint>>();
         private const string _contentType = "image/png";
 
         [SetUp]
@@ -34,7 +31,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             _handler = new S3EntryPoint(services =>
             {
                 services.Replace(ServiceDescriptor.Singleton(x => DatabaseContext));
-            }, _logger.Object);
+            });
         }
 
         [Test]

@@ -5,6 +5,7 @@ using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.V1.UseCase
 {
@@ -12,11 +13,16 @@ namespace DocumentsApi.V1.UseCase
     {
         private IS3Gateway _s3Gateway;
         private IDocumentsGateway _documentsGateway;
+        private readonly ILogger<DownloadDocumentUseCase> _logger;
 
-        public DownloadDocumentUseCase(IS3Gateway s3Gateway, IDocumentsGateway documentsGateway)
+        public DownloadDocumentUseCase(
+            IS3Gateway s3Gateway,
+            IDocumentsGateway documentsGateway,
+            ILogger<DownloadDocumentUseCase> logger)
         {
             _s3Gateway = s3Gateway;
             _documentsGateway = documentsGateway;
+            _logger = logger;
         }
 
         public string Execute(Guid documentId)
@@ -36,7 +42,7 @@ namespace DocumentsApi.V1.UseCase
             }
             catch (AmazonS3Exception e)
             {
-                Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
+                _logger.LogError("Error when retrieving the S3 object: '{0}' ", e.Message);
                 throw;
             }
         }

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Amazon.Lambda.S3Events;
 using Amazon.S3;
-using Amazon.S3.Util;
 using AutoFixture;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Gateways.Interfaces;

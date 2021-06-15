@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Amazon.S3.Util;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Infrastructure;
 using FluentAssertions;

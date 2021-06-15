@@ -8,16 +8,19 @@ using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
 using DocumentsApi.V1.Validators;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.V1.UseCase
 {
     public class CreateClaimUseCase : ICreateClaimUseCase
     {
         private IDocumentsGateway _documentsGateway;
+        private readonly ILogger<CreateClaimUseCase> _logger;
 
-        public CreateClaimUseCase(IDocumentsGateway documentsGateway)
+        public CreateClaimUseCase(IDocumentsGateway documentsGateway, ILogger<CreateClaimUseCase> logger)
         {
             _documentsGateway = documentsGateway;
+            _logger = logger;
         }
 
         public ClaimResponse Execute(ClaimRequest request)
@@ -25,7 +28,7 @@ namespace DocumentsApi.V1.UseCase
             var validation = new ClaimRequestValidator().Validate(request);
             if (!validation.IsValid)
             {
-                Console.WriteLine("VALIDATION: {0}", validation.Errors.First().ErrorMessage);
+                _logger.LogError("VALIDATION: {0}", validation.Errors.First().ErrorMessage);
                 throw new BadRequestException(validation);
             }
 

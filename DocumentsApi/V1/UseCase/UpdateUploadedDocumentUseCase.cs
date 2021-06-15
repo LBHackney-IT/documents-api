@@ -14,7 +14,10 @@ namespace DocumentsApi.V1.UseCase
         private readonly IDocumentsGateway _documentsGateway;
         private readonly IS3Gateway _s3Gateway;
 
-        public UpdateUploadedDocumentUseCase(IDocumentsGateway documentsGateway, IS3Gateway s3Gateway)
+        public UpdateUploadedDocumentUseCase(
+            IDocumentsGateway documentsGateway,
+            IS3Gateway s3Gateway
+        )
         {
             _documentsGateway = documentsGateway;
             _s3Gateway = s3Gateway;

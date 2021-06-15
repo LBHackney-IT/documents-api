@@ -9,6 +9,7 @@ using DocumentsApi.V1.UseCase;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.UseCase
 {
@@ -17,13 +18,14 @@ namespace DocumentsApi.Tests.V1.UseCase
     {
         private readonly CreateClaimUseCase _classUnderTest;
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
+        private readonly Mock<ILogger<CreateClaimUseCase>> _logger = new Mock<ILogger<CreateClaimUseCase>>();
         private readonly Fixture _fixture = new Fixture();
         private Document _document;
         private Claim _claim;
 
         public CreateClaimUseCaseTests()
         {
-            _classUnderTest = new CreateClaimUseCase(_documentsGateway.Object);
+            _classUnderTest = new CreateClaimUseCase(_documentsGateway.Object, _logger.Object);
 
             SetupMocks();
         }

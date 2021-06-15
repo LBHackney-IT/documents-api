@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Amazon.Lambda.S3Events;
 using Amazon.S3;
-using Amazon.S3.Util;
 using AutoFixture;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase;
 using Moq;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.UseCase
 {
@@ -19,14 +16,13 @@ namespace DocumentsApi.Tests.V1.UseCase
     {
         private readonly Fixture _fixture = new Fixture();
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
-        private readonly Mock<ILogger<UpdateUploadedDocumentUseCase>> _logger = new Mock<ILogger<UpdateUploadedDocumentUseCase>>();
         private readonly Mock<IS3Gateway> _s3Gateway = new Mock<IS3Gateway>();
         private UpdateUploadedDocumentUseCase _classUnderTest;
 
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new UpdateUploadedDocumentUseCase(_documentsGateway.Object, _s3Gateway.Object, _logger.Object);
+            _classUnderTest = new UpdateUploadedDocumentUseCase(_documentsGateway.Object, _s3Gateway.Object);
         }
 
         [Test]

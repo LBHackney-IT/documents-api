@@ -24,11 +24,12 @@ namespace DocumentsApi
             _logger = logger;
         }
 
-        public S3EntryPoint(Action<ServiceCollection> configureTestServices)
+        public S3EntryPoint(Action<ServiceCollection> configureTestServices, ILogger<S3EntryPoint> logger)
         {
             var serviceCollection = new ServiceCollection();
             ServiceConfigurator.ConfigureServices(serviceCollection);
             configureTestServices?.Invoke(serviceCollection);
+            _logger = logger;
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }

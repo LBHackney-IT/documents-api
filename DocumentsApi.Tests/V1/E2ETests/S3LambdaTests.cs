@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.E2ETests
 {
@@ -22,6 +23,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
     {
         private S3EntryPoint _handler;
         private readonly Mock<ILambdaContext> _lambdaContext = new Mock<ILambdaContext>();
+        private readonly Mock<ILogger<S3EntryPoint>> _logger = new Mock<ILogger<S3EntryPoint>>();
         private const string _contentType = "image/png";
 
         [SetUp]
@@ -32,7 +34,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             _handler = new S3EntryPoint(services =>
             {
                 services.Replace(ServiceDescriptor.Singleton(x => DatabaseContext));
-            });
+            }, _logger.Object);
         }
 
         [Test]

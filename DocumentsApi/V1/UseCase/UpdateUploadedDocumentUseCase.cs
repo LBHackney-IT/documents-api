@@ -6,6 +6,7 @@ using Amazon.Lambda.S3Events;
 using Amazon.S3.Util;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.V1.UseCase
 {
@@ -13,11 +14,16 @@ namespace DocumentsApi.V1.UseCase
     {
         private readonly IDocumentsGateway _documentsGateway;
         private readonly IS3Gateway _s3Gateway;
+        private readonly ILogger<UpdateUploadedDocumentUseCase> _logger;
 
-        public UpdateUploadedDocumentUseCase(IDocumentsGateway documentsGateway, IS3Gateway s3Gateway)
+        public UpdateUploadedDocumentUseCase(
+            IDocumentsGateway documentsGateway,
+            IS3Gateway s3Gateway,
+            ILogger<UpdateUploadedDocumentUseCase> logger)
         {
             _documentsGateway = documentsGateway;
             _s3Gateway = s3Gateway;
+            _logger = logger;
         }
 
         public async Task ExecuteAsync(S3Event s3Event)
@@ -32,11 +38,11 @@ namespace DocumentsApi.V1.UseCase
         private async Task UpdateDocument(S3EventNotification.S3EventNotificationRecord record)
         {
             var documentKey = record.S3.Object.Key;
-            Console.WriteLine($"Processing key {documentKey}");
+            _logger.LogInformation("Processing key {documentKey}", documentKey);
 
             var splitArray = documentKey.Split('/');
             var documentId = splitArray.Length > 1 ? splitArray[1] : splitArray[0];
-            Console.WriteLine($"Processing document with ID {documentId}");
+            _logger.LogInformation("Processing document with ID {documentId}", documentId);
 
             try
             {
@@ -46,13 +52,13 @@ namespace DocumentsApi.V1.UseCase
 
                 if (document == null)
                 {
-                    Console.WriteLine($"Could not find document with ID {documentId}");
+                    _logger.LogInformation("Could not find document with ID {documentId}", documentId);
                     return;
                 }
 
                 if (document.Uploaded)
                 {
-                    Console.WriteLine($"Document with ID {documentId} has already been uploaded");
+                    _logger.LogInformation("Document with ID {documentId} has already been uploaded", documentId);
                     return;
                 }
 
@@ -63,12 +69,12 @@ namespace DocumentsApi.V1.UseCase
                 document.FileType = type;
 
                 _documentsGateway.SaveDocument(document);
-                Console.WriteLine($"Completed processing document with ID {documentId}");
+                _logger.LogInformation("Completed processing document with ID {documentId}", documentId);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to process document with ID {documentId} | {ex.GetType()} {ex.Message}");
-                Console.WriteLine(ex);
+                _logger.LogError(ex, "Failed to process document with ID {documentId}", documentId);
+                _logger.LogError(ex.Message);
             }
         }
     }

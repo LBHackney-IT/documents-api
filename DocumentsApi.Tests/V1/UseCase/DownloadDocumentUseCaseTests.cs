@@ -9,6 +9,7 @@ using NUnit.Framework;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Bogus;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.UseCase
 {
@@ -17,12 +18,13 @@ namespace DocumentsApi.Tests.V1.UseCase
     {
         private readonly Mock<IS3Gateway> _s3Gateway = new Mock<IS3Gateway>();
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
+        private readonly Mock<ILogger<DownloadDocumentUseCase>> _logger = new Mock<ILogger<DownloadDocumentUseCase>>();
         private DownloadDocumentUseCase _classUnderTest;
 
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new DownloadDocumentUseCase(_s3Gateway.Object, _documentsGateway.Object);
+            _classUnderTest = new DownloadDocumentUseCase(_s3Gateway.Object, _documentsGateway.Object, _logger.Object);
         }
 
         [Test]

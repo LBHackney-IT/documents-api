@@ -164,3 +164,7 @@ If changes to the database schema are made then the docker image for the databas
 [docker-download]: https://www.docker.com/products/docker-desktop
 [made-tech]: https://madetech.com/
 [aws-cli]: https://aws.amazon.com/cli/
+
+# License
+
+[MIT](./LICENSE)

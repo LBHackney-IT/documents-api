@@ -93,7 +93,14 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void ThrowsNotFoundErrorWhenDocumentDoesNotExist()
         {
-            Func<HttpStatusCode> execute = () => _classUnderTest.Execute(new DocumentUploadRequest());
+            // Arrange
+            var request = new DocumentUploadRequest();
+            request.Id = Guid.NewGuid();
+
+            // Act
+            Func<HttpStatusCode> execute = () => _classUnderTest.Execute(request);
+
+            // Assert
             execute.Should().Throw<NotFoundException>();
         }
     }

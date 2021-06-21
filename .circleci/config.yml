@@ -52,11 +52,6 @@ commands:
           name: Install serverless CLI
           command: npm i -g serverless
       - run:
-          name: Install NodeServices packages
-          command: |
-            cd ./DocumentsApi/V1/Node
-            npm install
-      - run:
           name: Build lambda
           command: |
             cd ./DocumentsApi/

@@ -17,12 +17,6 @@ namespace DocumentsApi
             var options = AppOptions.FromEnv();
             services.AddSingleton<AppOptions>(x => options);
 
-            /* TODO: Node being added to create signed Post Policies
-               (see this issue: https://github.com/LBHackney-IT/documents-api/pull/6)
-               Can be removed when presigned post policies are available in .NET
-             */
-            services.AddNodeServices();
-
             // Database Context
             services.AddDbContext<DocumentsContext>(
                 opt => opt.UseLazyLoadingProxies().UseNpgsql(options.DatabaseConnectionString));
@@ -40,7 +34,6 @@ namespace DocumentsApi
 
             // Use Cases
             services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();
-            services.AddScoped<ICreateUploadPolicyUseCase, CreateUploadPolicyUseCase>();
             services.AddScoped<IUpdateUploadedDocumentUseCase, UpdateUploadedDocumentUseCase>();
             services.AddScoped<IFindClaimByIdUseCase, FindClaimByIdUseCase>();
             services.AddScoped<IDownloadDocumentUseCase, DownloadDocumentUseCase>();

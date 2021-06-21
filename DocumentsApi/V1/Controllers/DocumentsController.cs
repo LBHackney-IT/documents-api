@@ -24,6 +24,14 @@ namespace DocumentsApi.V1.Controllers
             _downloadDocumentUseCase = downloadDocumentUseCase;
         }
 
+
+        /// <summary>
+        /// Uploads the document to S3
+        /// </summary>
+        /// <response code="200">Uploaded</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="500">Amazon S3 exception</response>
         [HttpPost]
         [Route("{id}")]
         public IActionResult UploadDocument([FromForm] DocumentUploadRequest request)
@@ -37,9 +45,9 @@ namespace DocumentsApi.V1.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (BadRequestException ex)
+            catch (AmazonS3Exception e)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, e.Message);
             }
         }
 

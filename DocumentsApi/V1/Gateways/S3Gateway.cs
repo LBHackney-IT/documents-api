@@ -7,6 +7,7 @@ using DocumentsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.NodeServices;
 using Newtonsoft.Json;
 using Amazon.S3.Model;
+using DocumentsApi.V1.Boundary.Request;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -39,6 +40,18 @@ namespace DocumentsApi.V1.Gateways
         {
             var meta = await _s3.GetObjectMetadataAsync(_options.DocumentsBucketName, key).ConfigureAwait(true);
             return meta.Headers.ContentType;
+        }
+
+        public PutObjectResponse UploadDocument(DocumentUploadRequest documentUploadRequest)
+        {
+            PutObjectRequest request = new PutObjectRequest()
+            {
+                BucketName = _options.DocumentsBucketName,
+                Key = "pre-scan/" + documentUploadRequest.Id,
+                InputStream = documentUploadRequest.Document.OpenReadStream(),
+                ContentType = documentUploadRequest.Document.ContentType
+            };
+            return _s3.PutObjectAsync(request).Result;
         }
 
         public GetObjectResponse GetObject(Document document)

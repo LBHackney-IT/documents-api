@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Amazon.S3;
+using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,16 @@ namespace DocumentsApi.V1.Controllers
     public class DocumentsController : BaseController
     {
         private readonly ICreateUploadPolicyUseCase _createUploadPolicyUseCase;
+        private readonly IUploadDocumentUseCase _uploadDocumentUseCase;
         private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
 
-        public DocumentsController(ICreateUploadPolicyUseCase createUploadPolicyUseCase, IDownloadDocumentUseCase downloadDocumentUseCase)
+        public DocumentsController(
+            ICreateUploadPolicyUseCase createUploadPolicyUseCase,
+            IUploadDocumentUseCase uploadDocumentUseCase,
+            IDownloadDocumentUseCase downloadDocumentUseCase)
         {
             _createUploadPolicyUseCase = createUploadPolicyUseCase;
+            _uploadDocumentUseCase = uploadDocumentUseCase;
             _downloadDocumentUseCase = downloadDocumentUseCase;
         }
 
@@ -37,6 +43,25 @@ namespace DocumentsApi.V1.Controllers
             {
                 var result = await _createUploadPolicyUseCase.Execute(id).ConfigureAwait(true);
                 return Created(result.Url, result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("{id}")]
+        public IActionResult UploadDocument([FromForm] DocumentUploadRequest request)
+        {
+            try
+            {
+                var httpStatusCode = _uploadDocumentUseCase.Execute(request);
+                return StatusCode(int.Parse(httpStatusCode.ToString()));
             }
             catch (NotFoundException ex)
             {

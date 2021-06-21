@@ -66,6 +66,24 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
+        public async Task UploadDocumentReturns404ForNonExistentDocument()
+        {
+            var uri = new Uri($"api/v1/documents/{Guid.NewGuid().ToString()}", UriKind.Relative);
+            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+        }
+
+        [Test]
+        public async Task UploadDocumentReturns400ForAlreadyUploadedDocument()
+        {
+            var uri = new Uri($"api/v1/documents/{_document.Id}", UriKind.Relative);
+            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
         public async Task ReturnsDocumentStringWhenDocumentIsFound()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();

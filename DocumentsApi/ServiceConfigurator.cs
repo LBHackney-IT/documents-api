@@ -45,6 +45,7 @@ namespace DocumentsApi
             services.AddScoped<IFindClaimByIdUseCase, FindClaimByIdUseCase>();
             services.AddScoped<IDownloadDocumentUseCase, DownloadDocumentUseCase>();
             services.AddScoped<IUpdateClaimStateUseCase, UpdateClaimStateUseCase>();
+            services.AddScoped<IUploadDocumentUseCase, UploadDocumentUseCase>();
         }
     }
 }

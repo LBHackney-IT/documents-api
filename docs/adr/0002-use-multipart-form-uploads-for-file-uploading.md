@@ -16,7 +16,7 @@ There are a number of ways an API could allow clients to upload files to S3, the
 ## Decision
 
 We decided to use the second option (multipart form uploads), for the following reason:
-- We do not want to expose any AWS links to outside parties. This ensures that all access to AWS resources is controlled by Hackney authentication mechanisms,
+- We do not want to expose any AWS links to outside parties. This ensures that all access to AWS resources is controlled by Hackney authentication mechanisms.
 
 ## Consequences
 

@@ -22,24 +22,25 @@ namespace DocumentsApi.Tests.V1.UseCase
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
         private readonly Mock<ILogger<UploadDocumentUseCase>> _logger = new Mock<ILogger<UploadDocumentUseCase>>();
         private UploadDocumentUseCase _classUnderTest;
+        private Document document;
 
         [SetUp]
         public void SetUp()
         {
             _classUnderTest = new UploadDocumentUseCase(_s3Gateway.Object, _documentsGateway.Object, _logger.Object);
+            document = _fixture.Build<Document>()
+                .Without(x => x.UploadedAt)
+                .Create();
         }
 
         [Test]
         public void CanUploadDocument()
         {
             // Arrange
-            DocumentUploadRequest request = new DocumentUploadRequest();
+            var request = new DocumentUploadRequest();
+            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
             var expectedS3Response = new PutObjectResponse();
             expectedS3Response.HttpStatusCode = HttpStatusCode.OK;
-            var document = _fixture.Build<Document>()
-                .Without(x => x.UploadedAt)
-                .Create();
-            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
             _s3Gateway.Setup(x => x.UploadDocument(request)).Returns(expectedS3Response);
 
             // Act
@@ -50,13 +51,10 @@ namespace DocumentsApi.Tests.V1.UseCase
         public void ThrowsDocumentUploadExceptionIfAwsDoesNotReturn200()
         {
             // Arrange
-            DocumentUploadRequest request = new DocumentUploadRequest();
-            var document = _fixture.Build<Document>()
-                .Without(x => x.UploadedAt)
-                .Create();
+            var request = new DocumentUploadRequest();
+            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
             var expectedS3Response = new PutObjectResponse();
             expectedS3Response.HttpStatusCode = HttpStatusCode.OK;
-            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
             PutObjectResponse response = new PutObjectResponse();
             response.HttpStatusCode = HttpStatusCode.Forbidden;
             _s3Gateway.Setup(x => x.UploadDocument(request)).Returns(response);
@@ -69,13 +67,10 @@ namespace DocumentsApi.Tests.V1.UseCase
         public void ThrowsAmazonS3ExceptionIfCannotUploadDocument()
         {
             // Arrange
-            DocumentUploadRequest request = new DocumentUploadRequest();
-            var document = _fixture.Build<Document>()
-                .Without(x => x.UploadedAt)
-                .Create();
+            var request = new DocumentUploadRequest();
+            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
             var expectedS3Response = new PutObjectResponse();
             expectedS3Response.HttpStatusCode = HttpStatusCode.OK;
-            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
             _s3Gateway.Setup(x => x.UploadDocument(request)).Throws(new AmazonS3Exception("Error retrieving the document"));
 
             // Act and assert
@@ -86,14 +81,13 @@ namespace DocumentsApi.Tests.V1.UseCase
         public void ThrowsBadRequestErrorWhenDocumentAlreadyUploaded()
         {
             // Act
-            var document = _fixture.Build<Document>()
+            var already_uploaded_document = _fixture.Build<Document>()
                 .With(x => x.FileSize, 1000)
                 .With(x => x.FileType, "txt")
                 .Create();
             DocumentUploadRequest request = new DocumentUploadRequest();
-            request.Id = document.Id;
-
-            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
+            request.Id = already_uploaded_document.Id;
+            _documentsGateway.Setup(x => x.FindDocument(already_uploaded_document.Id)).Returns(already_uploaded_document);
 
             // Act and assert
             Assert.Throws<BadRequestException>(() => _classUnderTest.Execute(request));

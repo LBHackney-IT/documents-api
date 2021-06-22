@@ -22,13 +22,13 @@ namespace DocumentsApi.Tests.V1.UseCase
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
         private readonly Mock<ILogger<UploadDocumentUseCase>> _logger = new Mock<ILogger<UploadDocumentUseCase>>();
         private UploadDocumentUseCase _classUnderTest;
-        private Document document;
+        private Document _document;
 
         [SetUp]
         public void SetUp()
         {
             _classUnderTest = new UploadDocumentUseCase(_s3Gateway.Object, _documentsGateway.Object, _logger.Object);
-            document = _fixture.Build<Document>()
+            _document = _fixture.Build<Document>()
                 .Without(x => x.UploadedAt)
                 .Create();
         }
@@ -38,7 +38,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             // Arrange
             var request = new DocumentUploadRequest();
-            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
+            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(_document);
             var expectedS3Response = new PutObjectResponse();
             expectedS3Response.HttpStatusCode = HttpStatusCode.OK;
             _s3Gateway.Setup(x => x.UploadDocument(request)).Returns(expectedS3Response);
@@ -52,7 +52,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             // Arrange
             var request = new DocumentUploadRequest();
-            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
+            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(_document);
             var expectedS3Response = new PutObjectResponse();
             expectedS3Response.HttpStatusCode = HttpStatusCode.OK;
             PutObjectResponse response = new PutObjectResponse();
@@ -68,7 +68,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             // Arrange
             var request = new DocumentUploadRequest();
-            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
+            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(_document);
             var expectedS3Response = new PutObjectResponse();
             expectedS3Response.HttpStatusCode = HttpStatusCode.OK;
             _s3Gateway.Setup(x => x.UploadDocument(request)).Throws(new AmazonS3Exception("Error retrieving the document"));

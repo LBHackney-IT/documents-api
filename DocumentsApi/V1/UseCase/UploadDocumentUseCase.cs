@@ -21,7 +21,7 @@ namespace DocumentsApi.V1.UseCase
             _logger = logger;
         }
 
-        public HttpStatusCode Execute(DocumentUploadRequest request)
+        public void Execute(DocumentUploadRequest request)
         {
             var document = _documentsGateway.FindDocument(request.Id);
 
@@ -37,7 +37,11 @@ namespace DocumentsApi.V1.UseCase
 
             try
             {
-                return _s3Gateway.UploadDocument(request).HttpStatusCode;
+                var result = _s3Gateway.UploadDocument(request);
+                if (result.HttpStatusCode != HttpStatusCode.OK)
+                {
+                    throw new DocumentUploadException(result.HttpStatusCode.ToString());
+                }
             }
             catch (AmazonS3Exception e)
             {

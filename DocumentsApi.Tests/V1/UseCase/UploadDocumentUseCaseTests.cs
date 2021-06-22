@@ -8,7 +8,6 @@ using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase;
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -44,10 +43,26 @@ namespace DocumentsApi.Tests.V1.UseCase
             _s3Gateway.Setup(x => x.UploadDocument(request)).Returns(expectedS3Response);
 
             // Act
-            var result = _classUnderTest.Execute(request);
+            _classUnderTest.Execute(request);
+        }
 
-            // Assert
-            result.Should().BeEquivalentTo(expectedS3Response.HttpStatusCode);
+        [Test]
+        public void ThrowsDocumentUploadExceptionIfAwsDoesNotReturn200()
+        {
+            // Arrange
+            DocumentUploadRequest request = new DocumentUploadRequest();
+            var document = _fixture.Build<Document>()
+                .Without(x => x.UploadedAt)
+                .Create();
+            var expectedS3Response = new PutObjectResponse();
+            expectedS3Response.HttpStatusCode = HttpStatusCode.OK;
+            _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
+            PutObjectResponse response = new PutObjectResponse();
+            response.HttpStatusCode = HttpStatusCode.Forbidden;
+            _s3Gateway.Setup(x => x.UploadDocument(request)).Returns(response);
+
+            // Act and assert
+            Assert.Throws<DocumentUploadException>(() => _classUnderTest.Execute(request));
         }
 
         [Test]
@@ -63,11 +78,8 @@ namespace DocumentsApi.Tests.V1.UseCase
             _documentsGateway.Setup(x => x.FindDocument(request.Id)).Returns(document);
             _s3Gateway.Setup(x => x.UploadDocument(request)).Throws(new AmazonS3Exception("Error retrieving the document"));
 
-            // Act
-            Func<HttpStatusCode> execute = () => _classUnderTest.Execute(request);
-
-            // Assert
-            execute.Should().Throw<AmazonS3Exception>();
+            // Act and assert
+            Assert.Throws<AmazonS3Exception>(() => _classUnderTest.Execute(request));
         }
 
         [Test]
@@ -83,11 +95,8 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
 
-            // Act
-            Func<HttpStatusCode> execute = () => _classUnderTest.Execute(request);
-
-            // Assert
-            execute.Should().Throw<BadRequestException>();
+            // Act and assert
+            Assert.Throws<BadRequestException>(() => _classUnderTest.Execute(request));
         }
 
         [Test]
@@ -97,11 +106,8 @@ namespace DocumentsApi.Tests.V1.UseCase
             var request = new DocumentUploadRequest();
             request.Id = Guid.NewGuid();
 
-            // Act
-            Func<HttpStatusCode> execute = () => _classUnderTest.Execute(request);
-
-            // Assert
-            execute.Should().Throw<NotFoundException>();
+            // Act and assert
+            Assert.Throws<NotFoundException>(() => _classUnderTest.Execute(request));
         }
     }
 }

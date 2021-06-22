@@ -137,6 +137,3 @@ dotnet_diagnostic.CA2000.severity = none
 
 #Can reassign collections
 dotnet_diagnostic.CA2227.severity = none
-
-#Enable NodeServices temporarily
-dotnet_diagnostic.CS0618.severity = none

@@ -13,7 +13,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
     [TestFixture]
     public class DocumentsTests : IntegrationTests<Startup>
     {
-        private DocumentEntity _document;
+        // private DocumentEntity _document;
 
         [SetUp]
         public void SetUp()
@@ -21,26 +21,26 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var document = TestDataHelper.CreateDocument().ToEntity();
             DatabaseContext.Add(document);
             DatabaseContext.SaveChanges();
-            _document = document;
+            // _document = document;
         }
 
-        [Test]
-        public async Task UploadDocumentReturns404ForNonExistentDocument()
-        {
-            var uri = new Uri($"api/v1/documents/{Guid.NewGuid().ToString()}", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
-
-            response.StatusCode.Should().Be(404);
-        }
-
-        [Test]
-        public async Task UploadDocumentReturns400ForAlreadyUploadedDocument()
-        {
-            var uri = new Uri($"api/v1/documents/{_document.Id}", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
-
-            response.StatusCode.Should().Be(400);
-        }
+        // [Test]
+        // public async Task UploadDocumentReturns404ForNonExistentDocument()
+        // {
+        //     var uri = new Uri($"api/v1/documents/{Guid.NewGuid().ToString()}", UriKind.Relative);
+        //     var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+        //
+        //     response.StatusCode.Should().Be(404);
+        // }
+        //
+        // [Test]
+        // public async Task UploadDocumentReturns400ForAlreadyUploadedDocument()
+        // {
+        //     var uri = new Uri($"api/v1/documents/{_document.Id}", UriKind.Relative);
+        //     var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+        //
+        //     response.StatusCode.Should().Be(400);
+        // }
 
         [Test]
         public async Task ReturnsDocumentStringWhenDocumentIsFound()

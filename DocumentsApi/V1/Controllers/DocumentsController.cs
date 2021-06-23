@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Amazon.S3;
 using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
@@ -35,11 +36,11 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="500">Document upload exception</response>
         [HttpPost]
         [Route("{id}")]
-        public IActionResult UploadDocument([FromForm] DocumentUploadRequest request)
+        public IActionResult UploadDocument([FromRoute][Required] Guid id, [FromBody][Required] DocumentUploadRequest request)
         {
             try
             {
-                _uploadDocumentUseCase.Execute(request);
+                _uploadDocumentUseCase.Execute(id, request);
                 return Ok();
             }
             catch (NotFoundException ex)

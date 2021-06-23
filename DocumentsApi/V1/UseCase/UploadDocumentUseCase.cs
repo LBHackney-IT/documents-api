@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using Amazon.S3;
 using DocumentsApi.V1.Boundary.Request;
@@ -21,23 +22,23 @@ namespace DocumentsApi.V1.UseCase
             _logger = logger;
         }
 
-        public void Execute(DocumentUploadRequest request)
+        public void Execute(Guid documentId, DocumentUploadRequest request)
         {
-            var document = _documentsGateway.FindDocument(request.Id);
+            var document = _documentsGateway.FindDocument(documentId);
 
             if (document == null)
             {
-                throw new NotFoundException($"Cannot find document with ID {request.Id}");
+                throw new NotFoundException($"Cannot find document with ID {documentId}");
             }
 
             if (document.Uploaded)
             {
-                throw new BadRequestException($"Document with ID {request.Id} has already been uploaded.");
+                throw new BadRequestException($"Document with ID {documentId} has already been uploaded.");
             }
 
             try
             {
-                var result = _s3Gateway.UploadDocument(request);
+                var result = _s3Gateway.UploadDocument(documentId, request);
                 if (result.HttpStatusCode != HttpStatusCode.OK)
                 {
                     throw new DocumentUploadException(result.HttpStatusCode.ToString());
@@ -45,7 +46,7 @@ namespace DocumentsApi.V1.UseCase
             }
             catch (AmazonS3Exception e)
             {
-                _logger.LogError("Error when uploading DocumentId: '{0}'. Error: '{1}'", request.Id, e.Message);
+                _logger.LogError("Error when uploading DocumentId: '{0}'. Error: '{1}'", documentId, e.Message);
                 throw;
             }
         }

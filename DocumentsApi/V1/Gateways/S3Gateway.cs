@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Amazon.S3;
 using DocumentsApi.V1.Domain;
@@ -26,16 +28,35 @@ namespace DocumentsApi.V1.Gateways
             return meta.Headers.ContentType;
         }
 
-        public PutObjectResponse UploadDocument(DocumentUploadRequest documentUploadRequest)
+        public PutObjectResponse UploadDocument(Guid documentId, DocumentUploadRequest documentUploadRequest)
         {
-            PutObjectRequest request = new PutObjectRequest()
+            var base64Decoded = DecodeBase64ImageString(documentUploadRequest.Base64Document);
+            var byteArray = Convert.FromBase64String(base64Decoded.Imagebase64String);
+            using (var stream = new MemoryStream(byteArray))
             {
-                BucketName = _options.DocumentsBucketName,
-                Key = "pre-scan/" + documentUploadRequest.Id,
-                InputStream = documentUploadRequest.Document.OpenReadStream(),
-                ContentType = documentUploadRequest.Document.ContentType
+                var request = new PutObjectRequest
+                {
+                    BucketName = _options.DocumentsBucketName,
+                    Key = "pre-scan/" + documentId,
+                    InputStream = stream,
+                    ContentType = base64Decoded.ImageType
+                };
+                return _s3.PutObjectAsync(request).Result;
+            }
+        }
+
+        private static Base64DecodedData DecodeBase64ImageString(string imageString)
+        {
+            var base64Part = imageString.Split(",")[1];
+            var fileTypePart = Regex.Match(imageString, @"(?<=:).+(?=;)").Value;
+            var fileExt = Regex.Match(fileTypePart, @"(?<=\/).+").Value;
+
+            return new Base64DecodedData()
+            {
+                Imagebase64String = base64Part,
+                ImageType = fileTypePart,
+                ImageExtension = fileExt
             };
-            return _s3.PutObjectAsync(request).Result;
         }
 
         public GetObjectResponse GetObject(Document document)

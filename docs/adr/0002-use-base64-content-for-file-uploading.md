@@ -1,6 +1,6 @@
-# 2. Use multipart form uploads for file uploading
+# 2. Use base 64 content for file uploading
 
-Date: 2021-06-22
+Date: 2021-06-24
 
 ## Status
 
@@ -15,9 +15,9 @@ There are a number of ways an API could allow clients to upload files to S3, the
 
 ## Decision
 
-We decided to use the second option (multipart form uploads), for the following reason:
+We decided to use the first option (base 64 encoded uploads), for the following reason:
 - We do not want to expose any AWS links to outside parties. This ensures that all access to AWS resources is controlled by Hackney authentication mechanisms.
 
 ## Consequences
 
-It breaks the JSON API format of our API and creates an inconsistent experience for our clients.
+It is a slightly slower option compared with presigned URL so the user's experience will suffer a bit.

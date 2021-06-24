@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase;
@@ -8,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Bogus;
+using DocumentsApi.V1.Factories;
 using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.UseCase
@@ -18,13 +17,14 @@ namespace DocumentsApi.Tests.V1.UseCase
     {
         private readonly Mock<IS3Gateway> _s3Gateway = new Mock<IS3Gateway>();
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
+        private readonly Mock<IDocumentFormatFactory> _documentFormatFactory = new Mock<IDocumentFormatFactory>();
         private readonly Mock<ILogger<DownloadDocumentUseCase>> _logger = new Mock<ILogger<DownloadDocumentUseCase>>();
         private DownloadDocumentUseCase _classUnderTest;
 
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new DownloadDocumentUseCase(_s3Gateway.Object, _documentsGateway.Object, _logger.Object);
+            _classUnderTest = new DownloadDocumentUseCase(_s3Gateway.Object, _documentsGateway.Object, _documentFormatFactory.Object, _logger.Object);
         }
 
         [Test]
@@ -34,15 +34,10 @@ namespace DocumentsApi.Tests.V1.UseCase
             var document = TestDataHelper.CreateDocument();
             document.Id = documentId;
             var expectedS3Response = new GetObjectResponse();
-            var data = new Faker().Random.Guid().ToByteArray();
-
+            var expectedResponse = "expectedResponse";
             _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
             _s3Gateway.Setup(x => x.GetObject(document)).Returns(expectedS3Response);
-            expectedS3Response.ResponseStream = new MemoryStream(data);
-            //second response, as if reusing first one, the stream of data will be closed
-            var s3Response2 = new GetObjectResponse();
-            s3Response2.ResponseStream = new MemoryStream(data);
-            var expectedResponse = DownloadDocumentUseCase.EncodeStreamToBase64(s3Response2);
+            _documentFormatFactory.Setup(x => x.EncodeStreamToBase64(expectedS3Response)).Returns(expectedResponse);
 
             var result = _classUnderTest.Execute(documentId);
 

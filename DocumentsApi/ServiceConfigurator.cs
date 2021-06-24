@@ -1,5 +1,6 @@
 using Amazon;
 using Amazon.S3;
+using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
@@ -31,6 +32,9 @@ namespace DocumentsApi
             // Gateways
             services.AddScoped<IDocumentsGateway, DocumentsGateway>();
             services.AddScoped<IS3Gateway, S3Gateway>();
+
+            // Factories
+            services.AddScoped<IDocumentFormatFactory, DocumentFormatFactory>();
 
             // Use Cases
             services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();

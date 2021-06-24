@@ -3,6 +3,7 @@ using System.Net;
 using Amazon.S3;
 using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
+using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -13,12 +14,18 @@ namespace DocumentsApi.V1.UseCase
     {
         private IS3Gateway _s3Gateway;
         private IDocumentsGateway _documentsGateway;
+        private IDocumentFormatFactory _documentFormatFactory;
         private readonly ILogger<UploadDocumentUseCase> _logger;
 
-        public UploadDocumentUseCase(IS3Gateway s3Gateway, IDocumentsGateway documentsGateway, ILogger<UploadDocumentUseCase> logger)
+        public UploadDocumentUseCase(
+            IS3Gateway s3Gateway,
+            IDocumentsGateway documentsGateway,
+            IDocumentFormatFactory documentFormatFactory,
+            ILogger<UploadDocumentUseCase> logger)
         {
             _s3Gateway = s3Gateway;
             _documentsGateway = documentsGateway;
+            _documentFormatFactory = documentFormatFactory;
             _logger = logger;
         }
 
@@ -38,7 +45,8 @@ namespace DocumentsApi.V1.UseCase
 
             try
             {
-                var result = _s3Gateway.UploadDocument(documentId, request);
+                var decodedDocument = _documentFormatFactory.DecodeBase64DocumentString(request.Base64Document);
+                var result = _s3Gateway.UploadDocument(documentId, decodedDocument);
                 if (result.HttpStatusCode != HttpStatusCode.OK)
                 {
                     throw new DocumentUploadException(result.HttpStatusCode.ToString());

@@ -208,6 +208,7 @@ workflows:
           requires:
             - migrate-database-staging
       - publish-to-swaggerhub:
+          context: api-assume-role-document-evidence-store-staging-context
           requires:
             - deploy-to-staging
 

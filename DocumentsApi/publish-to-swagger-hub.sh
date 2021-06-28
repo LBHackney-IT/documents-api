@@ -22,7 +22,7 @@ then
 fi
 
 owner="Hackney"
-api_name="documents-api-neil-testing"
+api_name="documents-api"
 api_version="v1.0"
 swagger_version="1.0.0"
 

@@ -201,10 +201,6 @@ workflows:
           context: api-assume-role-document-evidence-store-staging-context
           requires:
             - build-and-test
-          filters:
-            branches:
-              only:
-                - main
       - migrate-database-staging:
           requires:
             - assume-role-staging
@@ -220,6 +216,10 @@ workflows:
           type: approval
           requires:
             - deploy-to-staging
+          filters:
+            branches:
+              only:
+                - main
       - assume-role-production:
           context: api-assume-role-document-evidence-store-production-context
           requires:

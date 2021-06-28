@@ -62,26 +62,26 @@ commands:
           command: |
             cd ./DocumentsApi/
             sls deploy --stage <<parameters.stage>> --conceal
-  publish-to-swaggerhub:
-    description: "Publishes API docs to SwaggerHub"
-    steps:
-      - *attach_workspace
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Install Node.js
-          command: |
-            curl -sL https://deb.nodesource.com/setup_12.x | bash -
-            apt-get update && apt-get install -y nodejs
-      - run:
-          name: Install SwaggerHub CLI
-          command: npm i -g swaggerhub-cli
-      - run:
-          name: Publish to SwaggerHub
-          command: |
-            cd ./DocumentsApi/
-            chmod +x ./publish-to-swagger-hub.sh
-            ./publish-to-swagger-hub.sh
+#  publish-to-swaggerhub:
+#    description: "Publishes API docs to SwaggerHub"
+#    steps:
+#      - *attach_workspace
+#      - checkout
+#      - setup_remote_docker
+#      - run:
+#          name: Install Node.js
+#          command: |
+#            curl -sL https://deb.nodesource.com/setup_12.x | bash -
+#            apt-get update && apt-get install -y nodejs
+#      - run:
+#          name: Install SwaggerHub CLI
+#          command: npm i -g swaggerhub-cli
+#      - run:
+#          name: Publish to SwaggerHub
+#          command: |
+#            cd ./DocumentsApi/
+#            chmod +x ./publish-to-swagger-hub.sh
+#            ./publish-to-swagger-hub.sh
 
   migrate-database:
     description: "Migrate database"
@@ -166,11 +166,6 @@ jobs:
       - deploy-lambda:
           stage: "staging"
 
-  publish-to-swaggerhub:
-    executor: docker-dotnet
-    steps:
-      - publish-to-swaggerhub
-
   deploy-to-production:
     executor: docker-dotnet
     steps:
@@ -189,6 +184,11 @@ jobs:
       - migrate-database:
           stage: "production"
 
+#  publish-to-swaggerhub:
+#    executor: docker-dotnet
+#    steps:
+#      - publish-to-swaggerhub
+
 workflows:
   check-and-deploy-staging-and-production:
     jobs:
@@ -201,26 +201,22 @@ workflows:
           context: api-assume-role-document-evidence-store-staging-context
           requires:
             - build-and-test
+          filters:
+            branches:
+              only:
+                - main
       - migrate-database-staging:
           requires:
             - assume-role-staging
       - deploy-to-staging:
           requires:
             - migrate-database-staging
-      - publish-to-swaggerhub:
-          context: api-assume-role-document-evidence-store-staging-context
-          requires:
-            - deploy-to-staging
 
       # Production deploy
       - permit-production-release:
           type: approval
           requires:
             - deploy-to-staging
-          filters:
-            branches:
-              only:
-                - main
       - assume-role-production:
           context: api-assume-role-document-evidence-store-production-context
           requires:
@@ -231,3 +227,7 @@ workflows:
       - deploy-to-production:
           requires:
             - migrate-database-production
+#      - publish-to-swaggerhub:
+#          context: api-assume-role-document-evidence-store-production-context
+#          requires:
+#            - deploy-to-production

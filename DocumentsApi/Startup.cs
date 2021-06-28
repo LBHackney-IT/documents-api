@@ -30,7 +30,6 @@ namespace DocumentsApi
         }
 
         public IConfiguration Configuration { get; }
-        private static List<ApiVersionDescription> _apiVersions { get; set; }
         private const string ApiName = "Documents API";
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -40,12 +39,21 @@ namespace DocumentsApi
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddFluentValidation();
-            services.AddApiVersioning(o =>
+
+            var apiVersions = new List<ApiVersion>();
+            apiVersions.Add(new ApiVersion(1, 0));
+
+            foreach (var apiVersion in apiVersions)
             {
-                o.DefaultApiVersion = new ApiVersion(1, 0);
-                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
-                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the url segment header)
-            });
+                services.AddApiVersioning(o =>
+                {
+                    o.DefaultApiVersion = apiVersion;
+                    o.AssumeDefaultVersionWhenUnspecified =
+                        true; // assume that the caller wants the default version if they don't specify
+                    o.ApiVersionReader =
+                        new UrlSegmentApiVersionReader(); // read the version number from the url segment header)
+                });
+            }
 
             services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
 
@@ -87,15 +95,17 @@ namespace DocumentsApi
                 });
 
                 //Get every ApiVersion attribute specified and create swagger docs for them
-                foreach (var apiVersion in _apiVersions)
+                foreach (var apiVersion in apiVersions)
                 {
-                    var version = $"v{apiVersion.ApiVersion.ToString()}";
-                    c.SwaggerDoc(version, new OpenApiInfo
-                    {
-                        Title = $"{ApiName}-api {version}",
-                        Version = version,
-                        Description = $"{ApiName} version {version}. Please check older versions for depreciated endpoints."
-                    });
+                    var version = $"v{apiVersion.ToString()}";
+                    c.SwaggerDoc(version,
+                        new OpenApiInfo
+                        {
+                            Title = $"{ApiName}-api {version}",
+                            Version = version,
+                            Description =
+                                $"{ApiName} version {version}. Please check older versions for deprecated endpoints."
+                        });
                 }
 
                 c.CustomSchemaIds(x => x.FullName);
@@ -115,6 +125,8 @@ namespace DocumentsApi
             ServiceConfigurator.ConfigureServices(services);
         }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -129,7 +141,7 @@ namespace DocumentsApi
 
             //Get All ApiVersions,
             var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
-            _apiVersions = api.ApiVersionDescriptions.ToList();
+            var _apiVersions = api.ApiVersionDescriptions.ToList();
 
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>

@@ -30,12 +30,6 @@ provider:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      corsConfiguration:
-        CorsRules:
-          - AllowedMethods:
-              - GET
-              - POST
-            AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
 
 package:
   artifact: ./bin/release/netcoreapp3.1/documents-api.zip
@@ -145,11 +139,6 @@ resources:
                   - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
 
 custom:
-  corsDomains:
-    staging:
-      - "https://*.hackney.gov.uk"
-    production:
-      - "https://*.hackney.gov.uk"
   vpc:
     staging:
       securityGroupIds:

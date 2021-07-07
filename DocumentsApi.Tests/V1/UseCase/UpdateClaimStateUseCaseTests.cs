@@ -69,6 +69,21 @@ namespace DocumentsApi.Tests.V1.UseCase
             act.Should().Throw<NotFoundException>().WithMessage($"Could not find Claim with ID: {id}");
         }
 
+        [Test]
+        public void ThrowsAnErrorWhenClaimDateIsInThePast()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var claimUpdateRequest = CreateClaimUpdateRequest(new DateTime(2000,3,20));
+            _documentsGateway.Setup(x => x.FindClaim(id)).Returns(TestDataHelper.CreateClaim);
+
+            // Act
+            Action act = () => _classUnderTest.Execute(id, claimUpdateRequest);
+
+            // Assert
+            act.Should().Throw<BadRequestException>().WithMessage("The date cannot be in the past.");
+        }
+
         private static ClaimUpdateRequest CreateClaimUpdateRequest(DateTime validUntil)
         {
             return new ClaimUpdateRequest()

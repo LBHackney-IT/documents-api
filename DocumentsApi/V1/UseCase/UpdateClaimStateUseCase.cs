@@ -31,6 +31,11 @@ namespace DocumentsApi.V1.UseCase
                 throw new BadRequestException($"Cannot update Claim with ID: {id} because of invalid request.");
             }
 
+            if (request.ValidUntil < DateTime.UtcNow)
+            {
+                throw new BadRequestException("The date cannot be in the past.");
+            }
+
             found.ValidUntil = request.ValidUntil;
             _documentsGateway.SaveClaim(found);
 

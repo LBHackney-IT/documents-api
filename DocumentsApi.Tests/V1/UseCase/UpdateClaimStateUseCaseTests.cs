@@ -74,7 +74,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             // Arrange
             var id = Guid.NewGuid();
-            var claimUpdateRequest = CreateClaimUpdateRequest(new DateTime(2000,3,20));
+            var claimUpdateRequest = CreateClaimUpdateRequest(new DateTime(2000, 3, 20));
             _documentsGateway.Setup(x => x.FindClaim(id)).Returns(TestDataHelper.CreateClaim);
 
             // Act

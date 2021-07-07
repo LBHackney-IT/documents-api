@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+We have linked to these records from the [Hackney ADR repository](https://github.com/LBHackney-IT/lbh-adrs/tree/master/DES). Records found in [Platform ADRs](https://github.com/LBHackney-IT/lbh-adrs/tree/master/Platform) should take precedence.
+
 * [1. Record architecture decisions](0001-record-architecture-decisions.md)
 * [2. Use base 64 content for file uploading](0002-use-base64-content-for-file-uploading.md)
 

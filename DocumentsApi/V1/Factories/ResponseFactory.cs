@@ -31,5 +31,21 @@ namespace DocumentsApi.V1.Factories
                 ValidUntil = domain.ValidUntil
             };
         }
+
+        public static ClaimAndUploadDocumentResponse ToClaimAndUploadDocumentResponse(this ClaimResponse claim, string base64Document)
+        {
+            return new ClaimAndUploadDocumentResponse
+            {
+                ApiCreatedBy = claim.ApiCreatedBy,
+                CreatedAt = claim.CreatedAt,
+                Document = claim.Document,
+                ServiceAreaCreatedBy = claim.ServiceAreaCreatedBy,
+                Id = claim.Id,
+                RetentionExpiresAt = claim.RetentionExpiresAt,
+                UserCreatedBy = claim.UserCreatedBy,
+                ValidUntil = claim.ValidUntil,
+                Base64Document = base64Document
+            };
+        }
     }
 }

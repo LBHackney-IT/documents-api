@@ -16,16 +16,19 @@ namespace DocumentsApi.V1.Controllers
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
+        private readonly ICreateClaimAndUploadDocumentUseCase _createClaimAndUploadDocumentUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
-            IUpdateClaimStateUseCase updateClaimStateUseCase
+            IUpdateClaimStateUseCase updateClaimStateUseCase,
+            ICreateClaimAndUploadDocumentUseCase createClaimAndUploadDocumentUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
             _updateClaimStateUseCase = updateClaimStateUseCase;
+            _createClaimAndUploadDocumentUseCase = createClaimAndUploadDocumentUseCase;
         }
 
         /// <summary>
@@ -45,6 +48,38 @@ namespace DocumentsApi.V1.Controllers
             catch (BadRequestException ex)
             {
                 return BadRequest(ex.ValidationResponse.Errors);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new claim and uploads a document
+        /// </summary>
+        /// <response code="200">Uploaded</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="400">A document has already been uploaded</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Document not found</response>
+        /// <response code="500">Document upload exception</response>
+        [HttpPost]
+        [Route("claim_and_document")]
+        public IActionResult CreateClaimAndUploadDocument(ClaimAndUploadDocumentRequest request)
+        {
+            try
+            {
+                var result = _createClaimAndUploadDocumentUseCase.Execute(request);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (DocumentUploadException e)
+            {
+                return StatusCode(500, e.Message);
             }
         }
 

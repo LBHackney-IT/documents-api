@@ -3,6 +3,7 @@ using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Factories;
 using FluentAssertions;
 using NUnit.Framework;
+using DocumentsApi.V1.Boundary.Response;
 
 namespace DocumentsApi.Tests.V1.Factories
 {
@@ -21,6 +22,32 @@ namespace DocumentsApi.Tests.V1.Factories
             var response = claim.ToResponse();
 
             response.Should().BeEquivalentTo(claim, opt => opt.Excluding(x => x.Document.Uploaded).Excluding(x => x.Expired));
+        }
+
+        [Test]
+        public void CanMapAClaimDomainModelAndBase64DocumentToResponse()
+        {
+            var document = _fixture.Create<DocumentResponse>();
+            var claim = _fixture.Build<ClaimResponse>()
+                .With(x => x.Document, document)
+                .Create();
+            var base64Document = "base-64-document";
+
+            var response = claim.ToClaimAndUploadDocumentResponse(base64Document);
+            ClaimAndUploadDocumentResponse expected = new ClaimAndUploadDocumentResponse
+            {
+                Id = response.Id,
+                CreatedAt = response.CreatedAt,
+                Document = response.Document,
+                ServiceAreaCreatedBy = response.ServiceAreaCreatedBy,
+                UserCreatedBy = response.UserCreatedBy,
+                ApiCreatedBy = response.ApiCreatedBy,
+                RetentionExpiresAt = response.RetentionExpiresAt,
+                ValidUntil = response.ValidUntil,
+                Base64Document = response.Base64Document
+            };
+
+            response.Should().BeEquivalentTo(expected);
         }
     }
 }

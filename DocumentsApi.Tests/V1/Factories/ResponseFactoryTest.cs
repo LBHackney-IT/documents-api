@@ -25,7 +25,7 @@ namespace DocumentsApi.Tests.V1.Factories
         }
 
         [Test]
-        public void CanMapAClaimDomainModelAndBase64DocumentToResponse()
+        public void CanMapAClaimAndBase64DocumentToResponse()
         {
             var document = _fixture.Create<DocumentResponse>();
             var claim = _fixture.Build<ClaimResponse>()
@@ -33,10 +33,10 @@ namespace DocumentsApi.Tests.V1.Factories
                 .Create();
             var base64Document = "base-64-document";
 
-            var response = claim.ToClaimAndUploadDocumentResponse(base64Document);
-            ClaimAndUploadDocumentResponse expected = new ClaimAndUploadDocumentResponse
+            var response = claim.ToClaimAndDocumentResponse(base64Document);
+            ClaimAndDocumentResponse expected = new ClaimAndDocumentResponse
             {
-                Id = response.Id,
+                ClaimId = response.ClaimId,
                 CreatedAt = response.CreatedAt,
                 Document = response.Document,
                 ServiceAreaCreatedBy = response.ServiceAreaCreatedBy,

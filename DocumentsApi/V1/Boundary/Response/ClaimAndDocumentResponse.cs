@@ -2,9 +2,9 @@ using System;
 
 namespace DocumentsApi.V1.Boundary.Response
 {
-    public class ClaimAndUploadDocumentResponse
+    public class ClaimAndDocumentResponse
     {
-        public Guid Id { get; set; }
+        public Guid ClaimId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DocumentResponse Document { get; set; }
         public string ServiceAreaCreatedBy { get; set; }

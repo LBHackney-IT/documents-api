@@ -5,6 +5,6 @@ namespace DocumentsApi.V1.UseCase.Interfaces
 {
     public interface ICreateClaimAndUploadDocumentUseCase
     {
-        public ClaimAndUploadDocumentResponse Execute(ClaimAndUploadDocumentRequest request);
+        public ClaimAndDocumentResponse Execute(ClaimAndUploadDocumentRequest request);
     }
 }

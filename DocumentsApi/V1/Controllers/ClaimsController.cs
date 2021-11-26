@@ -4,6 +4,7 @@ using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Amazon.S3;
 
 namespace DocumentsApi.V1.Controllers
 {
@@ -17,18 +18,21 @@ namespace DocumentsApi.V1.Controllers
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
         private readonly ICreateClaimAndUploadDocumentUseCase _createClaimAndUploadDocumentUseCase;
+        private readonly IGetClaimAndDocumentUseCase _getClaimAndDocumentUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
             IUpdateClaimStateUseCase updateClaimStateUseCase,
-            ICreateClaimAndUploadDocumentUseCase createClaimAndUploadDocumentUseCase
+            ICreateClaimAndUploadDocumentUseCase createClaimAndUploadDocumentUseCase,
+            IGetClaimAndDocumentUseCase getClaimAndDocumentUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
             _updateClaimStateUseCase = updateClaimStateUseCase;
             _createClaimAndUploadDocumentUseCase = createClaimAndUploadDocumentUseCase;
+            _getClaimAndDocumentUseCase = getClaimAndDocumentUseCase;
         }
 
         /// <summary>
@@ -54,7 +58,7 @@ namespace DocumentsApi.V1.Controllers
         /// <summary>
         /// Creates a new claim and uploads a document
         /// </summary>
-        /// <response code="200">Uploaded</response>
+        /// <response code="201">Claim created and document uploaded</response>
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="400">A document has already been uploaded</response>
         /// <response code="401">Request lacks valid API token</response>
@@ -67,7 +71,7 @@ namespace DocumentsApi.V1.Controllers
             try
             {
                 var result = _createClaimAndUploadDocumentUseCase.Execute(request);
-                return Ok(result);
+                return Created(new Uri($"/claim_and_document/{result.ClaimId}", UriKind.Relative), result);
             }
             catch (NotFoundException ex)
             {
@@ -101,6 +105,32 @@ namespace DocumentsApi.V1.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Gets a claim and a document
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Claim not found</response>
+        /// <response code="500">Amazon S3 exception</response>
+        [HttpGet]
+        [Route("claim_and_document/{claimId}")]
+        public IActionResult GetClaimAndDocument([Required][FromRoute] Guid claimId)
+        {
+            try
+            {
+                var result = _getClaimAndDocumentUseCase.Execute(claimId);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (AmazonS3Exception e)
+            {
+                return StatusCode(500, e.Message);
             }
         }
 

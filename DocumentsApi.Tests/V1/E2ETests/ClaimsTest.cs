@@ -161,5 +161,60 @@ namespace DocumentsApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(404);
         }
 
+        [Test]
+        public async Task Returns200WhenItCanGetClaimAndDocument()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            DatabaseContext.Add(claim);
+            DatabaseContext.Add(claim.Document);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/claims/claim_and_document/{claim.Id}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<ClaimAndDocumentResponse>(jsonString);
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task Returns400WhenClaimAndDocumentRequestIsNotValid()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            DatabaseContext.Add(claim);
+            DatabaseContext.Add(claim.Document);
+            DatabaseContext.SaveChanges();
+            var fakeClaimId = Guid.NewGuid();
+
+            var uri = new Uri($"api/v1/claims/claim_and_document/${fakeClaimId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<ClaimAndDocumentResponse>(jsonString);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task ClaimAndDocumentReturnsBadRequestWithInvalidParams()
+        {
+            var uri = new Uri($"api/v1/claims/claim_and_document", UriKind.Relative);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
+            var formattedValidUntil = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(4));
+            string base64Document = "data:@file/plain;base64,VGhpcyBpcyBhIHRlc3QgZmlsZQ==";
+            string body = "{" +
+                "\"serviceAreaCreatedBy\": \"development-team-staging\"," +
+                "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
+                "\"apiCreatedBy\": " +
+                $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
+                $"\"validUntil\": {formattedValidUntil}," +
+                $"\"base64Document\": \"{base64Document}\"" +
+                "}";
+
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
     }
 }

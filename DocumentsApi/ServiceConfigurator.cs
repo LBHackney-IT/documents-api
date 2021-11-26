@@ -44,6 +44,7 @@ namespace DocumentsApi
             services.AddScoped<IUpdateClaimStateUseCase, UpdateClaimStateUseCase>();
             services.AddScoped<IUploadDocumentUseCase, UploadDocumentUseCase>();
             services.AddScoped<ICreateClaimAndUploadDocumentUseCase, CreateClaimAndUploadDocumentUseCase>();
+            services.AddScoped<IGetClaimAndDocumentUseCase, GetClaimAndDocumentUseCase>();
         }
     }
 }

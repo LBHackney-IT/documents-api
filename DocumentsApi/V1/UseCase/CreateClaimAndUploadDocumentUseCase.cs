@@ -22,7 +22,7 @@ namespace DocumentsApi.V1.UseCase
             _logger = logger;
         }
 
-        public ClaimAndUploadDocumentResponse Execute(ClaimAndUploadDocumentRequest request)
+        public ClaimAndDocumentResponse Execute(ClaimAndUploadDocumentRequest request)
         {
             var validation = new ClaimAndUploadDocumentRequestValidator().Validate(request);
             if (!validation.IsValid)
@@ -35,7 +35,7 @@ namespace DocumentsApi.V1.UseCase
             var claim = _createClaimUseCase.Execute(claimRequest);
             _uploadDocumentUseCase.Execute(claim.Document.Id, documentUploadRequest);
 
-            return claim.ToClaimAndUploadDocumentResponse(request.Base64Document);
+            return claim.ToClaimAndDocumentResponse(request.Base64Document);
         }
 
         private static ClaimRequest BuildClaimRequest(ClaimAndUploadDocumentRequest request)

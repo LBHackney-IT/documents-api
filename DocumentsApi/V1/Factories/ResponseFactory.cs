@@ -32,15 +32,15 @@ namespace DocumentsApi.V1.Factories
             };
         }
 
-        public static ClaimAndUploadDocumentResponse ToClaimAndUploadDocumentResponse(this ClaimResponse claim, string base64Document)
+        public static ClaimAndDocumentResponse ToClaimAndDocumentResponse(this ClaimResponse claim, string base64Document)
         {
-            return new ClaimAndUploadDocumentResponse
+            return new ClaimAndDocumentResponse
             {
                 ApiCreatedBy = claim.ApiCreatedBy,
                 CreatedAt = claim.CreatedAt,
                 Document = claim.Document,
                 ServiceAreaCreatedBy = claim.ServiceAreaCreatedBy,
-                Id = claim.Id,
+                ClaimId = claim.Id,
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 UserCreatedBy = claim.UserCreatedBy,
                 ValidUntil = claim.ValidUntil,

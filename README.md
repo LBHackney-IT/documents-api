@@ -23,16 +23,19 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 1. Install [Docker][docker-download].
 2. Clone this repository.
-4. Open it in your IDE.
+4. Open it in your IDE (we use Visual Studio CE and JetBrains Rider on Mac)
 
 ### Development
 
-To serve the application, run it using your IDE of choice, we use Visual Studio CE and JetBrains Rider on Mac.
+In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access.
 
-The application can also be served locally using docker:
-```sh
-$ make build && make serve
-```
+In addition, you will also need to clone the [evidence-api repo](https://github.com/LBHackney-IT/evidence-api). Once cloned, navigate to the repo via the terminal and run `docker-compose up -d dev-database` to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+
+Once you have the environment variables and database container running, navigate via the terminal to the root of documents-api and run `touch .env`. This will create an `.env` file where you can store the environment variables (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
+
+Once the environment variables have been added, update the database by running the migration command `dotnet ef --project DocumentsApi database update`
+
+When the migration has successfully completed, run `dotnet run --project DocumentsApi` to start the API locally. It will run on `http://localhost:5001`.
 
 #### Mock S3
 

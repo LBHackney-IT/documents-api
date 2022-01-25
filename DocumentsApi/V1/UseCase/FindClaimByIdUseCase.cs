@@ -20,7 +20,7 @@ namespace DocumentsApi.V1.UseCase
         {
             var found = _documentsGateway.FindClaim(id);
 
-            if (found == null || found.Expired)
+            if (found == null)
             {
                 throw new NotFoundException($"Could not find Claim with ID {id}");
             }

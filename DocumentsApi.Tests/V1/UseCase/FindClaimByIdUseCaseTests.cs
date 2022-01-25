@@ -45,6 +45,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
+        [Ignore("we want to currently return expired claims")]
         public void ThrowsNotFoundIfClaimHasExpired()
         {
             var claim = TestDataHelper.CreateClaim();

@@ -31,7 +31,7 @@ In order to run the API locally, you will first need access to the environment v
 
 Once you have the environment variables, navigate via the terminal to the root of documents-api and run `touch .env`. This will create an `.env` file where you can store the environment variables (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
-To get the local database running, you will also need to clone the [evidence-api repo](https://github.com/LBHackney-IT/evidence-api) and follow the instructions in the `README.md`. Once the repo is cloned and the environment variables are set up there, navigate to the repo via the terminal and run `docker-compose up -d dev-database` to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+To get the local database running, you will also need to clone the [evidence-api repo](https://github.com/LBHackney-IT/evidence-api) and follow the instructions in the `README.md`. Once the evidence-api repo is cloned, follow the rest of the instructions on its README.md to add the envars, set up the db, run the migration and start the application (if you want).
 
 Once the environment variables have been added for documents-api and the database is running, update the database by running the migration command `dotnet ef --project DocumentsApi database update`
 

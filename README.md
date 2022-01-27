@@ -15,7 +15,7 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 ## Dependencies
 
--   S3 Mock API (described below)
+-   [S3 Mock API](#setting-up-mock-s3)
 
 ## Contributing
 
@@ -33,11 +33,56 @@ Once you have the environment variables, navigate via the terminal to the root o
 
 To get the local database running, you will also need to clone the [evidence-api repo](https://github.com/LBHackney-IT/evidence-api) and follow the instructions in the `README.md`. Once the evidence-api repo is cloned, follow the rest of the instructions on its README.md to add the envars, set up the db, run the migration and start the application (if you want).
 
-Once the environment variables have been added for documents-api and the database is running, update the database by running the migration command `dotnet ef --project DocumentsApi database update`
+Once the environment variables have been added for documents-api and the database is running, update the database by running the migration command 
+```sh
+dotnet ef --project DocumentsApi database update
+```
 
-When the migration has successfully completed, run `dotnet run --project DocumentsApi` to start the API locally. It will run on `http://localhost:5001`.
+When the migration has successfully completed, run 
+```sh
+dotnet run --project DocumentsApi
+``` 
+to start the API locally. It will run on `http://localhost:5001`.
 
-#### Mock S3
+### Testing
+
+To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer.
+
+If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
+
+In order to run the tests for this repo, you will need to check what containers you already have up on port 5432 and 5555 and stop those processes. (You'll likely have `evidence-api_dev-database_1` up. If you do, the just run `docker stop evidence-api_dev-database_1` -- you won't lose any locally seeded data as long as the attached volume is not deleted either.)
+
+Then, run
+```sh
+$ make test
+```
+This will spin up a new container called `documents-api_test-database_1` that the integration tests use. If this is your first time running the tests, then some will fail. You will need to run a new migration but running again:
+```sh
+dotnet ef --project DocumentsApi database update
+```
+Then, run 
+```sh
+$ make test
+```
+again and two additional containers will be created -- `documents-api_s3-mock_1` and `documents-api_documents-api-test_1`. The tests will now pass.
+
+
+### Agreed Testing Approach
+
+-   Use nUnit, FluentAssertions and Moq
+-   Always follow a TDD approach
+-   Tests should be independent of each other
+-   Gateway tests should interact with a real test instance of the database
+-   Test coverage should never go down
+-   All use cases should be covered by E2E tests
+-   Optimise when test run speed starts to hinder development
+-   Unit tests and E2E tests should run in CI
+-   Test database schemas should match up with production database schema
+-   Have integration tests which test from the PostgreSQL database to API Gateway
+
+### Dependencies
+
+#### Setting up mock S3
 
 To run this application, we need to contact S3 to create signed upload policies and download URLs. To be able to run this locally without setting up an AWS account, or to run the tests in isolation, we have used [S3Proxy](https://github.com/gaul/s3proxy).
 
@@ -51,7 +96,7 @@ You will also need to initialize your s3-mock which can be done by running the t
 
 ### S3 Lambda Function
 
-This application contains two lambda functions—an API, and a function which is triggered when objects are created in the S3 bucket, which can be found in `DocumentsApi/V1/S3EntryPoint.cs`.
+This application contains two lambda functions — an API, and a function which is triggered when objects are created in the S3 bucket, which can be found in `DocumentsApi/V1/S3EntryPoint.cs`.
 
 #### Test the S3 Lambda function with the Staging AWS Account
 
@@ -102,35 +147,6 @@ Both the API and Test projects have been set up to **treat all warnings from the
 
 However, we can select which errors to suppress by setting the severity of the responsible rule to none, e.g `dotnet_analyzer_diagnostic.<Category-or-RuleId>.severity = none`, within the `.editorconfig` file.
 Documentation on how to do this can be found [here](https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019).
-
-## Testing
-
-### Run the tests
-
-```sh
-$ make test
-```
-
-To run database tests locally (e.g. via Visual Studio) the `CONNECTION_STRING` environment variable will need to be populated with:
-
-`Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`
-
-Note: The Host name needs to be the name of the stub database docker-compose service, in order to run tests via Docker.
-
-If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The restart-db make command will do this for you.
-
-### Agreed Testing Approach
-
--   Use nUnit, FluentAssertions and Moq
--   Always follow a TDD approach
--   Tests should be independent of each other
--   Gateway tests should interact with a real test instance of the database
--   Test coverage should never go down
--   All use cases should be covered by E2E tests
--   Optimise when test run speed starts to hinder development
--   Unit tests and E2E tests should run in CI
--   Test database schemas should match up with production database schema
--   Have integration tests which test from the PostgreSQL database to API Gateway
 
 ## Data Migrations
 

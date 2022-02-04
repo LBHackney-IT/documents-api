@@ -133,6 +133,18 @@ Our staging and production environments are hosted by AWS. We would deploy to pr
 
 ### Creating A PR
 
+Before you commit or push your code, you will need to run:
+
+```sh
+make lint
+``` 
+
+Otherwise your PR will automatically fail the CircleCI checks. This Make recipe will install the `dotnet format` tool for you, so from then on, you can just run:
+```sh
+dotnet format
+``` 
+to format your code.
+
 To help with making changes to code easier to understand when being reviewed, we've added a PR template.
 When a new PR is created on a repo that uses this API template, the PR template will automatically fill in the `Open a pull request` description textbox.
 The PR author can edit and change the PR description using the template as a guide.

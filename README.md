@@ -56,7 +56,7 @@ Then, run
 ```sh
 $ make test
 ```
-This will spin up a new container called `documents-api_test-database_1` that the integration tests use. If this is your first time running the tests, then some will fail. You will need to run a new migration but running again:
+This will spin up a new container called `documents-api_test-database_1` that the integration tests use. If this is your first time running the tests, then some will fail. You will need to run a new migration by running again:
 ```sh
 dotnet ef --project DocumentsApi database update
 ```

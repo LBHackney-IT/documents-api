@@ -27,9 +27,7 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 ### Development
 
-In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access.
-
-Once you have the environment variables, navigate via the terminal to the root of documents-api and run `touch .env`. This will create an `.env` file where you can store the environment variables (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
+In order to run the API locally, you will first need to copy the environment variables in the [.env.example](.env.example) file and save them to a new file called `.env` in the root of the project (same place as `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
 To get the local database running, you will also need to clone the [evidence-api repo](https://github.com/LBHackney-IT/evidence-api) and follow the instructions in the `README.md`. Once the evidence-api repo is cloned, follow the rest of the instructions on its README.md to add the envars, set up the db, run the migration and start the application (if you want).
 
@@ -46,7 +44,7 @@ to start the API locally. It will run on `http://localhost:5001`.
 
 ### Testing
 
-To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer.
+To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have got when you copied the values from the `.env.example` and copied them to the `.env` file.
 
 If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
 

@@ -36,7 +36,7 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="201">Saved</response>
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
-        [HttpPost]
+        [HttpGet]
         [Route("upload_policies")]
         public async Task<IActionResult> CreateUploadPolicy()
         {

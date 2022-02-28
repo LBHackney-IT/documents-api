@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Jering.Javascript.NodeJS;
 using AutoFixture;
 using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Infrastructure;
@@ -17,6 +18,7 @@ namespace DocumentsApi.Tests.V1.Gateways
     {
         private readonly Fixture _fixture = new Fixture();
         private readonly Mock<IAmazonS3> _s3 = new Mock<IAmazonS3>();
+        private readonly Mock<INodeJSService> _nodeJSService = new Mock<INodeJSService>();
         private S3Gateway _classUnderTest;
         private AppOptions _options;
 
@@ -24,7 +26,7 @@ namespace DocumentsApi.Tests.V1.Gateways
         public void SetUp()
         {
             _options = _fixture.Create<AppOptions>();
-            _classUnderTest = new S3Gateway(_s3.Object, _options);
+            _classUnderTest = new S3Gateway(_s3.Object, _nodeJSService.Object, _options);
         }
 
         [Test]

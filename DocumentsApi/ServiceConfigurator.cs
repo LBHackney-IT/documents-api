@@ -1,5 +1,6 @@
 using Amazon;
 using Amazon.S3;
+using Jering.Javascript.NodeJS;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Gateways.Interfaces;
@@ -17,6 +18,10 @@ namespace DocumentsApi
         {
             var options = AppOptions.FromEnv();
             services.AddSingleton<AppOptions>(x => options);
+
+            services.AddNodeJS();
+            // var serviceProvider = services.BuildServiceProvider();
+            // var nodeJSService = serviceProvider.GetRequiredService<INodeJSService>();
 
             // Database Context
             services.AddDbContext<DocumentsContext>(

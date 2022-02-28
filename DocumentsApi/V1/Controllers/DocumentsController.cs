@@ -5,6 +5,8 @@ using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using DocumentsApi.V1.Gateways.Interfaces;
 
 namespace DocumentsApi.V1.Controllers
 {
@@ -16,13 +18,41 @@ namespace DocumentsApi.V1.Controllers
     {
         private readonly IUploadDocumentUseCase _uploadDocumentUseCase;
         private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
+        private readonly IS3Gateway _s3Gateway;
 
         public DocumentsController(
             IUploadDocumentUseCase uploadDocumentUseCase,
-            IDownloadDocumentUseCase downloadDocumentUseCase)
+            IDownloadDocumentUseCase downloadDocumentUseCase,
+            IS3Gateway s3Gateway)
         {
             _uploadDocumentUseCase = uploadDocumentUseCase;
             _downloadDocumentUseCase = downloadDocumentUseCase;
+            _s3Gateway = s3Gateway;
+        }
+
+        /// <summary>
+        /// Test endpoint
+        /// </summary>
+        /// <response code="201">Saved</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpPost]
+        [Route("upload_policies")]
+        public async Task<IActionResult> CreateUploadPolicy()
+        {
+            try
+            {
+                var result = await _s3Gateway.GenerateUploadPolicy().ConfigureAwait(true);
+                return Created(result.Url, result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

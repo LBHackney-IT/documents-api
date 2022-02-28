@@ -7,6 +7,7 @@ namespace DocumentsApi.V1.Gateways.Interfaces
 {
     public interface IS3Gateway
     {
+        public Task<S3UploadPolicy> GenerateUploadPolicy();
         public Task<string> GetObjectContentType(string key);
         public PutObjectResponse UploadDocument(Guid documentId, Base64DecodedData document);
         public GetObjectResponse GetObject(Document document);

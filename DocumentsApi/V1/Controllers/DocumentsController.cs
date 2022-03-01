@@ -43,7 +43,7 @@ namespace DocumentsApi.V1.Controllers
             try
             {
                 var result = await _s3Gateway.GenerateUploadPolicy().ConfigureAwait(true);
-                return Created(result.Url, result);
+                return Ok(result);
             }
             catch (NotFoundException ex)
             {

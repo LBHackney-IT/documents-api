@@ -33,7 +33,7 @@ namespace DocumentsApi.V1.Gateways
                Can be removed when presigned post policies are available in .NET
              */
             //var policyString = await _nodeServices.InvokeAsync<string>("V1/Node/index.js", _options.DocumentsBucketName, "pre-scan/" + document.Id.ToString(), UrlExpirySeconds).ConfigureAwait(true);
-            string javascriptModule = 
+            string javascriptModule =
                 @"const { createPresignedPost } = require('@aws-sdk/s3-presigned-post');
                 const { S3Client } = require('@aws-sdk/client-s3');
 

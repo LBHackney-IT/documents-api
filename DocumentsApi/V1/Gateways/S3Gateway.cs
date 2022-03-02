@@ -77,7 +77,7 @@ namespace DocumentsApi.V1.Gateways
                     }
                 };
             ";
-            var policyString = await _nodeJSService.InvokeFromFileAsync<string>(javascriptModule, args: new[] { _options.DocumentsBucketName, "pre-scan/" + "test-name", UrlExpirySeconds }).ConfigureAwait(true);
+            var policyString = await _nodeJSService.InvokeFromStringAsync<string>(javascriptModule, args: new[] { _options.DocumentsBucketName, "pre-scan/" + "test-name", UrlExpirySeconds }).ConfigureAwait(true);
             Console.WriteLine($"The S3 link is: {policyString}");
             return JsonConvert.DeserializeObject<S3UploadPolicy>(policyString);
         }

@@ -27,7 +27,7 @@ module.exports = (callback, bucketName, key, expiry) => {
                 { key },
                 { "x-amz-server-side-encryption": "AES256" },
                 ["content-length-range", 1, 10000000], // value is in bytes -> 10mb
-                ["starts-with", "$Content-Type", "image/jpg"],
+                ["starts-with", "$Content-Type", "image/jpeg"],
             ],
         });
 

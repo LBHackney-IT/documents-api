@@ -31,7 +31,7 @@ module.exports = (callback, bucketName, key, expiry) => {
             ],
         });
 
-        return callback(null, JSON.stringify(data));
+        data.then(result => callback(null, JSON.stringify(result)));
     } catch (err) {
         console.log("Failed generating pre-signed upload url", {
             error: err,

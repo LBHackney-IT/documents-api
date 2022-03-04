@@ -1,4 +1,3 @@
-from distutils.file_util import move_file
 import json
 import boto3
 import botocore

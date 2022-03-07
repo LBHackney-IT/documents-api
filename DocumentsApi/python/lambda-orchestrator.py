@@ -46,6 +46,10 @@ def lambda_handler(event, context):
         Bucket=bucket_name,
         Key=file_key_name,
     )
+
+    print(f"***********head_object: {head_object}")
+    print(f"***********head_object.body: {head_object.body}")
+    print(f"***********head_object.headers: {head_object.headers}")
     
     if head_object['ContentType'] not in accepted_mime_types:
         print(f"File type {head_object['ContentType']} is not accepted!")

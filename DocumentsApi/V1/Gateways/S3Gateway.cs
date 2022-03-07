@@ -8,6 +8,7 @@ using DocumentsApi.V1.Infrastructure;
 using Amazon.S3.Model;
 using Jering.Javascript.NodeJS;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -36,6 +37,31 @@ namespace DocumentsApi.V1.Gateways
             var policyString = await _nodeJSService.InvokeFromFileAsync<string>("V1/Node/index.js", args: new[] { _options.DocumentsBucketName, "pre-scan/" + "test-name", UrlExpirySeconds }).ConfigureAwait(true);
             Console.WriteLine($"The S3 link is: {policyString}");
             return JsonConvert.DeserializeObject<S3UploadPolicy>(policyString);
+        }
+
+        // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
+        [SuppressMessage("ReSharper", "CA1055")]
+        [SuppressMessage("ReSharper", "CA2200")]
+        public string GeneratePreSignedDownloadUrl()
+        {
+            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
+            {
+                BucketName = _options.DocumentsBucketName,
+                // Key = "clean/" + document.Id.ToString(),
+                Key = "clean/" + "test-name",
+                Expires = DateTime.UtcNow.AddMinutes(30)
+            };
+            var urlString = "";
+            try
+            {
+                urlString = _s3.GetPreSignedURL(request);
+            }
+            catch (AmazonS3Exception e)
+            {
+                Console.WriteLine("Error when retrieving the presigned URL: '{0}' ", e.Message);
+                throw e;
+            }
+            return urlString;
         }
 
         public async Task<string> GetObjectContentType(string key)

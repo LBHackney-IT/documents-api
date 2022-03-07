@@ -74,7 +74,7 @@ def lambda_handler(event, context):
         move_file_to_quarantine(file_key_name, copy_source_object, bucket_name, s3_client)
 
     mime = magic.Magic(mime=True)
-    print(mime.from_file(download_path))
+    print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")
 
     move_file_to_clean_and_update_database_document_entity(event, lambda_client, file_key_name, copy_source_object, bucket_name, s3_client)
    

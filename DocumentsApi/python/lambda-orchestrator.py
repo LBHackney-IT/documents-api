@@ -1,6 +1,8 @@
 import json
 import boto3
 import botocore
+import magic
+
 
 def lambda_handler(event, context):
     # Disable SSL for this instance of the client so that when we call 'download_file' then Palo Altos is able to scan the payload for malware
@@ -70,6 +72,9 @@ def lambda_handler(event, context):
         print('An exception occurred: {}'.format(e))
         print("There was an error when attempting to download the file, moving to quarantine")
         move_file_to_quarantine(file_key_name, copy_source_object, bucket_name, s3_client)
+
+    mime = magic.Magic(mime=True)
+    print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")
 
     move_file_to_clean_and_update_database_document_entity(event, lambda_client, file_key_name, copy_source_object, bucket_name, s3_client)
    

@@ -22,43 +22,42 @@ def lambda_handler(event, context):
     copy_source_object = {'Bucket': bucket_name, 'Key': file_key_name}
 
     #Whitelist of accepted MIME types
-    accepted_mime_types = [
-        'application/msword', #.doc
-        'application/pdf', #.pdf
-        'application/vnd.apple.numbers', #.numbers
-        'application/vnd.apple.pages', #.pages
-        'application/vnd.ms-excel', #.xls
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', #.xlsx
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', #.docx
-        'image/bmp', #.bmp
-        'image/gif', #.gif
-        'image/heic', #.heic
-        'image/jpeg', #.jpeg or .jpg
-        'image/png', #.png
-        'text/plain', #.txt
-        #'video/3gpp', #.3gpp or .3gp
-        #'video/mp4', #.mp4
-        #'video/quicktime', #.mov or .qt
-    ] 
+    # accepted_mime_types = [
+    #     'application/msword', #.doc
+    #     'application/pdf', #.pdf
+    #     'application/vnd.apple.numbers', #.numbers
+    #     'application/vnd.apple.pages', #.pages
+    #     'application/vnd.ms-excel', #.xls
+    #     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', #.xlsx
+    #     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', #.docx
+    #     'image/bmp', #.bmp
+    #     'image/gif', #.gif
+    #     'image/heic', #.heic
+    #     'image/jpeg', #.jpeg or .jpg
+    #     'image/png', #.png
+    #     'text/plain', #.txt
+    #     #'video/3gpp', #.3gpp or .3gp
+    #     #'video/mp4', #.mp4
+    #     #'video/quicktime', #.mov or .qt
+    # ] 
 
    #Check for MIME type of file
-    head_object = s3_client.head_object(
-        Bucket=bucket_name,
-        Key=file_key_name,
-    )
+    # head_object = s3_client.head_object(
+    #     Bucket=bucket_name,
+    #     Key=file_key_name,
+    # )
 
-    print(f"***********head_object: {head_object}")
-    print(f"***********head_object.headers: {head_object.headers}")
+    # print(f"***********head_object: {head_object}")
     
-    if head_object['ContentType'] not in accepted_mime_types:
-        print(f"File type {head_object['ContentType']} is not accepted!")
-        print("Deleting the original file")
-        print("s3_client.delete_object", bucket_name, file_key_name)
-        s3_client.delete_object(Bucket=bucket_name, Key=file_key_name)
-        return {
-            'statusCode': 200,
-            'body': json.dumps('Document Orchestrator finished successfully')
-        }
+    # if head_object['ContentType'] not in accepted_mime_types:
+    #     print(f"File type {head_object['ContentType']} is not accepted!")
+    #     print("Deleting the original file")
+    #     print("s3_client.delete_object", bucket_name, file_key_name)
+    #     s3_client.delete_object(Bucket=bucket_name, Key=file_key_name)
+    #     return {
+    #         'statusCode': 200,
+    #         'body': json.dumps('Document Orchestrator finished successfully')
+    #     }
 
     # If MIME type is accepted, we can continue and copy the file
     try:

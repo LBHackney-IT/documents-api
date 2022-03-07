@@ -48,7 +48,6 @@ def lambda_handler(event, context):
     )
 
     print(f"***********head_object: {head_object}")
-    print(f"***********head_object.body: {head_object.body}")
     print(f"***********head_object.headers: {head_object.headers}")
     
     if head_object['ContentType'] not in accepted_mime_types:

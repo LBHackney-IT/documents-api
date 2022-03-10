@@ -1,7 +1,7 @@
 import json
 import boto3
 import botocore
-import magic
+# import magic
 
 
 def lambda_handler(event, context):
@@ -73,8 +73,8 @@ def lambda_handler(event, context):
         print("There was an error when attempting to download the file, moving to quarantine")
         move_file_to_quarantine(file_key_name, copy_source_object, bucket_name, s3_client)
 
-    mime = magic.Magic(mime=True)
-    print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")
+    # mime = magic.Magic(mime=True)
+    # print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")
 
     move_file_to_clean_and_update_database_document_entity(event, lambda_client, file_key_name, copy_source_object, bucket_name, s3_client)
    

@@ -50,6 +50,7 @@ namespace DocumentsApi
             services.AddScoped<IUploadDocumentUseCase, UploadDocumentUseCase>();
             services.AddScoped<ICreateClaimAndUploadDocumentUseCase, CreateClaimAndUploadDocumentUseCase>();
             services.AddScoped<IGetClaimAndDocumentUseCase, GetClaimAndDocumentUseCase>();
+            services.AddScoped<ICreateUploadPolicyUseCase, CreateUploadPolicyUseCase>();
         }
     }
 }

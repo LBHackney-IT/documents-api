@@ -18,15 +18,18 @@ namespace DocumentsApi.V1.Controllers
     {
         private readonly IUploadDocumentUseCase _uploadDocumentUseCase;
         private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
+        private readonly ICreateUploadPolicyUseCase _createUploadPolicyUseCase;
         private readonly IS3Gateway _s3Gateway;
 
         public DocumentsController(
             IUploadDocumentUseCase uploadDocumentUseCase,
             IDownloadDocumentUseCase downloadDocumentUseCase,
+            ICreateUploadPolicyUseCase createUploadPolicyUseCase,
             IS3Gateway s3Gateway)
         {
             _uploadDocumentUseCase = uploadDocumentUseCase;
             _downloadDocumentUseCase = downloadDocumentUseCase;
+            _createUploadPolicyUseCase = createUploadPolicyUseCase;
             _s3Gateway = s3Gateway;
         }
 
@@ -37,12 +40,12 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
-        [Route("upload_policies")]
-        public async Task<IActionResult> CreateUploadPolicy()
+        [Route("{id}/upload_policies")]
+        public async Task<IActionResult> CreateUploadPolicy([FromRoute][Required] Guid id)
         {
             try
             {
-                var result = await _s3Gateway.GenerateUploadPolicy().ConfigureAwait(true);
+                var result = await _createUploadPolicyUseCase.Execute(id).ConfigureAwait(true);
                 return Ok(result);
             }
             catch (NotFoundException ex)

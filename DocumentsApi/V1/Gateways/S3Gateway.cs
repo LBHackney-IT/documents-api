@@ -27,14 +27,13 @@ namespace DocumentsApi.V1.Gateways
             _options = options;
         }
 
-        public async Task<S3UploadPolicy> GenerateUploadPolicy()
+        public async Task<S3UploadPolicy> GenerateUploadPolicy(Document document)
         {
             /* TODO: Node being added to create signed Post Policies
                (see this issue: https://github.com/LBHackney-IT/documents-api/pull/6)
                Can be removed when presigned post policies are available in .NET
              */
-            //var policyString = await _nodeServices.InvokeAsync<string>("V1/Node/index.js", _options.DocumentsBucketName, "pre-scan/" + document.Id.ToString(), UrlExpirySeconds).ConfigureAwait(true);
-            var policyString = await _nodeJSService.InvokeFromFileAsync<string>("V1/Node/index.js", args: new[] { _options.DocumentsBucketName, "pre-scan/" + "test-name", UrlExpirySeconds }).ConfigureAwait(true);
+            var policyString = await _nodeJSService.InvokeFromFileAsync<string>("V1/Node/index.js", args: new[] { _options.DocumentsBucketName, "pre-scan/" + document.Id.ToString(), UrlExpirySeconds }).ConfigureAwait(true);
             Console.WriteLine($"The S3 link is: {policyString}");
             return JsonConvert.DeserializeObject<S3UploadPolicy>(policyString);
         }

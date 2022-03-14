@@ -28,8 +28,9 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void ThrowsNotFoundErrorWhenDocumentDoesNotExist()
         {
-            Func<Task<S3UploadPolicy>> execute = async () => await _classUnderTest.Execute(Guid.NewGuid()).ConfigureAwait(true);
-            execute.Should().Throw<NotFoundException>();
+            var documentId = Guid.NewGuid();
+            Func<Task<S3UploadPolicy>> execute = async () => await _classUnderTest.Execute(documentId).ConfigureAwait(true);
+            execute.Should().Throw<NotFoundException>().WithMessage($"Cannot find document with ID {documentId}");
         }
 
         [Test]

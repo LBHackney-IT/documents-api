@@ -14,6 +14,7 @@ namespace DocumentsApi.Tests.V1.UseCase
     [TestFixture]
     public class CreateUploadPolicyUseCaseTests
     {
+        private readonly Fixture _fixture = new Fixture();
         private readonly Mock<IS3Gateway> _s3Gateway = new Mock<IS3Gateway>();
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
         private CreateUploadPolicyUseCase _classUnderTest;
@@ -29,6 +30,25 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             Func<Task<S3UploadPolicy>> execute = async () => await _classUnderTest.Execute(Guid.NewGuid()).ConfigureAwait(true);
             execute.Should().Throw<NotFoundException>();
+        }
+
+        [Test]
+        public async Task ReturnsPresignedUrl()
+        {
+            var document = _fixture.Build<Document>()
+                .Without(x => x.UploadedAt)
+                .Create();
+            var policy = _fixture.Create<S3UploadPolicy>();
+
+            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
+            _s3Gateway.Setup(x => x.GenerateUploadPolicy(document)).ReturnsAsync(policy);
+
+            var result = await _classUnderTest.Execute(document.Id).ConfigureAwait(true);
+
+            result.Should().BeEquivalentTo(policy);
+
+            _s3Gateway.VerifyAll();
+
         }
     }
 }

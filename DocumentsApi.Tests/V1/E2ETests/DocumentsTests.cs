@@ -80,5 +80,14 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(404);
         }
+
+        [Test]
+        public async Task CreatingUploadPolicyReturns404ForNonExistentDocument()
+        {
+            var uri = new Uri($"api/v1/documents/{Guid.NewGuid()}/upload_policies", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+        }
     }
 }

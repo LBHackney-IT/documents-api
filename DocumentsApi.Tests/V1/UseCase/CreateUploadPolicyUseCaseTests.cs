@@ -51,5 +51,20 @@ namespace DocumentsApi.Tests.V1.UseCase
             _s3Gateway.VerifyAll();
 
         }
+
+        [Test]
+        public void ThrowsABadRequestErrorWhenDocumentAlreadyUploaded()
+        {
+            var document = _fixture.Build<Document>()
+                .With(x => x.FileSize, 1000)
+                .With(x => x.FileType, "txt")
+                .Create();
+
+            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
+
+            Func<Task<S3UploadPolicy>> execute = () => _classUnderTest.Execute(document.Id);
+
+            execute.Should().Throw<BadRequestException>().WithMessage($"Document with ID {document.Id} has already been uploaded.");
+        }
     }
 }

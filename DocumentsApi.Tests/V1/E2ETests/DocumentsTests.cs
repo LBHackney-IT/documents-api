@@ -89,5 +89,14 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(404);
         }
+
+        [Test]
+        public async Task CreatingUploadPolicyReturns400ForAlreadyUploadedDocument()
+        {
+            var uri = new Uri($"api/v1/documents/{_document.Id}/upload_policies", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
     }
 }

@@ -65,8 +65,8 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
-        [Route("{id}/download_links")]
-        public IActionResult DownloadDocument([FromRoute][Required] Guid id)
+        [Route("download_links")]
+        public IActionResult DownloadDocument()
         {
             try
             {

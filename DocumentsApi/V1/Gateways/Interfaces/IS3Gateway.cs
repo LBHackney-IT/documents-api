@@ -11,7 +11,7 @@ namespace DocumentsApi.V1.Gateways.Interfaces
         public Task<S3UploadPolicy> GenerateUploadPolicy(Document document);
         // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
         [SuppressMessage("ReSharper", "CA1055")]
-        public string GeneratePreSignedDownloadUrl();
+        public string GeneratePreSignedDownloadUrl(Document document);
         public Task<string> GetObjectContentType(string key);
         public PutObjectResponse UploadDocument(Guid documentId, Base64DecodedData document);
         public GetObjectResponse GetObject(Document document);

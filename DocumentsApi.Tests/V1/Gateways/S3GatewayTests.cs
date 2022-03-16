@@ -51,6 +51,18 @@ namespace DocumentsApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void CanGeneratePresignedDownloadUrl()
+        {
+            var document = _fixture.Create<Document>();
+            document.UploadedAt = DateTime.UtcNow;
+            var expectedDownloadUrl = "www.s3downloadurl.com";
+            _s3.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expectedDownloadUrl);
+
+            var result = _classUnderTest.GeneratePreSignedDownloadUrl(document);
+            result.Should().Be(expectedDownloadUrl);
+        }
+
+        [Test]
         public async Task CanGetObjectContentType()
         {
             var key = "i am an object key";

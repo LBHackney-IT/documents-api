@@ -57,5 +57,20 @@ namespace DocumentsApi.Tests.V1.UseCase
             testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find document with ID: {documentId}");
         }
 
+        [Test]
+        public void ThrowsAmazonS3ExceptionIfCannotRetreiveDownloadLink()
+        {
+            var documentId = Guid.NewGuid();
+            var document = TestDataHelper.CreateDocument();
+            document.Id = documentId;
+
+            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(document);
+            _s3Gateway.Setup(x => x.GeneratePreSignedDownloadUrl(It.IsAny<Document>())).Throws(new AmazonS3Exception("Error when retreiving the download url"));
+            Func<string> testDelegate = () => _classUnderTest.Execute(documentId.ToString());
+
+            testDelegate.Should().Throw<AmazonS3Exception>();
+
+        }
+
     }
 }

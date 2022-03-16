@@ -41,7 +41,20 @@ namespace DocumentsApi.Tests.V1.UseCase
             result.Should().BeEquivalentTo(downloadUrl);
             _documentsGateway.VerifyAll();
             _s3Gateway.VerifyAll();
+        }
 
+        [Test]
+        public void ThrowsNotFoundIfDocumentDoesNotExist()
+        {
+            var documentId = Guid.NewGuid();
+            var document = TestDataHelper.CreateDocument();
+            document.Id = documentId;
+
+            _documentsGateway.Setup(x => x.FindDocument(document.Id)).Returns(null as Document);
+
+            Func<string> testDelegate = () => _classUnderTest.Execute(documentId.ToString());
+
+            testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find document with ID: {documentId}");
         }
 
     }

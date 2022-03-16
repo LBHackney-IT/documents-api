@@ -10,6 +10,8 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using System;
+using DocumentsApi.V1.Domain;
+using Newtonsoft.Json;
 
 namespace DocumentsApi.Tests.V1.Gateways
 {
@@ -27,6 +29,25 @@ namespace DocumentsApi.Tests.V1.Gateways
         {
             _options = _fixture.Create<AppOptions>();
             _classUnderTest = new S3Gateway(_s3.Object, _nodeJSService.Object, _options);
+        }
+
+        [Test]
+        public async Task CanGeneratePresignedUploadUrl()
+        {
+            var document = _fixture.Create<Document>();
+
+            var expectedPolicy = _fixture.Create<S3UploadPolicy>();
+            var expectedPolicyString = JsonConvert.SerializeObject(expectedPolicy);
+
+            _nodeJSService
+                .Setup(x => x.InvokeFromFileAsync<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedPolicyString);
+
+            var result = await _classUnderTest.GenerateUploadPolicy(document).ConfigureAwait(true);
+
+            result.Should().BeEquivalentTo(expectedPolicy);
+
+            _nodeJSService.VerifyAll();
         }
 
         [Test]

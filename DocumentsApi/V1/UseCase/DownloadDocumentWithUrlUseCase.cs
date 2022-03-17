@@ -18,14 +18,13 @@ namespace DocumentsApi.V1.UseCase
             _documentsGateway = documentsGateway;
         }
         [SuppressMessage("ReSharper", "CA2200")]
-        public string Execute(string claimId)
+        public string Execute(Guid claimId)
         {
-            var claimGuid = new Guid(claimId);
-            var claim = _documentsGateway.FindClaim(claimGuid);
+            var claim = _documentsGateway.FindClaim(claimId);
 
             if (claim == null)
             {
-                throw new NotFoundException($"Cannot find a claim with ID: {claimGuid}");
+                throw new NotFoundException($"Cannot find a claim with ID: {claimId}");
             }
 
             var result = "";

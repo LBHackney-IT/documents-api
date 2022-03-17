@@ -37,7 +37,7 @@ namespace DocumentsApi.Tests.V1.UseCase
             _documentsGateway.Setup(x => x.FindClaim(claim.Id)).Returns(claim);
             _s3Gateway.Setup(x => x.GeneratePreSignedDownloadUrl(It.IsAny<Document>())).Returns(downloadUrl);
 
-            var result = _classUnderTest.Execute(claimId.ToString());
+            var result = _classUnderTest.Execute(claimId);
 
             result.Should().BeEquivalentTo(downloadUrl);
             _documentsGateway.VerifyAll();
@@ -53,7 +53,7 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             _documentsGateway.Setup(x => x.FindClaim(claim.Id)).Returns(null as Claim);
 
-            Func<string> testDelegate = () => _classUnderTest.Execute(claimId.ToString());
+            Func<string> testDelegate = () => _classUnderTest.Execute(claimId);
 
             testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find a claim with ID: {claimId}");
         }
@@ -67,7 +67,7 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             _documentsGateway.Setup(x => x.FindClaim(claim.Id)).Returns(claim);
             _s3Gateway.Setup(x => x.GeneratePreSignedDownloadUrl(It.IsAny<Document>())).Throws(new AmazonS3Exception("Error when retreiving the download url"));
-            Func<string> testDelegate = () => _classUnderTest.Execute(claimId.ToString());
+            Func<string> testDelegate = () => _classUnderTest.Execute(claimId);
 
             testDelegate.Should().Throw<AmazonS3Exception>();
 

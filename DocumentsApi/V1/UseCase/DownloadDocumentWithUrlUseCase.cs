@@ -18,21 +18,21 @@ namespace DocumentsApi.V1.UseCase
             _documentsGateway = documentsGateway;
         }
         [SuppressMessage("ReSharper", "CA2200")]
-        public string Execute(string documentId)
+        public string Execute(string claimId)
         {
-            var documentGuid = new Guid(documentId);
-            var document = _documentsGateway.FindDocument(documentGuid);
+            var claimGuid = new Guid(claimId);
+            var claim = _documentsGateway.FindClaim(claimGuid);
 
-            if (document == null)
+            if (claim == null)
             {
-                throw new NotFoundException($"Cannot find document with ID: {documentGuid}");
+                throw new NotFoundException($"Cannot find a claim with ID: {claimGuid}");
             }
 
             var result = "";
 
             try
             {
-                result = _s3Gateway.GeneratePreSignedDownloadUrl(document);
+                result = _s3Gateway.GeneratePreSignedDownloadUrl(claim.Document);
             }
             catch (AmazonS3Exception e)
             {

@@ -59,31 +59,6 @@ namespace DocumentsApi.V1.Controllers
         }
 
         /// <summary>
-        /// Creates a download link for a document
-        /// </summary>
-        /// <response code="201">Saved</response>
-        /// <response code="400">Request contains invalid parameters</response>
-        /// <response code="401">Request lacks valid API token</response>
-        [HttpGet]
-        [Route("download_links")]
-        public IActionResult DownloadDocument()
-        {
-            try
-            {
-                return Ok();
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (AmazonS3Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
-        }
-
-
-        /// <summary>
         /// Uploads the document to S3
         /// </summary>
         /// <response code="200">Uploaded</response>

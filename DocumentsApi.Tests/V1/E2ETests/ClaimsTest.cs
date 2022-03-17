@@ -216,5 +216,27 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(400);
         }
+
+
+        [Test]
+        public async Task ReturnsDownloadUrlWhenDocumentIsFound()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            claim.Id = Guid.NewGuid();
+            var document = TestDataHelper.CreateDocument().ToEntity();
+            DatabaseContext.Add(document);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/claims/{claim.Id}/download_links", UriKind.Relative);
+
+            string body = "{" +
+                          $"\"documentId\": \"{document.Id}\"" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(201);
+        }
     }
 }

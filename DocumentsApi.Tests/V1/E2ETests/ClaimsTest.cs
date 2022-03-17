@@ -238,5 +238,23 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(201);
         }
+
+        [Test]
+        public async Task Returns404WhenCannotFindDocument()
+        {
+            var nonExistentClaimId = Guid.NewGuid();
+            var nonExistentDocumentId = Guid.NewGuid();
+
+            var uri = new Uri($"api/v1/claims/{nonExistentClaimId}/download_links", UriKind.Relative);
+
+            string body = "{" +
+                          $"\"documentId\": \"{nonExistentDocumentId}\"" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+        }
     }
 }

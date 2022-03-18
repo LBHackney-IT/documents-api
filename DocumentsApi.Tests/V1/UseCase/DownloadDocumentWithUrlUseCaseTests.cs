@@ -35,7 +35,7 @@ namespace DocumentsApi.Tests.V1.UseCase
             var downloadUrl = "www.fakeS3url.com";
 
             _documentsGateway.Setup(x => x.FindClaim(claim.Id)).Returns(claim);
-            _s3Gateway.Setup(x => x.GeneratePreSignedDownloadUrl(It.IsAny<Document>())).Returns(downloadUrl);
+            _s3Gateway.Setup(x => x.GeneratePreSignedDownloadUrl(claim.Document)).Returns(downloadUrl);
 
             var result = _classUnderTest.Execute(claimId);
 
@@ -45,17 +45,15 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotFoundIfClaimDoesNotExist()
+        public void ThrowsNotFoundIfClaimDoesNotExistForDownloadUrl()
         {
-            var claimId = Guid.NewGuid();
-            var claim = TestDataHelper.CreateClaim();
-            claim.Id = claimId;
+            var nonExistentClaimId = Guid.NewGuid();
 
-            _documentsGateway.Setup(x => x.FindClaim(claim.Id)).Returns(null as Claim);
+            _documentsGateway.Setup(x => x.FindClaim(It.IsAny<Guid>())).Returns(null as Claim);
 
-            Func<string> testDelegate = () => _classUnderTest.Execute(claimId);
+            Func<string> testDelegate = () => _classUnderTest.Execute(nonExistentClaimId);
 
-            testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find a claim with ID: {claimId}");
+            testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find a claim with ID: {nonExistentClaimId}");
         }
 
         [Test]

@@ -227,7 +227,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var claimId = Guid.NewGuid();
             claim.Id = claimId;
 
-            DatabaseContext.Add(claim);           
+            DatabaseContext.Add(claim);
             DatabaseContext.SaveChanges();
 
             //S3Proxy for mocks is not handling .GetPresignedURL correctly, so it is mocked manually here

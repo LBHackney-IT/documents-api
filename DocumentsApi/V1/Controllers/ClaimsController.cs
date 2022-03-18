@@ -169,14 +169,14 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="201">Saved</response>
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
-        [HttpPost]
+        [HttpGet]
         [Route("{claimId}/download_links")]
-        public IActionResult DownloadDocumentWithUrl([FromRoute] Guid claimId, [Required][FromBody] DownloadDocumentRequest request)
+        public IActionResult DownloadDocumentWithUrl([FromRoute] Guid claimId)
         {
             try
             {
-                var result = _downloadDocumentWithUrlUseCase.Execute(request.DocumentId);
-                return Created(new Uri($"/claims/{claimId}/download_links", UriKind.Relative), result);
+                var result = _downloadDocumentWithUrlUseCase.Execute(claimId);
+                return Ok(result);
             }
             catch (NotFoundException ex)
             {

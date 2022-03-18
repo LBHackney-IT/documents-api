@@ -8,6 +8,8 @@ using DocumentsApi.V1.Factories;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Moq;
+using Amazon.S3.Model;
 
 namespace DocumentsApi.Tests.V1.E2ETests
 {
@@ -219,41 +221,34 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
 
         [Test]
-        [Ignore("E2E failing due to change to use case")]
-        public async Task ReturnsDownloadUrlWhenDocumentIsFound()
+        public async Task ReturnsDownloadUrlWhenClaimIsFound()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();
-            claim.Id = Guid.NewGuid();
-            var document = TestDataHelper.CreateDocument().ToEntity();
-            DatabaseContext.Add(document);
+            var claimId = Guid.NewGuid();
+            claim.Id = claimId;
+
+            DatabaseContext.Add(claim);           
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/claims/{claim.Id}/download_links", UriKind.Relative);
+            //S3Proxy for mocks is not handling .GetPresignedURL correctly, so it is mocked manually here
+            var expectedUrlFromS3 = "www.s3urlstring";
+            MockS3Client.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expectedUrlFromS3);
 
-            string body = "{" +
-                          $"\"documentId\": \"{document.Id}\"" +
-                          "}";
+            var uri = new Uri($"api/v1/claims/{claimId}/download_links", UriKind.Relative);
 
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
-            response.StatusCode.Should().Be(201);
+            response.StatusCode.Should().Be(200);
         }
 
         [Test]
-        public async Task Returns404WhenCannotFindDocument()
+        public async Task Returns404WhenCannotFindClaimForDownloadUrl()
         {
             var nonExistentClaimId = Guid.NewGuid();
-            var nonExistentDocumentId = Guid.NewGuid();
 
             var uri = new Uri($"api/v1/claims/{nonExistentClaimId}/download_links", UriKind.Relative);
 
-            string body = "{" +
-                          $"\"documentId\": \"{nonExistentDocumentId}\"" +
-                          "}";
-
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(404);
         }

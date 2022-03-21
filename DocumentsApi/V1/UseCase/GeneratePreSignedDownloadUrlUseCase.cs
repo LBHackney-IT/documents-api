@@ -36,7 +36,7 @@ namespace DocumentsApi.V1.UseCase
             {
                 Console.WriteLine($"Error when retrieving the presigned URL: {e.Message}");
                 throw e;
-            }            
+            }
         }
     }
 }

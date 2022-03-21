@@ -8,6 +8,8 @@ using DocumentsApi.V1.Factories;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Moq;
+using Amazon.S3.Model;
 
 namespace DocumentsApi.Tests.V1.E2ETests
 {
@@ -215,6 +217,40 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(400);
+        }
+
+
+        [Test]
+        public async Task ReturnsDownloadUrlWhenClaimIsFound()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            var claimId = Guid.NewGuid();
+            claim.Id = claimId;
+
+            DatabaseContext.Add(claim);
+            DatabaseContext.SaveChanges();
+
+            //S3Proxy for mocks is not handling .GetPresignedURL correctly, so it is mocked manually here
+            var expectedUrlFromS3 = "www.s3urlstring";
+            MockS3Client.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expectedUrlFromS3);
+
+            var uri = new Uri($"api/v1/claims/{claimId}/download_links", UriKind.Relative);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task Returns404WhenCannotFindClaimForDownloadUrl()
+        {
+            var nonExistentClaimId = Guid.NewGuid();
+
+            var uri = new Uri($"api/v1/claims/{nonExistentClaimId}/download_links", UriKind.Relative);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
         }
     }
 }

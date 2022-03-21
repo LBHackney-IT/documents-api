@@ -19,13 +19,15 @@ namespace DocumentsApi.V1.Controllers
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
         private readonly ICreateClaimAndUploadDocumentUseCase _createClaimAndUploadDocumentUseCase;
         private readonly IGetClaimAndDocumentUseCase _getClaimAndDocumentUseCase;
+        private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
             IUpdateClaimStateUseCase updateClaimStateUseCase,
             ICreateClaimAndUploadDocumentUseCase createClaimAndUploadDocumentUseCase,
-            IGetClaimAndDocumentUseCase getClaimAndDocumentUseCase
+            IGetClaimAndDocumentUseCase getClaimAndDocumentUseCase,
+            IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
@@ -33,6 +35,7 @@ namespace DocumentsApi.V1.Controllers
             _updateClaimStateUseCase = updateClaimStateUseCase;
             _createClaimAndUploadDocumentUseCase = createClaimAndUploadDocumentUseCase;
             _getClaimAndDocumentUseCase = getClaimAndDocumentUseCase;
+            _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
         }
 
         /// <summary>
@@ -157,6 +160,31 @@ namespace DocumentsApi.V1.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates a download link for a document
+        /// </summary>
+        /// <response code="201">Saved</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpGet]
+        [Route("{claimId}/download_links")]
+        public IActionResult GeneratePreSignedDownloadUrl([FromRoute] Guid claimId)
+        {
+            try
+            {
+                var result = _generatePreSignedDownloadUrlUseCase.Execute(claimId);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (AmazonS3Exception e)
+            {
+                return StatusCode(500, e.Message);
             }
         }
     }

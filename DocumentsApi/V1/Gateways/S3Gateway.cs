@@ -40,14 +40,13 @@ namespace DocumentsApi.V1.Gateways
         // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
         [SuppressMessage("ReSharper", "CA1055")]
         [SuppressMessage("ReSharper", "CA2200")]
-        public string GeneratePreSignedDownloadUrl()
+        public string GeneratePreSignedDownloadUrl(Document document)
         {
             GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
             {
                 BucketName = _options.DocumentsBucketName,
-                // Key = "clean/" + document.Id.ToString(),
-                Key = "clean/" + "test-name",
-                Expires = DateTime.UtcNow.AddMinutes(30)
+                Key = "clean/" + document.Id.ToString(),
+                Expires = DateTime.UtcNow.AddSeconds(30)
             };
             var urlString = "";
             try

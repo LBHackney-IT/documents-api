@@ -51,7 +51,7 @@ namespace DocumentsApi
             services.AddScoped<ICreateClaimAndUploadDocumentUseCase, CreateClaimAndUploadDocumentUseCase>();
             services.AddScoped<IGetClaimAndDocumentUseCase, GetClaimAndDocumentUseCase>();
             services.AddScoped<ICreateUploadPolicyUseCase, CreateUploadPolicyUseCase>();
-            services.AddScoped<IDownloadDocumentWithUrlUseCase, DownloadDocumentWithUrlUseCase>();
+            services.AddScoped<IGeneratePreSignedDownloadUrlUseCase, GeneratePreSignedDownloadUrlUseCase>();
         }
     }
 }

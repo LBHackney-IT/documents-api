@@ -19,7 +19,7 @@ namespace DocumentsApi.V1.Controllers
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
         private readonly ICreateClaimAndUploadDocumentUseCase _createClaimAndUploadDocumentUseCase;
         private readonly IGetClaimAndDocumentUseCase _getClaimAndDocumentUseCase;
-        private readonly IDownloadDocumentWithUrlUseCase _downloadDocumentWithUrlUseCase;
+        private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
@@ -27,7 +27,7 @@ namespace DocumentsApi.V1.Controllers
             IUpdateClaimStateUseCase updateClaimStateUseCase,
             ICreateClaimAndUploadDocumentUseCase createClaimAndUploadDocumentUseCase,
             IGetClaimAndDocumentUseCase getClaimAndDocumentUseCase,
-            IDownloadDocumentWithUrlUseCase downloadDocumentWithUrlUseCase
+            IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
@@ -35,7 +35,7 @@ namespace DocumentsApi.V1.Controllers
             _updateClaimStateUseCase = updateClaimStateUseCase;
             _createClaimAndUploadDocumentUseCase = createClaimAndUploadDocumentUseCase;
             _getClaimAndDocumentUseCase = getClaimAndDocumentUseCase;
-            _downloadDocumentWithUrlUseCase = downloadDocumentWithUrlUseCase;
+            _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
         }
 
         /// <summary>
@@ -171,11 +171,11 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
         [Route("{claimId}/download_links")]
-        public IActionResult DownloadDocumentWithUrl([FromRoute] Guid claimId)
+        public IActionResult GeneratePreSignedDownloadUrl([FromRoute] Guid claimId)
         {
             try
             {
-                var result = _downloadDocumentWithUrlUseCase.Execute(claimId);
+                var result = _generatePreSignedDownloadUrlUseCase.Execute(claimId);
                 return Ok(result);
             }
             catch (NotFoundException ex)

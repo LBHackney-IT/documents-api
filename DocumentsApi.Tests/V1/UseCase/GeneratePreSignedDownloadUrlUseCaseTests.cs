@@ -13,16 +13,16 @@ using Amazon.S3;
 namespace DocumentsApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class DownloadDocumentWithUrlUseCaseTests
+    public class GeneratePreSignedDownloadUrlUseCaseTests
     {
         private readonly Mock<IS3Gateway> _s3Gateway = new Mock<IS3Gateway>();
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
-        private DownloadDocumentWithUrlUseCase _classUnderTest;
+        private GeneratePreSignedDownloadUrlUseCase _classUnderTest;
 
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new DownloadDocumentWithUrlUseCase(_s3Gateway.Object, _documentsGateway.Object);
+            _classUnderTest = new GeneratePreSignedDownloadUrlUseCase(_s3Gateway.Object, _documentsGateway.Object);
         }
 
         [Test]

@@ -69,9 +69,9 @@ def lambda_handler(event, context):
         print("s3_client.download_file", bucket_name, file_key_name, download_path)
         s3_client_no_ssl.download_file(bucket_name, file_key_name, download_path)
 
-        mimetype_little_i = subprocess.check_output(f"file -i {download_path}")
-        mimetype_big_i = subprocess.check_output(f"file -I {download_path}")
-        mimetype = subprocess.check_output(f"file --mime {download_path}")
+        mimetype_little_i = subprocess.check_output(f"file -i {download_path}", shell=True)
+        mimetype_big_i = subprocess.check_output(f"file -I {download_path}", shell=True)
+        mimetype = subprocess.check_output(f"file --mime {download_path}", shell=True)
         print(f"*********** Mime type with -i (Linux command) {mimetype_little_i}")
         print(f"*********** Mime type with -I {mimetype_big_i}")
         print(f"*********** Mime type with --mime {mimetype}")

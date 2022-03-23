@@ -63,23 +63,23 @@ def lambda_handler(event, context):
     #     }
 
     # If MIME type is accepted, we can continue and copy the file
-    try:
+    # try:
         # Get filename only and prepend with tmp as this is the only ephemeral storage lambdas have
-        download_path = '/tmp/' + file_key_name.split('/')[-1]
-        print("s3_client.download_file", bucket_name, file_key_name, download_path)
-        s3_client_no_ssl.download_file(bucket_name, file_key_name, download_path)
+    download_path = '/tmp/' + file_key_name.split('/')[-1]
+    print("s3_client.download_file", bucket_name, file_key_name, download_path)
+    s3_client_no_ssl.download_file(bucket_name, file_key_name, download_path)
 
-        mimetype_little_i = subprocess.Popen(['/bin/bash', '-c', f"file -i {download_path}"])
-        mimetype_big_i = subprocess.Popen(['/bin/bash', '-c', f"file -I {download_path}"])
-        mimetype = subprocess.Popen(['/bin/bash', '-c', f"file --mime {download_path}"])
-        print(f"*********** Mime type with -i (Linux command) {mimetype_little_i}")
-        print(f"*********** Mime type with -I {mimetype_big_i}")
-        print(f"*********** Mime type with --mime {mimetype}")
+    mimetype_little_i = subprocess.Popen(['/bin/bash', '-c', f"file -i {download_path}"])
+    mimetype_big_i = subprocess.Popen(['/bin/bash', '-c', f"file -I {download_path}"])
+    mimetype = subprocess.Popen(['/bin/bash', '-c', f"file --mime {download_path}"])
+    print(f"*********** Mime type with -i (Linux command) {mimetype_little_i}")
+    print(f"*********** Mime type with -I {mimetype_big_i}")
+    print(f"*********** Mime type with --mime {mimetype}")
 
-    except Exception as e:
-        print('An exception occurred: {}'.format(e))
-        print("There was an error when attempting to download the file, moving to quarantine")
-        move_file_to_quarantine(file_key_name, copy_source_object, bucket_name, s3_client)
+    # except Exception as e:
+    #     print('An exception occurred: {}'.format(e))
+    #     print("There was an error when attempting to download the file, moving to quarantine")
+    #     move_file_to_quarantine(file_key_name, copy_source_object, bucket_name, s3_client)
 
     # mime = magic.Magic(mime=True)
     # print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")

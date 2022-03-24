@@ -59,7 +59,11 @@ commands:
       - run:
           name: Install Python
           command: |
-            apt-get install python
+            apt-get install python3.8
+      - run:
+          name: Install pip
+          command: |
+            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py
       - run:
           name: Install Python dependencies
           command: |

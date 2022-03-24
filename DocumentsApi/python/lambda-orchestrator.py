@@ -1,9 +1,7 @@
 import json
 import boto3
 import botocore
-import subprocess
-import os
-# import magic
+import magic
 
 
 def lambda_handler(event, context):
@@ -44,14 +42,6 @@ def lambda_handler(event, context):
     #     #'video/mp4', #.mp4
     #     #'video/quicktime', #.mov or .qt
     # ] 
-
-   #Check for MIME type of file
-    # head_object = s3_client.head_object(
-    #     Bucket=bucket_name,
-    #     Key=file_key_name,
-    # )
-
-    # print(f"***********head_object: {head_object}")
     
     # if head_object['ContentType'] not in accepted_mime_types:
     #     print(f"File type {head_object['ContentType']} is not accepted!")
@@ -70,23 +60,13 @@ def lambda_handler(event, context):
     print("s3_client.download_file", bucket_name, file_key_name, download_path)
     s3_client_no_ssl.download_file(bucket_name, file_key_name, download_path)
 
-    stream = os.popen('which bash')
-    bash_location = stream.read()
-    print(f"*********** bash location from os: {bash_location}")
-
-    check_output_command = subprocess.check_output([f"{bash_location}", '-c', f"file -I {download_path}"])
-    print(f"*********** output from check_output mime type command: {check_output_command}")
-
-    popen_command = subprocess.Popen([f"{bash_location}", '-c', f"file -I {download_path}"])
-    print(f"*********** output from Popen command: {popen_command}")
-
     # except Exception as e:
     #     print('An exception occurred: {}'.format(e))
     #     print("There was an error when attempting to download the file, moving to quarantine")
     #     move_file_to_quarantine(file_key_name, copy_source_object, bucket_name, s3_client)
 
-    # mime = magic.Magic(mime=True)
-    # print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")
+    mime = magic.Magic(mime=True)
+    print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")
 
     move_file_to_clean_and_update_database_document_entity(event, lambda_client, file_key_name, copy_source_object, bucket_name, s3_client)
    

@@ -63,7 +63,7 @@ commands:
       - run:
           name: Install pip
           command: |
-            python3 -m ensurepip --upgrade
+            apt-get install -y python3-pip
       - run:
           name: Install Python dependencies
           command: |

@@ -59,7 +59,7 @@ commands:
       - run:
           name: Install Python
           command: |
-            sudo apt-get install python
+            apt-get install python
       - run:
           name: Install Python dependencies
           command: |

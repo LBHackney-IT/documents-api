@@ -64,7 +64,7 @@ commands:
           name: Install pip
           command: |
             curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-            python get-pip.py
+            python3 get-pip.py
       - run:
           name: Install Python dependencies
           command: |

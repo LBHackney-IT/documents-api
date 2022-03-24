@@ -65,10 +65,13 @@ commands:
           command: |
             apt-get install -y python3-pip
       - run:
-          name: Install Python dependencies
+          name: Setup venv and install dependencies
           command: |
             cd ./DocumentsApi/python
-            pip3 install python-magic
+            python3 -m venv python-env
+            source python-env/bin/activate
+            pip3 install -r requirements.txt
+            deactivate
       - run:
           name: Build lambda
           command: |

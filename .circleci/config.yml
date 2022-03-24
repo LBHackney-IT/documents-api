@@ -63,7 +63,7 @@ commands:
       - run:
           name: Install Python dependencies
           command: |
-            cd ./DocumentsApi/Python
+            cd ./DocumentsApi/python
             pip install python-magic
       - run:
           name: Build lambda

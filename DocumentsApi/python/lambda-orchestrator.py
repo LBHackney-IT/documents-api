@@ -2,6 +2,7 @@ import json
 import boto3
 import botocore
 import subprocess
+import os
 # import magic
 
 
@@ -69,12 +70,15 @@ def lambda_handler(event, context):
     print("s3_client.download_file", bucket_name, file_key_name, download_path)
     s3_client_no_ssl.download_file(bucket_name, file_key_name, download_path)
 
-    mimetype_little_i = subprocess.Popen(['/bin/bash', '-c', f"file -i {download_path}"])
-    mimetype_big_i = subprocess.Popen(['/bin/bash', '-c', f"file -I {download_path}"])
-    mimetype = subprocess.Popen(['/bin/bash', '-c', f"file --mime {download_path}"])
-    print(f"*********** Mime type with -i (Linux command) {mimetype_little_i}")
-    print(f"*********** Mime type with -I {mimetype_big_i}")
-    print(f"*********** Mime type with --mime {mimetype}")
+    stream = os.popen('which bash')
+    bash_location = stream.read()
+    print(f"*********** bash location from os: {bash_location}")
+
+    check_output_command = subprocess.check_output([f"{bash_location}", '-c', f"file -I {download_path}"])
+    print(f"*********** output from check_output mime type command: {check_output_command}")
+
+    popen_command = subprocess.Popen([f"{bash_location}", '-c', f"file -I {download_path}"])
+    print(f"*********** output from Popen command: {popen_command}")
 
     # except Exception as e:
     #     print('An exception occurred: {}'.format(e))

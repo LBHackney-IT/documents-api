@@ -57,6 +57,15 @@ commands:
             cd ./DocumentsApi/V1/Node
             npm install
       - run:
+          name: Install Python
+          command: |
+            sudo apt-get install python
+      - run:
+          name: Install Python dependencies
+          command: |
+            cd ./DocumentsApi/Python
+            pip install python-magic
+      - run:
           name: Build lambda
           command: |
             cd ./DocumentsApi/

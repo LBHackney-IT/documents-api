@@ -69,6 +69,10 @@ commands:
           command: |
             apt-get install -y python3-venv
       - run:
+          name: Install libmagic
+          command: |
+            apt-get install -y libmagic1
+      - run:
           name: Setup venv and install dependencies
           command: |
             cd ./DocumentsApi/python

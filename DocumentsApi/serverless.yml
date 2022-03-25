@@ -61,7 +61,7 @@ functions:
     package:
       artifact: ./bin/release/netcoreapp3.1/documents-api.zip
   DocumentsOrchestrator:
-    runtime: python3.8
+    runtime: python3.7
     name: ${self:service}-documents-orchestrator
     handler: lambda-orchestrator.lambda_handler
     package:

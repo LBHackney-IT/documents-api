@@ -5,7 +5,7 @@ if [ -f /etc/debian_version ]
 then
   apt -qq update
   apt -qq -y install zip
-  apt-get -qq -y install libmagic1
+  apt-get -qq -y install libmagic-dev
 fi
 
 #dotnet restore

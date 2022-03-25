@@ -72,6 +72,7 @@ commands:
           name: Install libmagic
           command: |
             apt-get install -y libmagic1
+            apt install libmagic-dev
       - run:
           name: Setup venv and install dependencies
           command: |

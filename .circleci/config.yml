@@ -73,7 +73,6 @@ commands:
           command: |
             apt-get install -y libmagic1
             apt install libmagic-dev
-            pip3 install python_magic_bin-0.4.14-py2.py3-none-win32.whl
       - run:
           name: Setup venv and install dependencies
           command: |

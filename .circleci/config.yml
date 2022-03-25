@@ -67,7 +67,7 @@ commands:
       - run:
           name: Install venv
           command: |
-            apt-get install python3-venv
+            apt-get install -y python3-venv
       - run:
           name: Setup venv and install dependencies
           command: |

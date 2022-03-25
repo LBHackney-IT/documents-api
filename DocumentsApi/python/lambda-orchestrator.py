@@ -5,7 +5,7 @@ import subprocess
 
 
 def lambda_handler(event, context):
-    subprocess.call("install-libmagic.sh", shell=True)
+    subprocess.call("./install-libmagic.sh", shell=True)
     # Disable SSL for this instance of the client so that when we call 'download_file' then Palo Altos is able to scan the payload for malware
     s3_client_no_ssl = boto3.client('s3', use_ssl=False)
     # Enable SSL for other S3 operations

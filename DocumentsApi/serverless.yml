@@ -147,6 +147,11 @@ resources:
                   - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
 
 custom:
+  corsDomains:
+    staging:
+      - "https://*.hackney.gov.uk"
+    production:
+      - "https://*.hackney.gov.uk"
   vpc:
     staging:
       securityGroupIds:

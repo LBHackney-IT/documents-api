@@ -30,6 +30,12 @@ provider:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+      corsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+              - POST
+            AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
 
 package:
   artifact: ./bin/release/netcoreapp3.1/documents-api.zip

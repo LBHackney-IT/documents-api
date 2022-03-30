@@ -48,7 +48,7 @@ namespace DocumentsApi.V1.Factories
                 Base64Document = base64Document
             };
         }
-        
+
         public static CreateClaimAndS3UploadPolicyResponse ToClaimAndS3PolicyResponse(this Claim claim, S3UploadPolicy s3UploadPolicy)
         {
             return new CreateClaimAndS3UploadPolicyResponse

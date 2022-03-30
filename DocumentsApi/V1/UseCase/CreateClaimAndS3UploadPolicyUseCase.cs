@@ -18,8 +18,8 @@ namespace DocumentsApi.V1.UseCase
         private IS3Gateway _s3Gateway;
         private readonly ILogger<CreateClaimAndS3UploadPolicyUseCase> _logger;
 
-        public CreateClaimAndS3UploadPolicyUseCase( 
-        IDocumentsGateway documentsGateway, 
+        public CreateClaimAndS3UploadPolicyUseCase(
+        IDocumentsGateway documentsGateway,
         IS3Gateway s3Gateway,
         ILogger<CreateClaimAndS3UploadPolicyUseCase> logger)
         {

@@ -204,7 +204,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/claims/claim_and_document", UriKind.Relative);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
             var formattedValidUntil = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(4));
-            
+
             string body = "{" +
                 "\"serviceAreaCreatedBy\": \"development-team-staging\"," +
                 "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +

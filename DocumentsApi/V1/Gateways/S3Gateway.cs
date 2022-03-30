@@ -67,22 +67,6 @@ namespace DocumentsApi.V1.Gateways
             return meta.Headers.ContentType;
         }
 
-        public PutObjectResponse UploadDocument(Guid documentId, Base64DecodedData document)
-        {
-            var byteArray = Convert.FromBase64String(document.DocumentBase64String);
-            using (var stream = new MemoryStream(byteArray))
-            {
-                var request = new PutObjectRequest
-                {
-                    BucketName = _options.DocumentsBucketName,
-                    Key = "pre-scan/" + documentId,
-                    InputStream = stream,
-                    ContentType = document.DocumentType
-                };
-                return _s3.PutObjectAsync(request).Result;
-            }
-        }
-
         public GetObjectResponse GetObject(Document document)
         {
             try

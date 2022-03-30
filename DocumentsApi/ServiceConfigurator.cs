@@ -38,14 +38,10 @@ namespace DocumentsApi
             services.AddScoped<IDocumentsGateway, DocumentsGateway>();
             services.AddScoped<IS3Gateway, S3Gateway>();
 
-            // Factories
-            services.AddScoped<IDocumentFormatFactory, DocumentFormatFactory>();
-
             // Use Cases
             services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();
             services.AddScoped<IUpdateUploadedDocumentUseCase, UpdateUploadedDocumentUseCase>();
             services.AddScoped<IFindClaimByIdUseCase, FindClaimByIdUseCase>();
-            services.AddScoped<IDownloadDocumentUseCase, DownloadDocumentUseCase>();
             services.AddScoped<IUpdateClaimStateUseCase, UpdateClaimStateUseCase>();
             services.AddScoped<ICreateClaimAndS3UploadPolicyUseCase, CreateClaimAndS3UploadPolicyUseCase>();
             services.AddScoped<IGetClaimAndDocumentUseCase, GetClaimAndDocumentUseCase>();

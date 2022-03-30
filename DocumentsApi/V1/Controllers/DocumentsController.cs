@@ -15,16 +15,13 @@ namespace DocumentsApi.V1.Controllers
     [ApiVersion("1.0")]
     public class DocumentsController : BaseController
     {
-        private readonly IDownloadDocumentUseCase _downloadDocumentUseCase;
         private readonly ICreateUploadPolicyUseCase _createUploadPolicyUseCase;
         private readonly IS3Gateway _s3Gateway;
 
         public DocumentsController(
-            IDownloadDocumentUseCase downloadDocumentUseCase,
             ICreateUploadPolicyUseCase createUploadPolicyUseCase,
             IS3Gateway s3Gateway)
         {
-            _downloadDocumentUseCase = downloadDocumentUseCase;
             _createUploadPolicyUseCase = createUploadPolicyUseCase;
             _s3Gateway = s3Gateway;
         }
@@ -51,33 +48,6 @@ namespace DocumentsApi.V1.Controllers
             catch (BadRequestException ex)
             {
                 return BadRequest(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the document in base64 representation
-        /// </summary>
-        /// <response code="200">Found</response>
-        /// <response code="400">Request contains invalid parameters</response>
-        /// <response code="401">Request lacks valid API token</response>
-        /// <response code="500">Amazon S3 exception</response>
-        [HttpGet]
-        [Route("{documentId}")]
-        [Produces("application/json")]
-        public IActionResult GetDocument([FromRoute] Guid documentId)
-        {
-            try
-            {
-                var result = _downloadDocumentUseCase.Execute(documentId);
-                return Ok(result);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (AmazonS3Exception e)
-            {
-                return StatusCode(500, e.Message);
             }
         }
     }

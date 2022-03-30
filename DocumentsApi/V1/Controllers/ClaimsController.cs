@@ -5,6 +5,7 @@ using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Amazon.S3;
+using System.Threading.Tasks;
 
 namespace DocumentsApi.V1.Controllers
 {
@@ -17,7 +18,7 @@ namespace DocumentsApi.V1.Controllers
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
-        private readonly ICreateClaimAndUploadDocumentUseCase _createClaimAndUploadDocumentUseCase;
+        private readonly ICreateClaimAndS3UploadPolicyUseCase _createClaimAndS3UploadPolicyUseCase;
         private readonly IGetClaimAndDocumentUseCase _getClaimAndDocumentUseCase;
         private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
 
@@ -25,7 +26,7 @@ namespace DocumentsApi.V1.Controllers
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
             IUpdateClaimStateUseCase updateClaimStateUseCase,
-            ICreateClaimAndUploadDocumentUseCase createClaimAndUploadDocumentUseCase,
+            ICreateClaimAndS3UploadPolicyUseCase createClaimAndS3UploadPolicyUseCase,
             IGetClaimAndDocumentUseCase getClaimAndDocumentUseCase,
             IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase
         )
@@ -33,7 +34,7 @@ namespace DocumentsApi.V1.Controllers
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
             _updateClaimStateUseCase = updateClaimStateUseCase;
-            _createClaimAndUploadDocumentUseCase = createClaimAndUploadDocumentUseCase;
+            _createClaimAndS3UploadPolicyUseCase = createClaimAndS3UploadPolicyUseCase;
             _getClaimAndDocumentUseCase = getClaimAndDocumentUseCase;
             _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
         }
@@ -69,11 +70,11 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="500">Document upload exception</response>
         [HttpPost]
         [Route("claim_and_document")]
-        public IActionResult CreateClaimAndUploadDocument(ClaimAndUploadDocumentRequest request)
+        public async Task<IActionResult> CreateClaimAndUploadDocument(ClaimRequest request)
         {
             try
             {
-                var result = _createClaimAndUploadDocumentUseCase.Execute(request);
+                var result = await _createClaimAndS3UploadPolicyUseCase.ExecuteAsync(request).ConfigureAwait(true);
                 return Created(new Uri($"/claim_and_document/{result.ClaimId}", UriKind.Relative), result);
             }
             catch (NotFoundException ex)

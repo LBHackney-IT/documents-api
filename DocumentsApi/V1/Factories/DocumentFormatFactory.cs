@@ -26,17 +26,5 @@ namespace DocumentsApi.V1.Factories
 
             return string.Empty;
         }
-
-        public Base64DecodedData DecodeBase64DocumentString(string documentString)
-        {
-            var base64Part = documentString.Split(",")[1];
-            var fileTypePart = Regex.Match(documentString, @"(?<=:).+(?=;)").Value;
-
-            return new Base64DecodedData()
-            {
-                DocumentBase64String = base64Part,
-                DocumentType = fileTypePart
-            };
-        }
     }
 }

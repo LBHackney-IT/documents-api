@@ -197,21 +197,19 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task ClaimAndDocumentReturnsBadRequestWithInvalidParams()
+        public async Task ClaimAndS3UploadRequestReturnsBadRequestWithInvalidParams()
         {
             var uri = new Uri($"api/v1/claims/claim_and_document", UriKind.Relative);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
             var formattedValidUntil = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(4));
-            string base64Document = "data:@file/plain;base64,VGhpcyBpcyBhIHRlc3QgZmlsZQ==";
+            
             string body = "{" +
                 "\"serviceAreaCreatedBy\": \"development-team-staging\"," +
                 "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
                 "\"apiCreatedBy\": " +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
-                $"\"base64Document\": \"{base64Document}\"" +
                 "}";
-
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);

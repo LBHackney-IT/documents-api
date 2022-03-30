@@ -164,6 +164,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
+        [Ignore("GetClaimAndDocument will be amended to use S3 PresignedUrl")]
         public async Task Returns200WhenItCanGetClaimAndDocument()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();
@@ -180,6 +181,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
+        [Ignore("GetClaimAndDocument will be amended to use S3 PresignedUrl")]
         public async Task Returns400WhenClaimAndDocumentRequestIsNotValid()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();

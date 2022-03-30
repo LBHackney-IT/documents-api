@@ -8,6 +8,7 @@ namespace DocumentsApi.V1.Factories
 {
     public class DocumentFormatFactory : IDocumentFormatFactory
     {
+        //TODO: Factory to be removed when remove old download path
         public string EncodeStreamToBase64(GetObjectResponse s3Response)
         {
             if (s3Response.ResponseStream != null)

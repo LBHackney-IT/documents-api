@@ -32,6 +32,7 @@ namespace DocumentsApi.V1.Factories
             };
         }
 
+        //TODO: Amend when removing old download path
         public static ClaimAndDocumentResponse ToClaimAndDocumentResponse(this ClaimResponse claim, string base64Document)
         {
             return new ClaimAndDocumentResponse

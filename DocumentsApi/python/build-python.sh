@@ -13,4 +13,5 @@ mkdir build
 cp lambda-orchestrator.py build
 pip3 install -r requirements.txt --target build
 
-zip -rv lambda-orchestrator.zip ./build/*
+cd ./build
+zip -rv ../lambda-orchestrator.zip ./*

@@ -19,7 +19,7 @@ namespace DocumentsApi.V1.Controllers
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
         private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
         private readonly ICreateClaimAndS3UploadPolicyUseCase _createClaimAndS3UploadPolicyUseCase;
-        private readonly IGetClaimAndDocumentUseCase _getClaimAndDocumentUseCase;
+        private readonly IGetClaimAndPreSignedDownloadUrlUseCase _getClaimAndPreSignedDownloadUrlUseCase;
         private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
 
         public ClaimsController(
@@ -27,7 +27,7 @@ namespace DocumentsApi.V1.Controllers
             IFindClaimByIdUseCase findClaimByIdUseCase,
             IUpdateClaimStateUseCase updateClaimStateUseCase,
             ICreateClaimAndS3UploadPolicyUseCase createClaimAndS3UploadPolicyUseCase,
-            IGetClaimAndDocumentUseCase getClaimAndDocumentUseCase,
+            IGetClaimAndPreSignedDownloadUrlUseCase getClaimAndPreSignedDownloadUrlUseCase,
             IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase
         )
         {
@@ -35,7 +35,7 @@ namespace DocumentsApi.V1.Controllers
             _findClaimByIdUseCase = findClaimByIdUseCase;
             _updateClaimStateUseCase = updateClaimStateUseCase;
             _createClaimAndS3UploadPolicyUseCase = createClaimAndS3UploadPolicyUseCase;
-            _getClaimAndDocumentUseCase = getClaimAndDocumentUseCase;
+            _getClaimAndPreSignedDownloadUrlUseCase = getClaimAndPreSignedDownloadUrlUseCase;
             _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
         }
 
@@ -113,19 +113,19 @@ namespace DocumentsApi.V1.Controllers
         }
 
         /// <summary>
-        /// Gets a claim and a document
+        /// Gets a claim and a presigned download url for the document
         /// </summary>
         /// <response code="200">Found</response>
         /// <response code="401">Request lacks valid API token</response>
         /// <response code="404">Claim not found</response>
         /// <response code="500">Amazon S3 exception</response>
         [HttpGet]
-        [Route("claim_and_document/{claimId}")]
-        public IActionResult GetClaimAndDocument([Required][FromRoute] Guid claimId)
+        [Route("claim_and_download_url/{claimId}")]
+        public IActionResult GetClaimAndPresignedDownloadUrl([Required][FromRoute] Guid claimId)
         {
             try
             {
-                var result = _getClaimAndDocumentUseCase.Execute(claimId);
+                var result = _getClaimAndPreSignedDownloadUrlUseCase.Execute(claimId);
                 return Ok(result);
             }
             catch (NotFoundException ex)

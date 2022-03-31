@@ -1,8 +1,11 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DocumentsApi.V1.Boundary.Response
 {
-    public class ClaimAndDocumentResponse
+    // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
+    [SuppressMessage("ReSharper", "CA1056")]
+    public class GetClaimAndPreSignedDownloadUrlResponse
     {
         public Guid ClaimId { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -12,6 +15,6 @@ namespace DocumentsApi.V1.Boundary.Response
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
-        public string Base64Document { get; set; }
+        public string PreSignedDownloadUrl { get; set; }
     }
 }

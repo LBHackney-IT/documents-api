@@ -84,28 +84,5 @@ namespace DocumentsApi.Tests.V1.Gateways
             var result = await _classUnderTest.GetObjectContentType(key).ConfigureAwait(true);
             result.Should().Be(expectedContentType);
         }
-
-        [Test]
-        public void CanGetObject()
-        {
-            var documentId = Guid.NewGuid();
-            var document = TestDataHelper.CreateDocument();
-            document.Id = documentId;
-            document.UploadedAt = DateTime.UtcNow;
-            var expected = new GetObjectResponse();
-            _s3.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
-            var result = _classUnderTest.GetObject(document);
-            result.Should().Be(expected);
-        }
-
-        [Test]
-        public void ThrowsExceptionWhenCannotGetObject()
-        {
-            var document = TestDataHelper.CreateDocument();
-            document.Id = Guid.NewGuid();
-            _s3.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), It.IsAny<CancellationToken>())).Throws(new AmazonS3Exception("Error retrieving the document"));
-            Func<GetObjectResponse> testDelegate = () => _classUnderTest.GetObject(document);
-            testDelegate.Should().Throw<AmazonS3Exception>();
-        }
     }
 }

@@ -27,23 +27,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task ReturnsDocumentStringWhenDocumentIsFound()
-        {
-            var claim = TestDataHelper.CreateClaim().ToEntity();
-            claim.Id = Guid.NewGuid();
-            var document = TestDataHelper.CreateDocument().ToEntity();
-            DatabaseContext.Add(document);
-            DatabaseContext.SaveChanges();
-            var expected = new GetObjectResponse();
-            MockS3Client.Setup(x => x.GetObjectAsync(It.IsAny<GetObjectRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
-
-            var uri = new Uri($"api/v1/documents/{document.Id}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-
-            response.StatusCode.Should().Be(200);
-        }
-
-        [Test]
         public async Task Returns404WhenCannotFindDocument()
         {
             var documentId = Guid.NewGuid();

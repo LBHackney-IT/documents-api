@@ -66,23 +66,5 @@ namespace DocumentsApi.V1.Gateways
             var meta = await _s3.GetObjectMetadataAsync(_options.DocumentsBucketName, key).ConfigureAwait(true);
             return meta.Headers.ContentType;
         }
-
-        public GetObjectResponse GetObject(Document document)
-        {
-            try
-            {
-                GetObjectRequest request = new GetObjectRequest
-                {
-                    BucketName = _options.DocumentsBucketName,
-                    Key = "clean/" + document.Id
-                };
-                return _s3.GetObjectAsync(request).Result;
-            }
-            catch (AmazonS3Exception e)
-            {
-                Console.WriteLine("Error when retrieving the S3 object: '{0}' ", e.Message);
-                throw;
-            }
-        }
     }
 }

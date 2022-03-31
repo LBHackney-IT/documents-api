@@ -11,7 +11,7 @@ rm -rf build
 mkdir build
 cp lambda-orchestrator.py build
 apt-get install -y python3-pip
-pip3 install -r ../requirements.txt --target build
+pip3 install -r requirements.txt --target build
 
 cd build
 zip -rv ../lambda-orchestrator.zip ./*

@@ -49,13 +49,13 @@ namespace DocumentsApi.V1.Factories
             };
         }
 
-        public static CreateClaimAndS3UploadPolicyResponse ToClaimAndS3PolicyResponse(this Claim claim, S3UploadPolicy s3UploadPolicy)
+        public static CreateClaimAndS3UploadPolicyResponse ToClaimAndS3UploadPolicyResponse(this Claim claim, S3UploadPolicy s3UploadPolicy)
         {
             return new CreateClaimAndS3UploadPolicyResponse
             {
                 ApiCreatedBy = claim.ApiCreatedBy,
                 CreatedAt = claim.CreatedAt,
-                Document = claim.Document,
+                Document = claim.Document.ToResponse(),
                 ServiceAreaCreatedBy = claim.ServiceAreaCreatedBy,
                 ClaimId = claim.Id,
                 RetentionExpiresAt = claim.RetentionExpiresAt,

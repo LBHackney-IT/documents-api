@@ -33,7 +33,7 @@ namespace DocumentsApi.Tests.V1.Factories
                 .Create();
             var s3UploadPolicy = _fixture.Build<S3UploadPolicy>().Create();
 
-            var response = claim.ToClaimAndS3PolicyResponse(s3UploadPolicy);
+            var response = claim.ToClaimAndS3UploadPolicyResponse(s3UploadPolicy);
             CreateClaimAndS3UploadPolicyResponse expected = new CreateClaimAndS3UploadPolicyResponse
             {
                 ClaimId = response.ClaimId,

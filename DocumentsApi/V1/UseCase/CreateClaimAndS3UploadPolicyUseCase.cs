@@ -37,14 +37,14 @@ namespace DocumentsApi.V1.UseCase
                 throw new BadRequestException(validation);
             }
 
-            var claim = BuildClaimRequest(request);
+            var claim = BuildClaim(request);
             var createdClaim = _documentsGateway.CreateClaim(claim);
             var s3UploadPolicy = await _s3Gateway.GenerateUploadPolicy(createdClaim.Document).ConfigureAwait(true);
 
-            return createdClaim.ToClaimAndS3PolicyResponse(s3UploadPolicy);
+            return createdClaim.ToClaimAndS3UploadPolicyResponse(s3UploadPolicy);
         }
 
-        private static Claim BuildClaimRequest(ClaimRequest request)
+        private static Claim BuildClaim(ClaimRequest request)
         {
             return new Claim
             {

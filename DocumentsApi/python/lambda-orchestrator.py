@@ -1,11 +1,9 @@
 import json
 import boto3
-import botocore
-import subprocess
+import magic
 
 
 def lambda_handler(event, context):
-    subprocess.call("./install-libmagic.sh", shell=True)
     # Disable SSL for this instance of the client so that when we call 'download_file' then Palo Altos is able to scan the payload for malware
     s3_client_no_ssl = boto3.client('s3', use_ssl=False)
     # Enable SSL for other S3 operations
@@ -66,7 +64,6 @@ def lambda_handler(event, context):
     #     print("There was an error when attempting to download the file, moving to quarantine")
     #     move_file_to_quarantine(file_key_name, copy_source_object, bucket_name, s3_client)
 
-    import magic
     mime = magic.Magic(mime=True)
     print(f"MIME TYPE FROM MAGIC {mime.from_file(download_path)}")
 

@@ -57,30 +57,11 @@ commands:
             cd ./DocumentsApi/V1/Node
             npm install
       - run:
-          name: Install Python
-          command: |
-            apt-get install python3.7
-      - run:
-          name: Install pip
-          command: |
-            apt-get install -y python3-pip
-      - run:
-          name: Install venv
-          command: |
-            apt-get install -y python3-venv
-      - run:
-          name: Install libmagic
-          command: |
-            apt-get install -y libmagic1
-            apt install libmagic-dev
-      - run:
-          name: Setup venv and install dependencies
+          name: Build python lambda
           command: |
             cd ./DocumentsApi/python
-            python3 -m venv python-env
-            source python-env/bin/activate
-            pip3 install -r requirements.txt
-            deactivate
+            chmod +x ./build-python.sh
+            ./build-python.sh
       - run:
           name: Build lambda
           command: |

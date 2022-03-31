@@ -71,7 +71,7 @@ functions:
     name: ${self:service}-documents-orchestrator
     handler: lambda-orchestrator.lambda_handler
     package:
-      artifact: lambda-orchestrator.zip
+      artifact: ./python/lambda-orchestrator.zip
     role: lambdaExecutionRole
     events:
       - s3:

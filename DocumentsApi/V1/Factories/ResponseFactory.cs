@@ -1,5 +1,6 @@
 using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Domain;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DocumentsApi.V1.Factories
 {
@@ -32,26 +33,27 @@ namespace DocumentsApi.V1.Factories
             };
         }
 
-        //TODO: Amend when removing old download path
-        public static ClaimAndDocumentResponse ToClaimAndDocumentResponse(this ClaimResponse claim, string base64Document)
+        // Suppress CA1054 because GetPreSignedURL returns a string, not an Uri
+        [SuppressMessage("ReSharper", "CA1054")]
+        public static ClaimAndPreSignedDownloadUrlResponse ToClaimAndPreSignedDownloadUrlResponse(this Claim claim, string preSignedDownloadUrl)
         {
-            return new ClaimAndDocumentResponse
+            return new ClaimAndPreSignedDownloadUrlResponse
             {
                 ApiCreatedBy = claim.ApiCreatedBy,
                 CreatedAt = claim.CreatedAt,
-                Document = claim.Document,
+                Document = claim.Document.ToResponse(),
                 ServiceAreaCreatedBy = claim.ServiceAreaCreatedBy,
                 ClaimId = claim.Id,
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 UserCreatedBy = claim.UserCreatedBy,
                 ValidUntil = claim.ValidUntil,
-                Base64Document = base64Document
+                PreSignedDownloadUrl = preSignedDownloadUrl
             };
         }
 
-        public static CreateClaimAndS3UploadPolicyResponse ToClaimAndS3UploadPolicyResponse(this Claim claim, S3UploadPolicy s3UploadPolicy)
+        public static ClaimAndS3UploadPolicyResponse ToClaimAndS3UploadPolicyResponse(this Claim claim, S3UploadPolicy s3UploadPolicy)
         {
-            return new CreateClaimAndS3UploadPolicyResponse
+            return new ClaimAndS3UploadPolicyResponse
             {
                 ApiCreatedBy = claim.ApiCreatedBy,
                 CreatedAt = claim.CreatedAt,

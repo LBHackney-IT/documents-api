@@ -1,9 +1,11 @@
 using System;
-using DocumentsApi.V1.Domain;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DocumentsApi.V1.Boundary.Response
 {
-    public class CreateClaimAndS3UploadPolicyResponse
+    // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
+    [SuppressMessage("ReSharper", "CA1056")]
+    public class ClaimAndPreSignedDownloadUrlResponse
     {
         public Guid ClaimId { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -13,6 +15,6 @@ namespace DocumentsApi.V1.Boundary.Response
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
-        public S3UploadPolicy S3UploadPolicy { get; set; }
+        public string PreSignedDownloadUrl { get; set; }
     }
 }

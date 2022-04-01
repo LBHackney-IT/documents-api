@@ -1,8 +1,9 @@
 using System;
+using DocumentsApi.V1.Domain;
 
 namespace DocumentsApi.V1.Boundary.Response
 {
-    public class ClaimAndDocumentResponse
+    public class ClaimAndS3UploadPolicyResponse
     {
         public Guid ClaimId { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -12,6 +13,6 @@ namespace DocumentsApi.V1.Boundary.Response
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
-        public string Base64Document { get; set; }
+        public S3UploadPolicy S3UploadPolicy { get; set; }
     }
 }

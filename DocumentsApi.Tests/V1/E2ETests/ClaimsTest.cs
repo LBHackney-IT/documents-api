@@ -164,25 +164,27 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        [Ignore("GetClaimAndDocument will be amended to use S3 PresignedUrl")]
-        public async Task Returns200WhenItCanGetClaimAndDocument()
+        public async Task Returns200WhenItCanGetClaimAndPreSignedDownloadUrl()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();
             DatabaseContext.Add(claim);
             DatabaseContext.Add(claim.Document);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/claims/claim_and_document/{claim.Id}", UriKind.Relative);
+            var expectedPreSignedDownloadUrl = new String("www.awsDownloadUrl.com");
+            MockS3Client.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expectedPreSignedDownloadUrl);
+
+            var uri = new Uri($"api/v1/claims/claim_and_download_url/{claim.Id}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<ClaimAndDocumentResponse>(jsonString);
+            var result = JsonConvert.DeserializeObject<ClaimAndPreSignedDownloadUrlResponse>(jsonString);
 
             response.StatusCode.Should().Be(200);
+            result.PreSignedDownloadUrl.Should().Be(expectedPreSignedDownloadUrl);
         }
 
         [Test]
-        [Ignore("GetClaimAndDocument will be amended to use S3 PresignedUrl")]
-        public async Task Returns400WhenClaimAndDocumentRequestIsNotValid()
+        public async Task Returns400WhenGetClaimAndPreSignedDownloadUrlRequestIsNotValid()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();
             DatabaseContext.Add(claim);
@@ -190,10 +192,10 @@ namespace DocumentsApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
             var fakeClaimId = Guid.NewGuid();
 
-            var uri = new Uri($"api/v1/claims/claim_and_document/${fakeClaimId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims/claim_and_download_url/${fakeClaimId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<ClaimAndDocumentResponse>(jsonString);
+            var result = JsonConvert.DeserializeObject<ClaimAndPreSignedDownloadUrlResponse>(jsonString);
 
             response.StatusCode.Should().Be(400);
         }

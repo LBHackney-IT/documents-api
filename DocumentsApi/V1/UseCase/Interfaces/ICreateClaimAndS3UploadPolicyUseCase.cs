@@ -6,6 +6,6 @@ namespace DocumentsApi.V1.UseCase.Interfaces
 {
     public interface ICreateClaimAndS3UploadPolicyUseCase
     {
-        public Task<CreateClaimAndS3UploadPolicyResponse> ExecuteAsync(ClaimRequest request);
+        public Task<ClaimAndS3UploadPolicyResponse> ExecuteAsync(ClaimRequest request);
     }
 }

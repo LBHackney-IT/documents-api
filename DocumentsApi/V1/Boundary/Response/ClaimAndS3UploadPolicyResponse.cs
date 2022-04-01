@@ -3,7 +3,7 @@ using DocumentsApi.V1.Domain;
 
 namespace DocumentsApi.V1.Boundary.Response
 {
-    public class CreateClaimAndS3UploadPolicyResponse
+    public class ClaimAndS3UploadPolicyResponse
     {
         public Guid ClaimId { get; set; }
         public DateTime CreatedAt { get; set; }

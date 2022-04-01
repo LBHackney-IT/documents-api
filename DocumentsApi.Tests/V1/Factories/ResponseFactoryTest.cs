@@ -35,7 +35,7 @@ namespace DocumentsApi.Tests.V1.Factories
             var s3UploadPolicy = _fixture.Build<S3UploadPolicy>().Create();
 
             var response = claim.ToClaimAndS3UploadPolicyResponse(s3UploadPolicy);
-            CreateClaimAndS3UploadPolicyResponse expected = new CreateClaimAndS3UploadPolicyResponse
+            var expected = new ClaimAndS3UploadPolicyResponse
             {
                 ClaimId = response.ClaimId,
                 CreatedAt = response.CreatedAt,

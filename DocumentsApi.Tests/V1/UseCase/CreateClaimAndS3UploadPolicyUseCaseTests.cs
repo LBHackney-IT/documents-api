@@ -30,7 +30,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             var request = new ClaimRequest();
 
-            Func<Task<CreateClaimAndS3UploadPolicyResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
+            Func<Task<ClaimAndS3UploadPolicyResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
 
             testDelegate.Should().Throw<BadRequestException>();
 

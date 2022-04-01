@@ -28,7 +28,7 @@ namespace DocumentsApi.V1.UseCase
             _logger = logger;
         }
 
-        public async Task<CreateClaimAndS3UploadPolicyResponse> ExecuteAsync(ClaimRequest request)
+        public async Task<ClaimAndS3UploadPolicyResponse> ExecuteAsync(ClaimRequest request)
         {
             var validation = new ClaimRequestValidator().Validate(request);
             if (!validation.IsValid)

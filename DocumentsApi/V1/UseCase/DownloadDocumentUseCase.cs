@@ -27,6 +27,7 @@ namespace DocumentsApi.V1.UseCase
             _logger = logger;
         }
 
+        // TODO : Amend this to return presigned download url instead
         public string Execute(Guid documentId)
         {
             var document = _documentsGateway.FindDocument(documentId);

@@ -25,16 +25,16 @@ namespace DocumentsApi.Tests.V1.Factories
         }
 
         [Test]
-        public void CanMapAClaimAndBase64DocumentToResponse()
+        public void CanMapAClaimAndS3UploadPolicyToResponse()
         {
-            var document = _fixture.Create<DocumentResponse>();
-            var claim = _fixture.Build<ClaimResponse>()
+            var document = _fixture.Create<Document>();
+            var claim = _fixture.Build<Claim>()
                 .With(x => x.Document, document)
                 .Create();
-            var base64Document = "base-64-document";
+            var s3UploadPolicy = _fixture.Build<S3UploadPolicy>().Create();
 
-            var response = claim.ToClaimAndDocumentResponse(base64Document);
-            ClaimAndDocumentResponse expected = new ClaimAndDocumentResponse
+            var response = claim.ToClaimAndS3UploadPolicyResponse(s3UploadPolicy);
+            CreateClaimAndS3UploadPolicyResponse expected = new CreateClaimAndS3UploadPolicyResponse
             {
                 ClaimId = response.ClaimId,
                 CreatedAt = response.CreatedAt,
@@ -44,7 +44,7 @@ namespace DocumentsApi.Tests.V1.Factories
                 ApiCreatedBy = response.ApiCreatedBy,
                 RetentionExpiresAt = response.RetentionExpiresAt,
                 ValidUntil = response.ValidUntil,
-                Base64Document = response.Base64Document
+                S3UploadPolicy = response.S3UploadPolicy
             };
 
             response.Should().BeEquivalentTo(expected);

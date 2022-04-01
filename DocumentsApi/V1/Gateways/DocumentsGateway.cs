@@ -16,23 +16,23 @@ namespace DocumentsApi.V1.Gateways
             _databaseContext = databaseContext;
         }
 
-        public Document SaveDocument(Document request)
+        public Document SaveDocument(Document document)
         {
-            var entity = request.ToEntity();
+            var entity = document.ToEntity();
 
             _databaseContext.Documents.Add(entity);
-            if (request.Id != default) _databaseContext.Entry(entity).State = EntityState.Modified;
+            if (document.Id != default) _databaseContext.Entry(entity).State = EntityState.Modified;
             _databaseContext.SaveChanges();
 
             return entity.ToDomain();
         }
 
-        public Claim CreateClaim(Claim request)
+        public Claim CreateClaim(Claim claim)
         {
-            var entity = request.ToEntity();
+            var entity = claim.ToEntity();
 
             _databaseContext.Claims.Add(entity);
-            if (request.Id != default) _databaseContext.Entry(entity).State = EntityState.Modified;
+            if (claim.Id != default) _databaseContext.Entry(entity).State = EntityState.Modified;
             _databaseContext.SaveChanges();
 
             return entity.ToDomain();

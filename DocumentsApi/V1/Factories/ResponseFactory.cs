@@ -32,6 +32,7 @@ namespace DocumentsApi.V1.Factories
             };
         }
 
+        //TODO: Amend when removing old download path
         public static ClaimAndDocumentResponse ToClaimAndDocumentResponse(this ClaimResponse claim, string base64Document)
         {
             return new ClaimAndDocumentResponse
@@ -45,6 +46,22 @@ namespace DocumentsApi.V1.Factories
                 UserCreatedBy = claim.UserCreatedBy,
                 ValidUntil = claim.ValidUntil,
                 Base64Document = base64Document
+            };
+        }
+
+        public static CreateClaimAndS3UploadPolicyResponse ToClaimAndS3UploadPolicyResponse(this Claim claim, S3UploadPolicy s3UploadPolicy)
+        {
+            return new CreateClaimAndS3UploadPolicyResponse
+            {
+                ApiCreatedBy = claim.ApiCreatedBy,
+                CreatedAt = claim.CreatedAt,
+                Document = claim.Document.ToResponse(),
+                ServiceAreaCreatedBy = claim.ServiceAreaCreatedBy,
+                ClaimId = claim.Id,
+                RetentionExpiresAt = claim.RetentionExpiresAt,
+                UserCreatedBy = claim.UserCreatedBy,
+                ValidUntil = claim.ValidUntil,
+                S3UploadPolicy = s3UploadPolicy
             };
         }
     }

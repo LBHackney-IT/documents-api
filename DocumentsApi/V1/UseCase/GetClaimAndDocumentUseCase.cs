@@ -22,6 +22,7 @@ namespace DocumentsApi.V1.UseCase
             _logger = logger;
         }
 
+        // TODO: Amend this to use gateways directly
         public ClaimAndDocumentResponse Execute(Guid claimId)
         {
             var claim = _findClaimByIdUseCase.Execute(claimId);

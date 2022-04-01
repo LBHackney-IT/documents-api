@@ -13,7 +13,6 @@ namespace DocumentsApi.V1.Gateways.Interfaces
         [SuppressMessage("ReSharper", "CA1055")]
         public string GeneratePreSignedDownloadUrl(Document document);
         public Task<string> GetObjectContentType(string key);
-        public PutObjectResponse UploadDocument(Guid documentId, Base64DecodedData document);
         public GetObjectResponse GetObject(Document document);
     }
 }

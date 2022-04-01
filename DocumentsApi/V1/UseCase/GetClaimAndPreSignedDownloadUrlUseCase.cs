@@ -12,16 +12,13 @@ namespace DocumentsApi.V1.UseCase
     {
         private readonly IS3Gateway _s3Gateway;
         private readonly IDocumentsGateway _documentsGateway;
-        private readonly ILogger<GetClaimAndPreSignedDownloadUrlUseCase> _logger;
 
         public GetClaimAndPreSignedDownloadUrlUseCase(
             IS3Gateway s3Gateway,
-            IDocumentsGateway documentsGateway,
-            ILogger<GetClaimAndPreSignedDownloadUrlUseCase> logger)
+            IDocumentsGateway documentsGateway)
         {
             _s3Gateway = s3Gateway;
             _documentsGateway = documentsGateway;
-            _logger = logger;
         }
 
         public ClaimAndPreSignedDownloadUrlResponse Execute(Guid claimId)

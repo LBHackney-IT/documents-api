@@ -20,11 +20,9 @@ namespace DocumentsApi.Tests.V1.UseCase
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
         private Fixture _fixture = new Fixture();
 
-        private readonly Mock<ILogger<GetClaimAndPreSignedDownloadUrlUseCase>> _logger = new Mock<ILogger<GetClaimAndPreSignedDownloadUrlUseCase>>();
-
         public GetClaimAndDocumentUseCaseTests()
         {
-            _classUnderTest = new GetClaimAndPreSignedDownloadUrlUseCase(_s3Gateway.Object, _documentsGateway.Object, _logger.Object);
+            _classUnderTest = new GetClaimAndPreSignedDownloadUrlUseCase(_s3Gateway.Object, _documentsGateway.Object);
         }
 
         [Test]

@@ -61,7 +61,7 @@ namespace DocumentsApi.Tests.V1.Factories
             var s3preSignedDownloadUrl = new String("www.awsS3DownloadUrl.com");
 
             var response = claim.ToClaimAndPreSignedDownloadUrlResponse(s3preSignedDownloadUrl);
-            GetClaimAndPreSignedDownloadUrlResponse expected = new GetClaimAndPreSignedDownloadUrlResponse
+            var expected = new ClaimAndPreSignedDownloadUrlResponse
             {
                 ClaimId = response.ClaimId,
                 CreatedAt = response.CreatedAt,

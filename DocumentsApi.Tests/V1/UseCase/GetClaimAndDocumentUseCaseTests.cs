@@ -37,12 +37,12 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             var result = _classUnderTest.Execute(existingClaim.Id);
 
-            var expectedResponse = _fixture.Build<GetClaimAndPreSignedDownloadUrlResponse>()
+            var expectedResponse = _fixture.Build<ClaimAndPreSignedDownloadUrlResponse>()
                 .With(x => x.ClaimId, existingClaim.Id)
                 .With(x => x.PreSignedDownloadUrl, s3DownloadUrl)
                 .Create();
 
-            result.Should().BeOfType<GetClaimAndPreSignedDownloadUrlResponse>();
+            result.Should().BeOfType<ClaimAndPreSignedDownloadUrlResponse>();
             result.ClaimId.Should().Be(expectedResponse.ClaimId);
             result.PreSignedDownloadUrl.Should().Be(expectedResponse.PreSignedDownloadUrl);
         }
@@ -53,7 +53,7 @@ namespace DocumentsApi.Tests.V1.UseCase
             var nonExistingClaimId = Guid.NewGuid();
             _documentsGateway.Setup(x => x.FindClaim(nonExistingClaimId)).Returns(null as Claim);
 
-            Func<GetClaimAndPreSignedDownloadUrlResponse> testDelegate = () => _classUnderTest.Execute(nonExistingClaimId);
+            Func<ClaimAndPreSignedDownloadUrlResponse> testDelegate = () => _classUnderTest.Execute(nonExistingClaimId);
 
             testDelegate.Should().Throw<NotFoundException>();
         }

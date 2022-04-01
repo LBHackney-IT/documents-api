@@ -24,7 +24,7 @@ namespace DocumentsApi.V1.UseCase
             _logger = logger;
         }
 
-        public GetClaimAndPreSignedDownloadUrlResponse Execute(Guid claimId)
+        public ClaimAndPreSignedDownloadUrlResponse Execute(Guid claimId)
         {
             var foundClaim = _documentsGateway.FindClaim(claimId);
             if (foundClaim == null)

@@ -5,7 +5,7 @@ namespace DocumentsApi.V1.Boundary.Response
 {
     // Suppress CA1055 because GetPreSignedURL returns a string, not an Uri
     [SuppressMessage("ReSharper", "CA1056")]
-    public class GetClaimAndPreSignedDownloadUrlResponse
+    public class ClaimAndPreSignedDownloadUrlResponse
     {
         public Guid ClaimId { get; set; }
         public DateTime CreatedAt { get; set; }

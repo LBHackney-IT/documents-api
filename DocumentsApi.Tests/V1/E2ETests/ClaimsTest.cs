@@ -177,7 +177,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/claims/claim_and_download_url/{claim.Id}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<GetClaimAndPreSignedDownloadUrlResponse>(jsonString);
+            var result = JsonConvert.DeserializeObject<ClaimAndPreSignedDownloadUrlResponse>(jsonString);
 
             response.StatusCode.Should().Be(200);
             result.PreSignedDownloadUrl.Should().Be(expectedPreSignedDownloadUrl);
@@ -195,7 +195,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/claims/claim_and_download_url/${fakeClaimId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<GetClaimAndPreSignedDownloadUrlResponse>(jsonString);
+            var result = JsonConvert.DeserializeObject<ClaimAndPreSignedDownloadUrlResponse>(jsonString);
 
             response.StatusCode.Should().Be(400);
         }

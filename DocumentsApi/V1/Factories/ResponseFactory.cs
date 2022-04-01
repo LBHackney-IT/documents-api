@@ -35,9 +35,9 @@ namespace DocumentsApi.V1.Factories
 
         // Suppress CA1054 because GetPreSignedURL returns a string, not an Uri
         [SuppressMessage("ReSharper", "CA1054")]
-        public static GetClaimAndPreSignedDownloadUrlResponse ToClaimAndPreSignedDownloadUrlResponse(this Claim claim, string preSignedDownloadUrl)
+        public static ClaimAndPreSignedDownloadUrlResponse ToClaimAndPreSignedDownloadUrlResponse(this Claim claim, string preSignedDownloadUrl)
         {
-            return new GetClaimAndPreSignedDownloadUrlResponse
+            return new ClaimAndPreSignedDownloadUrlResponse
             {
                 ApiCreatedBy = claim.ApiCreatedBy,
                 CreatedAt = claim.CreatedAt,

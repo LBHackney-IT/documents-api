@@ -5,6 +5,6 @@ namespace DocumentsApi.V1.UseCase.Interfaces
 {
     public interface IGetClaimAndPreSignedDownloadUrlUseCase
     {
-        public GetClaimAndPreSignedDownloadUrlResponse Execute(Guid claimId);
+        public ClaimAndPreSignedDownloadUrlResponse Execute(Guid claimId);
     }
 }

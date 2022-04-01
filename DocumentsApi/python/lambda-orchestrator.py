@@ -54,11 +54,7 @@ def lambda_handler(event, context):
         print("There was an error when attempting to download the file, moving to quarantine")
 
         move_file_to_quarantine(file_key_name, copy_source_object, bucket_name)
-
-        return {
-            'statusCode': 200,
-            'body': json.dumps('Document Orchestrator finished successfully')
-        }
+        return 'Document Orchestrator finished successfully'
 
     mime = magic.Magic(mime=True)
     mime_type = mime.from_file(download_path)
@@ -67,18 +63,11 @@ def lambda_handler(event, context):
 
     if mime_type not in accepted_mime_types:
         print(f"File type {mime_type} is not accepted!")
-        print("Deleting the original file")
-        print("s3_client.delete_object", bucket_name, file_key_name)
-
         move_file_to_quarantine(file_key_name, copy_source_object, bucket_name)
-
-        return {
-            'statusCode': 200,
-            'body': json.dumps('Document Orchestrator finished successfully')
-        }
+        return 'Document Orchestrator finished successfully'
 
     move_file_to_clean_and_update_database_document_entity(event, file_key_name, copy_source_object, bucket_name)
-
+    return 'Document Orchestrator finished successfully'
 
 def move_file_to_quarantine(file_key_name, copy_source_object, bucket_name):
     quarantine_file_key_name = file_key_name.replace('pre-scan/', 'quarantine/')
@@ -88,10 +77,6 @@ def move_file_to_quarantine(file_key_name, copy_source_object, bucket_name):
     print("Deleting the original file")
     print("s3_client.delete_object", bucket_name, file_key_name)
     s3_client.delete_object(Bucket=bucket_name, Key=file_key_name)
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Document Orchestrator finished successfully')
-    }
 
 
 def move_file_to_clean_and_update_database_document_entity(event, file_key_name, copy_source_object, bucket_name):
@@ -112,8 +97,3 @@ def move_file_to_clean_and_update_database_document_entity(event, file_key_name,
         Payload = json.dumps(event)
     )
     print("Response of lambda_client.invoke", response)
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Document Orchestrator finished successfully')
-    }

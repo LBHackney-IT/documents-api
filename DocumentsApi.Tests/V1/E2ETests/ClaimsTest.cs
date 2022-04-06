@@ -201,9 +201,33 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
+        public async Task ClaimAndS3UploadRequestReturnsUploadPolicy()
+        {
+            var uri = new Uri($"api/v1/claims/claim_and_upload_policy", UriKind.Relative);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
+            var formattedValidUntil = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(4));
+
+            string body = "{" +
+                "\"serviceAreaCreatedBy\": \"development-team-staging\"," +
+                "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
+                "\"apiCreatedBy\": \"some-api\"," +
+                $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
+                $"\"validUntil\": {formattedValidUntil}" +
+                "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString);
+            var readResponse = await response.Content.ReadAsStringAsync();
+            var responseAsObject = JsonConvert.DeserializeObject<ClaimAndS3UploadPolicyResponse>(readResponse);
+
+            response.StatusCode.Should().Be(201);
+            responseAsObject.S3UploadPolicy.Url.Should().NotBeNull();
+        }
+
+        [Test]
         public async Task ClaimAndS3UploadRequestReturnsBadRequestWithInvalidParams()
         {
-            var uri = new Uri($"api/v1/claims/claim_and_document", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims/claim_and_upload_policy", UriKind.Relative);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
             var formattedValidUntil = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(4));
 
@@ -212,7 +236,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
                 "\"apiCreatedBy\": " +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
-                $"\"validUntil\": {formattedValidUntil}," +
+                $"\"validUntil\": {formattedValidUntil}" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");

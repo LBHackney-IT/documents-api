@@ -60,34 +60,23 @@ namespace DocumentsApi.V1.Controllers
         }
 
         /// <summary>
-        /// Creates a new claim and uploads a document
+        /// Creates a new claim and returns an upload policy from S3
         /// </summary>
-        /// <response code="201">Claim created and document uploaded</response>
+        /// <response code="201">Claim created and upload policy returned</response>
         /// <response code="400">Request contains invalid parameters</response>
-        /// <response code="400">A document has already been uploaded</response>
         /// <response code="401">Request lacks valid API token</response>
-        /// <response code="404">Document not found</response>
-        /// <response code="500">Document upload exception</response>
         [HttpPost]
-        [Route("claim_and_document")]
-        public async Task<IActionResult> CreateClaimAndUploadDocument(ClaimRequest request)
+        [Route("claim_and_upload_policy")]
+        public async Task<IActionResult> CreateClaimAndUploadPolicy(ClaimRequest request)
         {
             try
             {
-                var result = await _createClaimAndS3UploadPolicyUseCase.ExecuteAsync(request).ConfigureAwait(true);
-                return Created(new Uri($"/claim_and_document/{result.ClaimId}", UriKind.Relative), result);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
+                var result = await _createClaimAndS3UploadPolicyUseCase.ExecuteAsync(request);
+                return Created(new Uri($"/claim_and_upload_policy/{result.ClaimId}", UriKind.Relative), result);
             }
             catch (BadRequestException ex)
             {
                 return BadRequest(ex.Message);
-            }
-            catch (DocumentUploadException e)
-            {
-                return StatusCode(500, e.Message);
             }
         }
 

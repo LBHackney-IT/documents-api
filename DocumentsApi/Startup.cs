@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
+using DocumentsApi.V1.Controllers.Filters;
 using DocumentsApi.Versioning;
 using dotenv.net;
 using FluentValidation.AspNetCore;
@@ -36,7 +37,10 @@ namespace DocumentsApi
         public static void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
+                .AddMvc(c =>
+                {
+                    c.Filters.Add<HandleExceptionAttribute>();
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddFluentValidation();
 

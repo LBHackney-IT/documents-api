@@ -1,3 +1,17 @@
+.PHONY: build-test
+build-test:
+	docker-compose -f DocumentsApi.Tests/compose.yml build
+	
+.PHONY: serve-test
+serve-test:
+	make build-test && make test
+
+.PHONY: test
+test:
+	docker compose -f DocumentsApi.Tests/compose.yml stop
+	docker compose -f DocumentsApi.Tests/compose.yml run --rm test
+	docker compose -f DocumentsApi.Tests/compose.yml stop
+	
 .PHONY: setup
 setup:
 	docker-compose build
@@ -13,10 +27,6 @@ serve:
 .PHONY: shell
 shell:
 	docker-compose run documents-api bash
-
-.PHONY: test
-test:
-	docker-compose up test-database & docker-compose build documents-api-test && docker-compose up documents-api-test
 
 .PHONY: lint
 lint:

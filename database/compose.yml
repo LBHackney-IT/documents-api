@@ -1,0 +1,20 @@
+services:
+  migrate:
+    build:
+      context: ../
+      dockerfile: ./database/Dockerfile
+    env_file: ../.env
+
+  db:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: documents_api
+    expose:
+      - '5432'
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U',  'postgres', '-d', 'documents_api']
+      interval: 5s
+      timeout: 5s
+      retries: 5

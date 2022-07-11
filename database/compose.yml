@@ -3,7 +3,8 @@ services:
     build:
       context: ../
       dockerfile: ./database/Dockerfile
-    env_file: ../.env
+    environment: 
+      - CONNECTION_STRING=Server=http://host.docker.internal;Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword
 
   db:
     image: postgres:11

@@ -3,8 +3,12 @@ services:
     build:
       context: ../
       dockerfile: ./DocumentsApi.Tests/Dockerfile
-    env_file:
-      ../.env
+    environment:
+      - CONNECTION_STRING=Server=http://host.docker.internal;Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword
+      - BUCKET_NAME=testBucketName
+      - S3_API_ENDPOINT=http://host.docker.internal:5555
+      - AWS_ACCESS_KEY_ID=remote-identity
+      - AWS_SECRET_ACCESS_KEY=remote-credential
     depends_on:
       migrate:
         condition: service_completed_successfully

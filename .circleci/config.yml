@@ -154,9 +154,6 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: build
-          command: docker-compose -f DocumentsApi.Tests/compose.yml build
-      - run:
           name: Run tests
           command: docker compose -f DocumentsApi.Tests/compose.yml run test
 

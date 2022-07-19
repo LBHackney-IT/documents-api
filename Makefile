@@ -4,25 +4,31 @@ build-test:
 	
 .PHONY: serve-test
 serve-test:
-	make build-test && make test
+	make build-test && make start-test
 
-.PHONY: test
-test:
+.PHONY: start-test
+start-test:
 	docker compose -f DocumentsApi.Tests/compose.yml stop
 	docker compose -f DocumentsApi.Tests/compose.yml run --rm test
 	docker compose -f DocumentsApi.Tests/compose.yml stop
+
+.PHONY: build-local
+build-local:
+	docker-compose -f DocumentsApi/compose.yml build
 	
-.PHONY: setup
-setup:
-	docker-compose build
+.PHONY: serve-local
+serve-local:
+	make build-local && make start-local
 
-.PHONY: build
-build:
-	docker-compose build documents-api
+.PHONY: start-local
+start-local:
+	docker compose -f DocumentsApi/compose.yml stop
+	docker compose -f DocumentsApi/compose.yml up -d
+	
+.PHONY: stop-local
+stop-local:
+	docker compose -f DocumentsApi/compose.yml stop
 
-.PHONY: serve
-serve:
-	docker-compose build documents-api && docker-compose up documents-api
 
 .PHONY: shell
 shell:

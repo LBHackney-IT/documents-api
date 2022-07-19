@@ -8,7 +8,7 @@ RUN apt-get update \
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY ./DocumentsApi/*.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build

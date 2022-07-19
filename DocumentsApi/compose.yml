@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: ../
+      dockerfile: ./DocumentsApi/Dockerfile
+    env_file: ../.env
+    ports:
+      - "3003:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      s3-mock:
+        condition: service_started
+
+  migrate:
+    extends:
+      file: ../database/compose.yml
+      service: migrate
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    extends:
+      file: ../database/compose.yml
+      service: db
+    ports:
+      - "3004:5432"
+    volumes:
+        - ../database/data:/var/lib/postgresql/data
+
+  s3-mock:
+    image: andrewgaul/s3proxy
+    ports:
+      - "5555:80"
+    environment:
+      - S3PROXY_AUTHORIZATION=none
+      - S3PROXY_CORS_ALLOW_ALL=true
+      - LOG_LEVEL=debug

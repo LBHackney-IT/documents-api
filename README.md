@@ -4,8 +4,8 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 ## Stack
 
--   .NET Core as a web framework.
--   nUnit as a test framework.
+-   .NET Core v3.1 as a web framework.
+-   nUnit v3.11 as a test framework.
 
 
 ## What does it do?
@@ -15,55 +15,66 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 ## Dependencies
 
--   [S3 Mock API](#setting-up-mock-s3)
+-   [S3 Lambda Function](#s3-lambda-function)
 
 ## Contributing
 
-### Setup
+### Prerequisites
 
-1. Install [Docker][docker-download].
+1. Install [Docker][docker-download] (>v20.10).
 2. Clone this repository.
-4. Open it in your IDE (we use Visual Studio CE and JetBrains Rider on Mac)
+3. Open it in your IDE of your choice.
 
-### Development
+### 1. Set up envars
 
 In order to run the API locally, you will first need to copy the environment variables in the [.env.example](.env.example) file and save them to a new file called `.env` in the root of the project (same place as `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
-To get the local database running, you will also need to clone the [evidence-api repo](https://github.com/LBHackney-IT/evidence-api) and follow the instructions in the `README.md`. Once the evidence-api repo is cloned, follow the rest of the instructions on its README.md to add the envars, set up the db, run the migration and start the application (if you want).
+### 2. Set up containers
 
-Once the environment variables have been added for documents-api and the database is running, update the database by running the migration command 
-```sh
-dotnet ef --project DocumentsApi database update
+Next step, to set up the local Documents API container, `cd` into the root of the project
+(same place as the Makefile) and run `make serve-local`. This will set up the database container,
+S3 proxy, run an automatic migration and stand up the API container. There are other Make recipes in the file;
+```
+# build the image and start the db, s3 proxy, migration and API containers
+$ make serve-local
+
+# build the images
+$ make build-local
+
+# start the db, s3 proxy migration and API containers
+$ make start-local
 ```
 
-When the migration has successfully completed, run 
-```sh
-dotnet run --project DocumentsApi
-``` 
-to start the API locally. It will run on `http://localhost:5001`.
+* The API will run on `http://localhost:3003`
+* The database will run on `http://localhost:3004`
+* The S3 proxy will run on `http://localhost:5555`
 
-### Testing
+### 3. Testing
 
-To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have got when you copied the values from the `.env.example` and copied them to the `.env` file.
+There are two ways to test the application:
 
-If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
+1. Run the tests in the test container
+2. Run them locally
 
-In order to run the tests for this repo, you will need to check what containers you already have up on port 5432 and 5555 and stop those processes. (You'll likely have `evidence-api_dev-database_1` up. If you do, the just run `docker stop evidence-api_dev-database_1` -- you won't lose any locally seeded data as long as the attached volume is not deleted either.)
-
-Then, run
-```sh
-$ make test
+The simplest and most reliable way is running the tests in the container. You can do this by running `make serve-test`,
+which will build the images and run the containers. There are other Make recipes in the file;
 ```
-This will spin up a new container called `documents-api_test-database_1` that the integration tests use. If this is your first time running the tests, then some will fail. You will need to run a new migration by running again:
-```sh
-dotnet ef --project DocumentsApi database update
-```
-Then, run 
-```sh
-$ make test
-```
-again and two additional containers will be created -- `documents-api_s3-mock_1` and `documents-api_documents-api-test_1`. The tests will now pass.
+# build the image and start the db, s3 proxy, migration and test containers
+$ make serve-test
 
+# build the images
+$ make build-test 
+
+# start the db, s3 proxy, migration and test containers
+$ make start-test
+```
+However, you might want to run the tests locally, in order to debug them through your IDE. The codebase is also set up to allow this.
+All you need to do is to make sure that your `CONNECTION_STRING` envar in `.env` is the same as the one in `.env.example`.
+
+Then, run `make start-local` and make sure to clean any local data that you might have added -- you can do this manually through a database application
+like TablePlus or DataGrip.
+
+Then you can run your tests by running `dotnet test` or through your IDE.
 
 ### Agreed Testing Approach
 
@@ -80,23 +91,11 @@ again and two additional containers will be created -- `documents-api_s3-mock_1`
 
 ### Dependencies
 
-#### Setting up mock S3
-
-To run this application, we need to contact S3 to create signed upload policies and download URLs. To be able to run this locally without setting up an AWS account, or to run the tests in isolation, we have used [S3Proxy](https://github.com/gaul/s3proxy).
-
-Running the tests using `make` or `docker-compose` will handle this for you, but to run outside of those (e.g. with your IDE), you'll need to have the S3 proxy running in the background:
-
-```shell script
-docker-compose run -d s3-mock
-```
-
-You will also need to initialize your s3-mock which can be done by running the test _DocumentsApi.Tests/V1/E2ETests/S3LambdaTests.cs_
-
-### S3 Lambda Function
+<h3 id="s3-lambda-function">S3 Lambda Function</h3>
 
 This application contains two lambda functions — an API, and a function which is triggered when objects are created in the S3 bucket, which can be found in `DocumentsApi/V1/S3EntryPoint.cs`.
 
-#### Test the S3 Lambda function with the Staging AWS Account
+To test the S3 Lambda function with the staging AWS account, follow these steps:
 
 1. Install [AWS lambda test tool](e18ebff8-2a46-4ee3-8d27-c36706ac006f): `dotnet tool install -g Amazon.Lambda.TestTool-3.1`
 2. Create a document in the staging S3 bucket with the key ``e18ebff8-2a46-4ee3-8d27-c36706ac006f``
@@ -135,12 +134,12 @@ Before you commit or push your code, you will need to run:
 
 ```sh
 make lint
-``` 
+```
 
 Otherwise your PR will automatically fail the CircleCI checks. This Make recipe will install the `dotnet format` tool for you, so from then on, you can just run:
 ```sh
 dotnet format
-``` 
+```
 to format your code.
 
 To help with making changes to code easier to understand when being reviewed, we've added a PR template.

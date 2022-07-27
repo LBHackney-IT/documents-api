@@ -91,7 +91,7 @@ Then you can run your tests by running `dotnet test` or through your IDE.
 
 ### Dependencies
 
-<h3 id="s3-lambda-function">S3 Lambda Function</h3>
+#### S3 Lambda Function
 
 This application contains two lambda functions — an API, and a function which is triggered when objects are created in the S3 bucket, which can be found in `DocumentsApi/V1/S3EntryPoint.cs`.
 

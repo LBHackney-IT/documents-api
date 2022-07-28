@@ -1,0 +1,40 @@
+services:
+  test:
+    build:
+      context: ../
+      dockerfile: ./DocumentsApi.Tests/Dockerfile
+    environment:
+      CONNECTION_STRING: Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword
+      BUCKET_NAME: testBucketName
+      S3_API_ENDPOINT: http://s3-mock:80
+      AWS_ACCESS_KEY_ID: remote-identity
+      AWS_SECRET_ACCESS_KEY: remote-credential
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      s3-mock:
+        condition: service_started
+
+  migrate:
+    extends:
+      file: ../database/compose.yml
+      service: migrate
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    extends:
+      file: ../database/compose.yml
+      service: db
+    expose:
+      - "5432"
+
+  s3-mock:
+    image: andrewgaul/s3proxy
+    expose:
+      - "80"
+    environment:
+      - S3PROXY_AUTHORIZATION=none
+      - S3PROXY_CORS_ALLOW_ALL=true
+      - LOG_LEVEL=debug

@@ -1,22 +1,38 @@
-.PHONY: setup
-setup:
-	docker-compose build
+.PHONY: build-test
+build-test:
+	docker-compose -f DocumentsApi.Tests/compose.yml build
+	
+.PHONY: serve-test
+serve-test:
+	make build-test && make start-test
 
-.PHONY: build
-build:
-	docker-compose build documents-api
+.PHONY: start-test
+start-test:
+	docker compose -f DocumentsApi.Tests/compose.yml stop
+	docker compose -f DocumentsApi.Tests/compose.yml run --rm test
+	docker compose -f DocumentsApi.Tests/compose.yml stop
 
-.PHONY: serve
-serve:
-	docker-compose build documents-api && docker-compose up documents-api
+.PHONY: build-local
+build-local:
+	docker-compose -f DocumentsApi/compose.yml build
+	
+.PHONY: serve-local
+serve-local:
+	make build-local && make start-local
+
+.PHONY: start-local
+start-local:
+	docker compose -f DocumentsApi/compose.yml stop
+	docker compose -f DocumentsApi/compose.yml up -d
+	
+.PHONY: stop-local
+stop-local:
+	docker compose -f DocumentsApi/compose.yml stop
+
 
 .PHONY: shell
 shell:
 	docker-compose run documents-api bash
-
-.PHONY: test
-test:
-	docker-compose up test-database & docker-compose build documents-api-test && docker-compose up documents-api-test
 
 .PHONY: lint
 lint:

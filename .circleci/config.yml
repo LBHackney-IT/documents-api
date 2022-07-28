@@ -155,10 +155,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose build documents-api-test
+          command: docker-compose -f DocumentsApi.Tests/compose.yml build
       - run:
           name: Run tests
-          command: docker-compose run documents-api-test
+          command: docker-compose -f DocumentsApi.Tests/compose.yml run test
 
   assume-role-staging:
     executor: docker-python

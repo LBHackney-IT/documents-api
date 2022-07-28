@@ -70,3 +70,5 @@ tmp/
 .env
 
 .serverless
+
+database/data

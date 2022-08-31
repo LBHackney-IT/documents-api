@@ -23,6 +23,7 @@ namespace DocumentsApi.Tests.V1.Factories
             domain.CreatedAt.Should().Be(entity.CreatedAt);
             domain.FileSize.Should().Be(entity.FileSize);
             domain.FileType.Should().Be(entity.FileType);
+            domain.Name.Should().Be(entity.Name);
         }
 
         [Test]
@@ -49,6 +50,7 @@ namespace DocumentsApi.Tests.V1.Factories
             domain.UserCreatedBy.Should().Be(entity.UserCreatedBy);
             domain.ServiceAreaCreatedBy.Should().Be(entity.ServiceAreaCreatedBy);
             domain.RetentionExpiresAt.Should().Be(entity.RetentionExpiresAt);
+            domain.TargetId.Should().Be(entity.TargetId);
         }
 
         [Test]

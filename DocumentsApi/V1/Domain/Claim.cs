@@ -12,6 +12,7 @@ namespace DocumentsApi.V1.Domain
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
+        public Guid? TargetId { get; set; } = null;
 
         public virtual bool Expired => RetentionExpiresAt.CompareTo(DateTime.UtcNow) < 0;
     }

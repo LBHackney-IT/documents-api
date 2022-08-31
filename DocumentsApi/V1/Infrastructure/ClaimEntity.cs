@@ -41,5 +41,8 @@ namespace DocumentsApi.V1.Infrastructure
         [Required]
         [Column("valid_until")]
         public DateTime ValidUntil { get; set; }
+
+        [Column("target_id")]
+        public Guid? TargetId { get; set; } = null;
     }
 }

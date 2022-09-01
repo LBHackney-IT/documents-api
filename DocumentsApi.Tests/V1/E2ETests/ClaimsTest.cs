@@ -46,6 +46,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"document\":{" +
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
+                                  "\"name\":null," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -54,7 +55,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"userCreatedBy\":\"staff@test.hackney.gov.uk\"," +
                               "\"apiCreatedBy\":\"evidence-api\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
-                              $"\"validUntil\":{formattedValidUntil}" +
+                              $"\"validUntil\":{formattedValidUntil}," +
+                              "\"targetId\":null" +
                               "}";
 
             json.Should().Be(expected);

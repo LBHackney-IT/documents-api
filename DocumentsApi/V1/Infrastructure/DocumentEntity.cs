@@ -14,6 +14,9 @@ namespace DocumentsApi.V1.Infrastructure
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
+        [Column("name")]
+        public string Name { get; set; }
+
         [Column("file_size")]
         public long FileSize { get; set; }
 

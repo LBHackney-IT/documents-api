@@ -12,6 +12,7 @@ namespace DocumentsApi.V1.Factories
             {
                 Id = entity.Id,
                 CreatedAt = entity.CreatedAt,
+                Name = entity.Name,
                 FileSize = entity.FileSize,
                 FileType = entity.FileType,
                 UploadedAt = entity.UploadedAt
@@ -28,7 +29,8 @@ namespace DocumentsApi.V1.Factories
                 UserCreatedBy = entity.UserCreatedBy,
                 ServiceAreaCreatedBy = entity.ServiceAreaCreatedBy,
                 RetentionExpiresAt = entity.RetentionExpiresAt,
-                ValidUntil = entity.ValidUntil
+                ValidUntil = entity.ValidUntil,
+                TargetId = entity.TargetId
             };
         }
 

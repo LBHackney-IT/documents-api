@@ -11,6 +11,7 @@ namespace DocumentsApi.V1.Factories
             return new DocumentResponse
             {
                 CreatedAt = domain.CreatedAt,
+                Name = domain.Name,
                 FileSize = domain.FileSize,
                 FileType = domain.FileType,
                 Id = domain.Id,
@@ -29,7 +30,8 @@ namespace DocumentsApi.V1.Factories
                 Id = domain.Id,
                 RetentionExpiresAt = domain.RetentionExpiresAt,
                 UserCreatedBy = domain.UserCreatedBy,
-                ValidUntil = domain.ValidUntil
+                ValidUntil = domain.ValidUntil,
+                TargetId = domain.TargetId
             };
         }
 
@@ -47,6 +49,7 @@ namespace DocumentsApi.V1.Factories
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 UserCreatedBy = claim.UserCreatedBy,
                 ValidUntil = claim.ValidUntil,
+                TargetId = claim.TargetId,
                 PreSignedDownloadUrl = preSignedDownloadUrl
             };
         }
@@ -63,6 +66,7 @@ namespace DocumentsApi.V1.Factories
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 UserCreatedBy = claim.UserCreatedBy,
                 ValidUntil = claim.ValidUntil,
+                TargetId = claim.TargetId,
                 S3UploadPolicy = s3UploadPolicy
             };
         }

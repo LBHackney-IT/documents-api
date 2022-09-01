@@ -11,6 +11,7 @@ namespace DocumentsApi.V1.Factories
             {
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt,
+                Name = domain.Name,
                 FileSize = domain.FileSize,
                 FileType = domain.FileType,
                 UploadedAt = domain.UploadedAt
@@ -29,7 +30,8 @@ namespace DocumentsApi.V1.Factories
                 UserCreatedBy = domain.UserCreatedBy,
                 ServiceAreaCreatedBy = domain.ServiceAreaCreatedBy,
                 RetentionExpiresAt = domain.RetentionExpiresAt,
-                ValidUntil = domain.ValidUntil
+                ValidUntil = domain.ValidUntil,
+                TargetId = domain.TargetId
             };
         }
     }

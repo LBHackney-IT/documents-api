@@ -13,9 +13,9 @@ namespace DocumentsApi.V1.Domain
 
         public bool Uploaded => UploadedAt != null;
 
-        public Document(){}
+        public Document() { }
 
-        public Document (string name)
+        public Document(string name)
         {
             this.Name = name;
         }

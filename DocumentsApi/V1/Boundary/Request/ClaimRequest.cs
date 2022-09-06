@@ -9,5 +9,7 @@ namespace DocumentsApi.V1.Boundary.Request
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
+        public Guid? TargetId { get; set; }
+        public string DocumentName { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace DocumentsApi.V1.Controllers
         private readonly ICreateClaimAndS3UploadPolicyUseCase _createClaimAndS3UploadPolicyUseCase;
         private readonly IGetClaimAndPreSignedDownloadUrlUseCase _getClaimAndPreSignedDownloadUrlUseCase;
         private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
+        private readonly IGetClaimsByTargetIdUseCase _getClaimsByTargetIdUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
@@ -28,7 +29,8 @@ namespace DocumentsApi.V1.Controllers
             IUpdateClaimStateUseCase updateClaimStateUseCase,
             ICreateClaimAndS3UploadPolicyUseCase createClaimAndS3UploadPolicyUseCase,
             IGetClaimAndPreSignedDownloadUrlUseCase getClaimAndPreSignedDownloadUrlUseCase,
-            IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase
+            IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase,
+            IGetClaimsByTargetIdUseCase getClaimsByTargetIdUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
@@ -37,6 +39,7 @@ namespace DocumentsApi.V1.Controllers
             _createClaimAndS3UploadPolicyUseCase = createClaimAndS3UploadPolicyUseCase;
             _getClaimAndPreSignedDownloadUrlUseCase = getClaimAndPreSignedDownloadUrlUseCase;
             _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
+            _getClaimsByTargetIdUseCase = getClaimsByTargetIdUseCase;
         }
 
         /// <summary>
@@ -175,6 +178,31 @@ namespace DocumentsApi.V1.Controllers
             catch (AmazonS3Exception e)
             {
                 return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get claims by target ID
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Claims not found</response>
+        [HttpGet]
+        public IActionResult GetClaimsByTargetId([FromQuery] Guid targetId)
+        {
+            try
+            {
+                var result = _getClaimsByTargetIdUseCase.Execute(targetId);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

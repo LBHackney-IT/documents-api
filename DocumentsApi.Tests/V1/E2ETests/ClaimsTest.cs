@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,9 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
                 "\"apiCreatedBy\": \"evidence-api\"," +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
-                $"\"validUntil\": {formattedValidUntil}" +
+                $"\"validUntil\": {formattedValidUntil}," +
+                "\"targetId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
+                "\"documentName\": \"Some name\"" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -46,7 +49,55 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"document\":{" +
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
-                                  "\"name\":null," +
+                                  "\"name\":\"Some name\"," +
+                                  "\"fileSize\":0," +
+                                  "\"fileType\":null," +
+                                  "\"uploadedAt\":null" +
+                              "}," +
+                              "\"serviceAreaCreatedBy\":\"development-team-staging\"," +
+                              "\"userCreatedBy\":\"staff@test.hackney.gov.uk\"," +
+                              "\"apiCreatedBy\":\"evidence-api\"," +
+                              $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
+                              $"\"validUntil\":{formattedValidUntil}," +
+                              "\"targetId\":\"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"" +
+                              "}";
+
+            json.Should().Be(expected);
+        }
+
+        [Test]
+        public async Task CanCreateClaimsWithoutTargetId()
+        {
+            var uri = new Uri($"api/v1/claims", UriKind.Relative);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
+            var formattedValidUntil = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(4));
+            string body = "{" +
+                "\"serviceAreaCreatedBy\": \"development-team-staging\"," +
+                "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
+                "\"apiCreatedBy\": \"evidence-api\"," +
+                $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
+                $"\"validUntil\": {formattedValidUntil}," +
+                "\"documentName\": \"Some name\"" +
+                "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(201);
+
+            var created = DatabaseContext.Claims.First();
+            var document = DatabaseContext.Documents.First();
+
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedDocumentCreatedAt = JsonConvert.SerializeObject(document.CreatedAt);
+            string expected = "{" +
+                              $"\"id\":\"{created.Id}\"," +
+                              $"\"createdAt\":{formattedCreatedAt}," +
+                              "\"document\":{" +
+                                  $"\"id\":\"{document.Id}\"," +
+                                  $"\"createdAt\":{formattedDocumentCreatedAt}," +
+                                  "\"name\":\"Some name\"," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -279,6 +330,76 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(404);
+        }
+
+        [Test]
+        public async Task Returns200WhenItCanGetClaimsByTargetId()
+        {
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            claim.Document.FileSize = 0;
+            claim.Document.FileType = null;
+            claim.Document.UploadedAt = null;
+            DatabaseContext.Add(claim);
+            DatabaseContext.Add(claim.Document);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/claims?targetId={claim.TargetId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<Dictionary<string, List<ClaimResponse>>>(jsonString);
+            
+            var formattedCreatedAt = JsonConvert.SerializeObject(claim.CreatedAt);
+            var formattedDocumentCreatedAt = JsonConvert.SerializeObject(claim.Document.CreatedAt);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(claim.RetentionExpiresAt);
+            var formattedValidUntil = JsonConvert.SerializeObject(claim.ValidUntil);
+        
+            string expected = "{" +
+                            "\"claims\":[{" +
+                              $"\"id\":\"{claim.Id}\"," +
+                              $"\"createdAt\":{formattedCreatedAt}," +
+                              "\"document\":{" +
+                                  $"\"id\":\"{claim.Document.Id}\"," +
+                                  $"\"createdAt\":{formattedDocumentCreatedAt}," +
+                                  $"\"name\":\"{claim.Document.Name}\"," +
+                                  $"\"fileSize\":0," +
+                                  $"\"fileType\":null," +
+                                  $"\"uploadedAt\":null" +
+                              "}," +
+                              $"\"serviceAreaCreatedBy\":\"{claim.ServiceAreaCreatedBy}\"," +
+                              $"\"userCreatedBy\":\"{claim.UserCreatedBy}\"," +
+                              $"\"apiCreatedBy\":\"{claim.ApiCreatedBy}\"," +
+                              $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
+                              $"\"validUntil\":{formattedValidUntil}," +
+                              $"\"targetId\":\"{claim.TargetId}\"" +
+                              "}" +
+                            "]}";
+
+            response.StatusCode.Should().Be(200);
+            jsonString.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task Returns404WhenCannotFindClaimsForTargetId()
+        {
+            var nonExistentTargetId = Guid.NewGuid();
+
+            var uri = new Uri($"api/v1/claims?targetId={nonExistentTargetId}", UriKind.Relative);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+        }
+
+        [Test]
+        public async Task Returns400WhenTargetIdIsNotGuid()
+        {
+            var invalidTargetId = "abc";
+
+            var uri = new Uri($"api/v1/claims?targetId={invalidTargetId}", UriKind.Relative);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
         }
     }
 }

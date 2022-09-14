@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways;
+using DocumentsApi.V1.Domain;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -115,6 +117,48 @@ namespace DocumentsApi.Tests.V1.Gateways
         public void FindingAClaimReturnsNullWhenNotFound()
         {
             var found = _classUnderTest.FindClaim(Guid.NewGuid());
+
+            found.Should().BeNull();
+        }
+
+        [Test]
+        public void CanFindClaimsByTargetId()
+        {
+            var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
+            var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
+            claimEntity1.TargetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            claimEntity2.TargetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            DatabaseContext.Add(claimEntity1);
+            DatabaseContext.Add(claimEntity2);
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<Claim>()
+            {
+                claimEntity1.ToDomain(), 
+                claimEntity2.ToDomain()
+            };
+
+            var found = _classUnderTest.FindClaimsByTargetId(new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c"));
+
+            found.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public void ReturnsNullWhenNoClaimContainsSpecifiedTargetId()
+        {
+            var found = _classUnderTest.FindClaimsByTargetId(Guid.NewGuid());
+            found.Should().BeNull();
+        }
+
+        [Test]
+        public void DoesNotReturnClaimIfTargetIdDoesNotMatch()
+        {
+            var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
+            claimEntity1.TargetId = new Guid("591f0c9e-100c-402b-9344-4c623abc57bb");
+            DatabaseContext.Add(claimEntity1);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindClaimsByTargetId(new Guid("aff8e4e8-6628-4654-a0e9-140c4b5a5da6"));
 
             found.Should().BeNull();
         }

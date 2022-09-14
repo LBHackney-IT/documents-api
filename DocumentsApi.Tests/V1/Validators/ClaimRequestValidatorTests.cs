@@ -73,6 +73,26 @@ namespace DocumentsApi.Tests.V1.Validators
         }
 
         [Test]
+        public void FailsWithDocumentNameLongerThan300Characters()
+        {
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentName, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec p")
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void FailsWithDocumentNameShorterThan1Character()
+        {
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentName, "")
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
+        }
+
+        [Test]
         public void ValidatesAValidRequest()
         {
             var request = _fixture.Build<ClaimRequest>()

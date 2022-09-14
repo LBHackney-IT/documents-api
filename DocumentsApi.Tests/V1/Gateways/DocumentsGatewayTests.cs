@@ -134,7 +134,7 @@ namespace DocumentsApi.Tests.V1.Gateways
 
             var expected = new List<Claim>()
             {
-                claimEntity1.ToDomain(), 
+                claimEntity1.ToDomain(),
                 claimEntity2.ToDomain()
             };
 

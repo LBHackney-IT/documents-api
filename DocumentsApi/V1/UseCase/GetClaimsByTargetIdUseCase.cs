@@ -20,7 +20,7 @@ namespace DocumentsApi.V1.UseCase
         public Dictionary<string, List<ClaimResponse>> Execute(Guid targetId)
         {
             var claims = _documentsGateway.FindClaimsByTargetId(targetId);
-            
+
             if (claims == null)
             {
                 throw new NotFoundException($"No claims have been found for target ID: {targetId}");
@@ -30,8 +30,8 @@ namespace DocumentsApi.V1.UseCase
             {
                 {"claims", new List<ClaimResponse>()}
             };
-            
-            foreach(var claim in claims)
+
+            foreach (var claim in claims)
             {
                 result["claims"].Add(claim.ToResponse());
             }

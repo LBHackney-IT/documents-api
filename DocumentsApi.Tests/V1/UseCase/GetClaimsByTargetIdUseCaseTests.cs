@@ -29,8 +29,8 @@ namespace DocumentsApi.Tests.V1.UseCase
             var existingClaim = TestDataHelper.CreateClaim();
             var gatewayResponse = new List<Claim>() { existingClaim };
             _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>())).Returns(new List<Claim>(gatewayResponse));
-            var expected = new Dictionary<string, List<ClaimResponse>>() 
-            { 
+            var expected = new Dictionary<string, List<ClaimResponse>>()
+            {
                 { "claims", new List<ClaimResponse>() { existingClaim.ToResponse() } }
             };
 

@@ -347,12 +347,12 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<Dictionary<string, List<ClaimResponse>>>(jsonString);
-            
+
             var formattedCreatedAt = JsonConvert.SerializeObject(claim.CreatedAt);
             var formattedDocumentCreatedAt = JsonConvert.SerializeObject(claim.Document.CreatedAt);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(claim.RetentionExpiresAt);
             var formattedValidUntil = JsonConvert.SerializeObject(claim.ValidUntil);
-        
+
             string expected = "{" +
                             "\"claims\":[{" +
                               $"\"id\":\"{claim.Id}\"," +

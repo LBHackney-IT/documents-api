@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DocumentsApi.V1.Domain;
 
 namespace DocumentsApi.V1.Gateways.Interfaces
@@ -9,6 +10,7 @@ namespace DocumentsApi.V1.Gateways.Interfaces
         public Claim CreateClaim(Claim request);
         public Document FindDocument(Guid id);
         public Claim FindClaim(Guid id);
+        public List<Claim> FindClaimsByTargetId(Guid targetId);
         public Claim SaveClaim(Claim request);
     }
 }

@@ -379,18 +379,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task Returns404WhenCannotFindClaimsForTargetId()
-        {
-            var nonExistentTargetId = Guid.NewGuid();
-
-            var uri = new Uri($"api/v1/claims?targetId={nonExistentTargetId}", UriKind.Relative);
-
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-
-            response.StatusCode.Should().Be(404);
-        }
-
-        [Test]
         public async Task Returns400WhenTargetIdIsNotGuid()
         {
             var invalidTargetId = "abc";

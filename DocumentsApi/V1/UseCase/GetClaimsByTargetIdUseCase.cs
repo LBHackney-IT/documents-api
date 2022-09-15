@@ -21,15 +21,15 @@ namespace DocumentsApi.V1.UseCase
         {
             var claims = _documentsGateway.FindClaimsByTargetId(targetId);
 
-            if (claims == null)
-            {
-                throw new NotFoundException($"No claims have been found for target ID: {targetId}");
-            }
-
             var result = new Dictionary<string, List<ClaimResponse>>()
             {
                 {"claims", new List<ClaimResponse>()}
             };
+
+            if (claims == null)
+            {
+                return result;
+            }
 
             foreach (var claim in claims)
             {

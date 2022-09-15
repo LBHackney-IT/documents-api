@@ -187,7 +187,6 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="200">Found</response>
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
-        /// <response code="404">Claims not found</response>
         [HttpGet]
         public IActionResult GetClaimsByTargetId([FromQuery] Guid targetId)
         {
@@ -195,10 +194,6 @@ namespace DocumentsApi.V1.Controllers
             {
                 var result = _getClaimsByTargetIdUseCase.Execute(targetId);
                 return Ok(result);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
             }
             catch (BadRequestException ex)
             {

@@ -40,13 +40,13 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotFoundExceptionWhenNoClaimsWereFoundForTargetId()
+        public void ReturnsEmptyWhenNoClaimsWereFoundForTargetId()
         {
             _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>())).Returns(null as List<Claim>);
 
-            Func<Dictionary<string, List<ClaimResponse>>> testDelegate = () => _classUnderTest.Execute(Guid.NewGuid());
+            var result = _classUnderTest.Execute(Guid.NewGuid());
 
-            testDelegate.Should().Throw<NotFoundException>();
+            result["claims"].Should().BeEmpty();
         }
     }
 }

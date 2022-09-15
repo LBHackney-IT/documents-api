@@ -144,14 +144,14 @@ namespace DocumentsApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void ReturnsNullWhenNoClaimContainsSpecifiedTargetId()
+        public void ReturnsEmptyCollectionWhenNoClaimContainsSpecifiedTargetId()
         {
             var found = _classUnderTest.FindClaimsByTargetId(Guid.NewGuid());
-            found.Should().BeNull();
+            found.Should().BeEmpty();
         }
 
         [Test]
-        public void DoesNotReturnClaimIfTargetIdDoesNotMatch()
+        public void ReturnsEmptyClaimsCollectionIfTargetIdDoesNotMatch()
         {
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             claimEntity1.TargetId = new Guid("591f0c9e-100c-402b-9344-4c623abc57bb");
@@ -160,7 +160,7 @@ namespace DocumentsApi.Tests.V1.Gateways
 
             var found = _classUnderTest.FindClaimsByTargetId(new Guid("aff8e4e8-6628-4654-a0e9-140c4b5a5da6"));
 
-            found.Should().BeNull();
+            found.Should().BeEmpty();
         }
     }
 }

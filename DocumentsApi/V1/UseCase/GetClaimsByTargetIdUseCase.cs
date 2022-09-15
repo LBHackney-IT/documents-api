@@ -26,11 +26,6 @@ namespace DocumentsApi.V1.UseCase
                 {"claims", new List<ClaimResponse>()}
             };
 
-            if (claims == null)
-            {
-                return result;
-            }
-
             foreach (var claim in claims)
             {
                 result["claims"].Add(claim.ToResponse());

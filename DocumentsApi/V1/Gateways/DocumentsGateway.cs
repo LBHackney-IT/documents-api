@@ -63,7 +63,6 @@ namespace DocumentsApi.V1.Gateways
         public List<Claim> FindClaimsByTargetId(Guid targetId)
         {
             var entities = _databaseContext.Claims.Where(claimEntity => claimEntity.TargetId == targetId).Include(claimEntity => claimEntity.Document);
-            if (!entities.Any()) return null;
 
             var claims = new List<Claim>();
             foreach (var entity in entities)

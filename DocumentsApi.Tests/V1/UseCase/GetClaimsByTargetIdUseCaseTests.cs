@@ -40,9 +40,9 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsEmptyWhenNoClaimsWereFoundForTargetId()
+        public void ReturnsEmptyCollectionWhenNoClaimsWereFoundForTargetId()
         {
-            _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>())).Returns(null as List<Claim>);
+            _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>())).Returns(new List<Claim>());
 
             var result = _classUnderTest.Execute(Guid.NewGuid());
 

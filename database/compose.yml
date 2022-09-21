@@ -3,7 +3,9 @@ services:
     build:
       context: ../
       dockerfile: ./database/Dockerfile
-    environment: 
+      args:
+        - LBHPACKAGESTOKEN=${LBHPACKAGESTOKEN}
+    environment:
       - CONNECTION_STRING=Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword
 
   db:
@@ -13,9 +15,9 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: documents_api
     expose:
-      - '5432'
+      - "5432"
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U',  'postgres', '-d', 'documents_api']
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "documents_api"]
       interval: 5s
       timeout: 5s
       retries: 5

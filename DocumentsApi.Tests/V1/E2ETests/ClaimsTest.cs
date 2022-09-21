@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Factories;
+using DocumentsApi.Tests.V1.E2ETests.Constants;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -344,6 +345,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             var uri = new Uri($"api/v1/claims?targetId={claim.TargetId}", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<Dictionary<string, List<ClaimResponse>>>(jsonString);
@@ -384,6 +387,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var invalidTargetId = "abc";
 
             var uri = new Uri($"api/v1/claims?targetId={invalidTargetId}", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 

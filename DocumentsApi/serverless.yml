@@ -17,6 +17,7 @@ provider:
   environment:
     CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
     BUCKET_NAME: document-evidence-store-${self:provider.stage}-bucket
+    ALLOWED_GOOGLE_GROUPS: /documents-api/${self:provider.stage}/get/claims/allowed-google-groups
   s3:
     documentsBucket:
       accessControl: Private

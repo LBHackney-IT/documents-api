@@ -3,6 +3,8 @@ services:
     build:
       context: ../
       dockerfile: ./DocumentsApi/Dockerfile
+      args:
+        - LBHPACKAGESTOKEN=${LBHPACKAGESTOKEN}
     env_file: ../.env
     environment:
       CONNECTION_STRING: Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword
@@ -30,7 +32,7 @@ services:
     ports:
       - "3004:5432"
     volumes:
-        - ../database/data:/var/lib/postgresql/data
+      - ../database/data:/var/lib/postgresql/data
 
   s3-mock:
     image: andrewgaul/s3proxy

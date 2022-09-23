@@ -27,7 +27,7 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 In order to run the API locally, you will first need to copy the environment variables in the [.env.example](.env.example) file and save them to a new file called `.env` in the root of the project (same place as `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
-You will also need to seprately set up `LBHPACKAGESTOKEN` env var (used to access the [lbh-core](https://github.com/LBHackney-IT/lbh-core) library) in your terminal profile or in every terminal window. To do that for PowerShell you can use this command:
+You will also need to separately set up `LBHPACKAGESTOKEN` env var (used to access the [lbh-core](https://github.com/LBHackney-IT/lbh-core) library) in your terminal profile or in every terminal window. To do that for PowerShell you can use this command:
 
 ```
 [System.Environment]::SetEnvironmentVariable('LBHPACKAGESTOKEN','<TOKEN VALUE GOES HERE>',[System.EnvironmentVariableTarget]::User)

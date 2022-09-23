@@ -189,7 +189,7 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
-        [AuthorizeByGroups("ALLOWED_GOOGLE_GROUPS")]
+        [AuthorizeByGroups("GET_CLAIMS_ALLOWED_GOOGLE_GROUPS")]
         public IActionResult GetClaimsByTargetId([FromQuery] Guid targetId)
         {
             try

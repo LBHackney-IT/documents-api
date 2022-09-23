@@ -36,27 +36,13 @@ namespace DeveloperHubAPI.Tests.V1.Authorization
         }
 
         [Test]
-        public void ConstructorThrowsErrorIfGroupsEnvVariableIsNull()
+        public void ConstructorThrowsErrorIfGroupsEnvVariableIsEmpty()
         {
-            var incorrectEnvVariable = "var";
+            var incorrectEnvVariable = "";
 
             Func<TokenGroupsFilter> func = () => new TokenGroupsFilter(_mockContextWrapper.Object, _mockTokenFactory.Object, incorrectEnvVariable);
 
             func.Should().Throw<EnvironmentVariableNullException>().WithMessage($"Cannot resolve {incorrectEnvVariable} environment variable.");
-        }
-
-        private (AuthorizationFilterContext, HeaderDictionary) SetUpMockContextAndHeaders()
-        {
-            var mockHttpContext = new Mock<HttpContext>();
-            var actionContext = new ActionContext(mockHttpContext.Object,
-                                                  new Microsoft.AspNetCore.Routing.RouteData(),
-                                                  new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
-            var context = new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
-
-            var requestHeaders = new HeaderDictionary(new Dictionary<string, StringValues> { { "Authorization", "abc" } });
-            _mockContextWrapper.Setup(x => x.GetContextRequestHeaders(context.HttpContext)).Returns(requestHeaders);
-
-            return (context, requestHeaders);
         }
 
         [Test]
@@ -102,5 +88,18 @@ namespace DeveloperHubAPI.Tests.V1.Authorization
             _mockTokenFactory.Verify(x => x.Create(requestHeaders, "Authorization"), Times.Once);
         }
 
+        private (AuthorizationFilterContext, HeaderDictionary) SetUpMockContextAndHeaders()
+        {
+            var mockHttpContext = new Mock<HttpContext>();
+            var actionContext = new ActionContext(mockHttpContext.Object,
+                                                  new Microsoft.AspNetCore.Routing.RouteData(),
+                                                  new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
+            var context = new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
+
+            var requestHeaders = new HeaderDictionary(new Dictionary<string, StringValues> { { "Authorization", "abc" } });
+            _mockContextWrapper.Setup(x => x.GetContextRequestHeaders(context.HttpContext)).Returns(requestHeaders);
+
+            return (context, requestHeaders);
+        }
     }
 }

@@ -7,11 +7,9 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 -   .NET Core v3.1 as a web framework.
 -   nUnit v3.11 as a test framework.
 
-
 ## What does it do?
 
 [**🚀 Swagger**](https://app.swaggerhub.com/apis-docs/Hackney/documents-api/1.0.0) ([Edit it here](https://app.swaggerhub.com/apis/Hackney/documents-api/1.0.0))
-
 
 ## Dependencies
 
@@ -29,11 +27,26 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 In order to run the API locally, you will first need to copy the environment variables in the [.env.example](.env.example) file and save them to a new file called `.env` in the root of the project (same place as `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
+You will also need to separately set up `LBHPACKAGESTOKEN` env var (used to access the [lbh-core](https://github.com/LBHackney-IT/lbh-core) library) in your terminal profile or in every terminal window. To do that for PowerShell you can use this command:
+
+```
+[System.Environment]::SetEnvironmentVariable('LBHPACKAGESTOKEN','<TOKEN VALUE GOES HERE>',[System.EnvironmentVariableTarget]::User)
+```
+
+and for Linux/Mac you can use this command
+
+```
+export LBHPACKAGESTOKEN=<TOKEN VALUE GOES HERE>
+```
+
+The values for all the env vars can be found in the Parameter Store, in `Document-Evidence-Store-Staging` and `Document-Evidence-Store-Production` AWS accounts.
+
 ### 2. Set up containers
 
 Next step, to set up the local Documents API container, `cd` into the root of the project
 (same place as the Makefile) and run `make serve-local`. This will set up the database container,
 S3 proxy, run an automatic migration and stand up the API container. There are other Make recipes in the file;
+
 ```
 # build the image and start the db, s3 proxy, migration and API containers
 $ make serve-local
@@ -45,9 +58,9 @@ $ make build-local
 $ make start-local
 ```
 
-* The API will run on `http://localhost:3003`
-* The database will run on `http://localhost:3004`
-* The S3 proxy will run on `http://localhost:5555`
+-   The API will run on `http://localhost:3003`
+-   The database will run on `http://localhost:3004`
+-   The S3 proxy will run on `http://localhost:5555`
 
 ### 3. Testing
 
@@ -58,16 +71,18 @@ There are two ways to test the application:
 
 The simplest and most reliable way is running the tests in the container. You can do this by running `make serve-test`,
 which will build the images and run the containers. There are other Make recipes in the file;
+
 ```
 # build the image and start the db, s3 proxy, migration and test containers
 $ make serve-test
 
 # build the images
-$ make build-test 
+$ make build-test
 
 # start the db, s3 proxy, migration and test containers
 $ make start-test
 ```
+
 However, you might want to run the tests locally, in order to debug them through your IDE. The codebase is also set up to allow this.
 All you need to do is to make sure that your `CONNECTION_STRING` envar in `.env` is the same as the one in `.env.example`.
 
@@ -98,7 +113,7 @@ This application contains two lambda functions — an API, and a function which 
 To test the S3 Lambda function with the staging AWS account, follow these steps:
 
 1. Install [AWS lambda test tool](e18ebff8-2a46-4ee3-8d27-c36706ac006f): `dotnet tool install -g Amazon.Lambda.TestTool-3.1`
-2. Create a document in the staging S3 bucket with the key ``e18ebff8-2a46-4ee3-8d27-c36706ac006f``
+2. Create a document in the staging S3 bucket with the key `e18ebff8-2a46-4ee3-8d27-c36706ac006f`
 3. Create the equivalent record in your local database:
     ```shell script
     psql --database documents_api -f database/s3-test-seed.sql
@@ -122,9 +137,9 @@ We use a pull request workflow, where changes are made on a branch and approved 
 Then we have an automated six step deployment process, which runs in CircleCI.
 
 1. Automated tests (nUnit) are run to ensure the release is of good quality.
-4. The application is deployed to staging automatically.
-5. We manually confirm a production deployment in the CircleCI workflow once we're happy with our changes in staging.
-6. The application is deployed to production.
+2. The application is deployed to staging automatically.
+3. We manually confirm a production deployment in the CircleCI workflow once we're happy with our changes in staging.
+4. The application is deployed to production.
 
 Our staging and production environments are hosted by AWS. We would deploy to production per each feature/config merged into `main` branch.
 
@@ -137,9 +152,11 @@ make lint
 ```
 
 Otherwise your PR will automatically fail the CircleCI checks. This Make recipe will install the `dotnet format` tool for you, so from then on, you can just run:
+
 ```sh
 dotnet format
 ```
+
 to format your code.
 
 To help with making changes to code easier to understand when being reviewed, we've added a PR template.

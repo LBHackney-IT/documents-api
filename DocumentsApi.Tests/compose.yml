@@ -3,12 +3,15 @@ services:
     build:
       context: ../
       dockerfile: ./DocumentsApi.Tests/Dockerfile
+      args:
+        - LBHPACKAGESTOKEN=${LBHPACKAGESTOKEN}
     environment:
       CONNECTION_STRING: Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword
       BUCKET_NAME: testBucketName
       S3_API_ENDPOINT: http://s3-mock:80
       AWS_ACCESS_KEY_ID: remote-identity
       AWS_SECRET_ACCESS_KEY: remote-credential
+      GET_CLAIMS_ALLOWED_GOOGLE_GROUPS: e2e-testing
     depends_on:
       migrate:
         condition: service_completed_successfully

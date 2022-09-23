@@ -204,8 +204,10 @@ workflows:
   check-and-deploy-staging-and-production:
     jobs:
       # Build & Test
-      - check-code-formatting
-      - build-and-test
+      - check-code-formatting:
+          context: api-nuget-token-context
+      - build-and-test:
+          context: api-nuget-token-context
 
       # Staging deploy
       - assume-role-staging:
@@ -220,6 +222,7 @@ workflows:
           requires:
             - assume-role-staging
       - deploy-to-staging:
+          context: api-nuget-token-context
           requires:
             - migrate-database-staging
 
@@ -236,6 +239,7 @@ workflows:
           requires:
             - assume-role-production
       - deploy-to-production:
+          context: api-nuget-token-context
           requires:
             - migrate-database-production
       - publish-to-swaggerhub:

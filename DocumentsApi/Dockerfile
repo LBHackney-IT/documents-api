@@ -1,5 +1,8 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 
+ARG LBHPACKAGESTOKEN
+ENV LBHPACKAGESTOKEN=$LBHPACKAGESTOKEN
+
 RUN apt-get update \
      && apt-get install curl gnupg -yq \
      && curl -sL https://deb.nodesource.com/setup_14.x | bash \
@@ -9,6 +12,7 @@ WORKDIR /app
 
 # Copy csproj and restore as distinct layers
 COPY ./DocumentsApi/*.csproj ./
+COPY /NuGet.Config /root/.nuget/NuGet/NuGet.Config
 RUN dotnet restore
 
 # Copy everything else and build

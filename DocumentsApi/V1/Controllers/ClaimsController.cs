@@ -6,6 +6,7 @@ using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Amazon.S3;
 using System.Threading.Tasks;
+using DocumentsApi.V1.Authorization;
 
 namespace DocumentsApi.V1.Controllers
 {
@@ -188,6 +189,7 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="400">Request contains invalid parameters</response>
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
+        [AuthorizeByGroups("GET_CLAIMS_ALLOWED_GOOGLE_GROUPS")]
         public IActionResult GetClaimsByTargetId([FromQuery] Guid targetId)
         {
             try

@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Hackney.Core.Http;
+using Hackney.Core.JWT;
 
 namespace DocumentsApi
 {
@@ -125,6 +127,9 @@ namespace DocumentsApi
             {
                 Console.WriteLine("LOADED ENVIRONMENT FROM .env");
             }
+
+            services.AddTokenFactory()
+                .AddHttpContextWrapper();
 
             ServiceConfigurator.ConfigureServices(services);
         }

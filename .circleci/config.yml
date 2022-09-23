@@ -219,6 +219,7 @@ workflows:
               only:
                 - main
       - migrate-database-staging:
+          context: api-nuget-token-context
           requires:
             - assume-role-staging
       - deploy-to-staging:
@@ -236,6 +237,7 @@ workflows:
           requires:
             - permit-production-release
       - migrate-database-production:
+          context: api-nuget-token-context
           requires:
             - assume-role-production
       - deploy-to-production:

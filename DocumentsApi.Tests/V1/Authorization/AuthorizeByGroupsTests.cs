@@ -12,7 +12,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 
-namespace DeveloperHubAPI.Tests.V1.Authorization
+namespace DocumentsApi.Tests.V1.Authorization
 {
     [TestFixture]
     public class AuthoriseByGroupsTests
@@ -55,7 +55,7 @@ namespace DeveloperHubAPI.Tests.V1.Authorization
             _classUnderTest.OnAuthorization(context);
             // Assert
             context.Result.Should().BeOfType(typeof(UnauthorizedObjectResult));
-            (context.Result as UnauthorizedObjectResult).Value.Should().Be("User  is not authorized to access this endpoint.");
+            (context.Result as UnauthorizedObjectResult).Value.Should().Be("An authorization token was not provided.");
             _mockTokenFactory.Verify(x => x.Create(requestHeaders, "Authorization"), Times.Once);
         }
 

@@ -42,7 +42,12 @@ namespace DocumentsApi.V1.Authorization
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var token = _tokenFactory.Create(_contextWrapper.GetContextRequestHeaders(context.HttpContext));
-            if (token is null || !token.Groups.Any(g => _requiredGoogleGroups.Contains(g)))
+            if (token is null)
+            {
+                context.Result = new UnauthorizedObjectResult($"An authorization token was not provided.");
+            }
+
+            if (token != null && !token.Groups.Any(g => _requiredGoogleGroups.Contains(g)))
             {
                 context.Result = new UnauthorizedObjectResult($"User {token?.Name} is not authorized to access this endpoint.");
             }

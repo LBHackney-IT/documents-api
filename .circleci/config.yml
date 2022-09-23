@@ -237,6 +237,7 @@ workflows:
           requires:
             - permit-production-release
       - migrate-database-production:
+          context: api-nuget-token-context
           requires:
             - assume-role-production
       - deploy-to-production:

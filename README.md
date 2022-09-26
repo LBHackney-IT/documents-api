@@ -39,6 +39,8 @@ and for Linux/Mac you can use this command
 export LBHPACKAGESTOKEN=<TOKEN VALUE GOES HERE>
 ```
 
+Please make sure that the `GET_CLAIMS_ALLOWED_GOOGLE_GROUPS` env var contains `e2e-testing` group for the tests to pass locally.
+
 The values for all the env vars can be found in the Parameter Store, in `Document-Evidence-Store-Staging` and `Document-Evidence-Store-Production` AWS accounts.
 
 ### 2. Set up containers

@@ -59,9 +59,9 @@ namespace DocumentsApi.Tests.V1.Factories
             var claim = _fixture.Build<Claim>()
                 .With(x => x.Document, document)
                 .Create();
-            var s3preSignedDownloadUrl = new String("www.awsS3DownloadUrl.com");
+            var s3PreSignedDownloadUrl = new String("www.awsS3DownloadUrl.com");
 
-            var response = claim.ToClaimAndPreSignedDownloadUrlResponse(s3preSignedDownloadUrl);
+            var response = claim.ToClaimAndPreSignedDownloadUrlResponse(s3PreSignedDownloadUrl);
             var expected = new ClaimAndPreSignedDownloadUrlResponse
             {
                 ClaimId = response.ClaimId,
@@ -73,7 +73,7 @@ namespace DocumentsApi.Tests.V1.Factories
                 RetentionExpiresAt = response.RetentionExpiresAt,
                 ValidUntil = response.ValidUntil,
                 TargetId = response.TargetId,
-                PreSignedDownloadUrl = s3preSignedDownloadUrl
+                PreSignedDownloadUrl = s3PreSignedDownloadUrl
             };
 
             response.Should().BeEquivalentTo(expected);

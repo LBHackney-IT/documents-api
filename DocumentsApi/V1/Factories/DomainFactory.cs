@@ -13,6 +13,7 @@ namespace DocumentsApi.V1.Factories
                 Id = entity.Id,
                 CreatedAt = entity.CreatedAt,
                 Name = entity.Name,
+                Description = entity.Description,
                 FileSize = entity.FileSize,
                 FileType = entity.FileType,
                 UploadedAt = entity.UploadedAt

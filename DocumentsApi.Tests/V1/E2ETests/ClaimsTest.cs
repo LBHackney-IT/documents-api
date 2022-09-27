@@ -51,6 +51,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"name\":\"Some name\"," +
+                                  "\"description\":null," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +

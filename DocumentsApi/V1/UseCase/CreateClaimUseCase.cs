@@ -41,19 +41,6 @@ namespace DocumentsApi.V1.UseCase
 
         private static Claim BuildClaimRequest(ClaimRequest request)
         {
-            if (!String.IsNullOrEmpty(request.DocumentName))
-            {
-                return new Claim
-                {
-                    ApiCreatedBy = request.ApiCreatedBy,
-                    ServiceAreaCreatedBy = request.ServiceAreaCreatedBy,
-                    UserCreatedBy = request.UserCreatedBy,
-                    RetentionExpiresAt = request.RetentionExpiresAt,
-                    ValidUntil = request.ValidUntil,
-                    TargetId = request.TargetId,
-                    Document = new Document(request.DocumentName)
-                };
-            }
             return new Claim
             {
                 ApiCreatedBy = request.ApiCreatedBy,
@@ -62,8 +49,11 @@ namespace DocumentsApi.V1.UseCase
                 RetentionExpiresAt = request.RetentionExpiresAt,
                 ValidUntil = request.ValidUntil,
                 TargetId = request.TargetId,
-                // TODO: Support creating claims for existing documents
-                Document = new Document()
+                Document = new Document
+                {
+                    Name = request.DocumentName,
+                    Description = request.DocumentDescription
+                }
             };
         }
     }

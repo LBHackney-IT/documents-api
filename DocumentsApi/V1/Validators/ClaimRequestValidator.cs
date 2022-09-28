@@ -13,7 +13,7 @@ namespace DocumentsApi.V1.Validators
             RuleFor(x => x.ApiCreatedBy).NotEmpty().NotNull();
             RuleFor(x => x.RetentionExpiresAt).NotNull().GreaterThan(DateTime.UtcNow);
             RuleFor(x => x.DocumentName).MinimumLength(1).MaximumLength(300);
-            RuleFor(x => x.DocumentDescription).MinimumLength(1).MaximumLength(1001);
+            RuleFor(x => x.DocumentDescription).MinimumLength(1).MaximumLength(1000);
         }
     }
 }

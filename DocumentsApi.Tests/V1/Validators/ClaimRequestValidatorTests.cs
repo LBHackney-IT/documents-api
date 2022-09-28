@@ -101,5 +101,37 @@ namespace DocumentsApi.Tests.V1.Validators
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();
         }
+        [Test]
+        public void FailsWhenDocumentDescriptionLongerThan1000Characters()
+        {
+            var tooLongDescription = new string('T', 1001);
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentDescription,tooLongDescription)
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void AcceptsWhenDocumentDescriptionIsExactly1000Characters()
+        {
+            var validDescription = new string('T', 1000);
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentDescription,validDescription)
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void FailsWhenDocumentDescriptionShorterThan1Character()
+        {
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentDescription, "")
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
+        }
+
     }
 }

@@ -11,5 +11,6 @@ namespace DocumentsApi.V1.Boundary.Request
         public DateTime ValidUntil { get; set; }
         public Guid? TargetId { get; set; }
         public string DocumentName { get; set; }
+        public string DocumentDescription { get; set; }
     }
 }

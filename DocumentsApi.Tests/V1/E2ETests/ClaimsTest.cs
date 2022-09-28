@@ -100,6 +100,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"name\":\"Some name\"," +
+                                  "\"description\":null," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -365,6 +366,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   $"\"name\":\"{claim.Document.Name}\"," +
+                                  $"\"description\":null," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +

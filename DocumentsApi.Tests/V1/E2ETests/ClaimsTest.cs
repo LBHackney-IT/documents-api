@@ -30,12 +30,13 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
                 "\"targetId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
-                "\"documentName\": \"Some name\"" +
+                "\"documentName\": \"Some name\"," +
+                "\"documentDescription\": \"Some description\"" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
+            var json = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(201);
 
@@ -51,7 +52,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"name\":\"Some name\"," +
-                                  "\"description\":null," +
+                                  "\"description\":\"Some description\"," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -366,7 +367,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   $"\"name\":\"{claim.Document.Name}\"," +
-                                  $"\"description\":null," +
+                                  $"\"description\":\"{claim.Document.Description}\"," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +

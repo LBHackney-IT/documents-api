@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Gateways.Interfaces;
@@ -26,15 +27,20 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void ReturnsClaimsByTargetId()
         {
+            var request = new PaginatedClaimRequest()
+            {
+                TargetId = Guid.NewGuid(),
+                Limit = 10
+            };
             var existingClaim = TestDataHelper.CreateClaim();
             var gatewayResponse = new List<Claim>() { existingClaim };
-            _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>())).Returns(new List<Claim>(gatewayResponse));
+            _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>(), It.IsAny<int>())).Returns(new List<Claim>(gatewayResponse));
             var expected = new Dictionary<string, List<ClaimResponse>>()
             {
                 { "claims", new List<ClaimResponse>() { existingClaim.ToResponse() } }
             };
 
-            var result = _classUnderTest.Execute(Guid.NewGuid());
+            var result = _classUnderTest.Execute(request);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -42,9 +48,14 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void ReturnsEmptyCollectionWhenNoClaimsWereFoundForTargetId()
         {
-            _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>())).Returns(new List<Claim>());
+            _documentsGateway.Setup(x => x.FindClaimsByTargetId(It.IsAny<Guid>(), It.IsAny<int>())).Returns(new List<Claim>());
 
-            var result = _classUnderTest.Execute(Guid.NewGuid());
+            var request = new PaginatedClaimRequest()
+            {
+                TargetId = Guid.NewGuid(),
+                Limit = 10
+            };
+            var result = _classUnderTest.Execute(request);
 
             result["claims"].Should().BeEmpty();
         }

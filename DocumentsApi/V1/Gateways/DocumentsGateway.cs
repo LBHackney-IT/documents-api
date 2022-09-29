@@ -6,6 +6,7 @@ using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -60,15 +61,36 @@ namespace DocumentsApi.V1.Gateways
             return entity.ToDomain();
         }
 
-        public List<Claim> FindClaimsByTargetId(Guid targetId)
+        public List<Claim> FindClaimsByTargetId(Guid targetId, int limit, Guid? cursor, bool? isNextPage)
         {
-            var entities = _databaseContext.Claims.Where(claimEntity => claimEntity.TargetId == targetId).Include(claimEntity => claimEntity.Document);
+            IQueryable<ClaimEntity> entities;
+
+            if (cursor == null)
+            {
+                entities = _databaseContext.Claims
+                    .Where(claimEntity => claimEntity.TargetId == targetId)
+                    .Include(claimEntity => claimEntity.Document)
+                    .OrderByDescending(claimEntity => claimEntity.CreatedAt).Take(limit + 1);
+            }
+            else
+            {
+                entities = _databaseContext.Claims
+                    .Where(
+                        claimEntity => claimEntity.TargetId == targetId &&
+                        isNextPage == true ?
+                            claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt
+                            :
+                            claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt)
+                    .Include(claimEntity => claimEntity.Document)
+                    .OrderByDescending(claimEntity => claimEntity.CreatedAt).Take(limit + 1);
+            }
 
             var claims = new List<Claim>();
             foreach (var entity in entities)
             {
                 claims.Add(entity.ToDomain());
             }
+
             return claims;
         }
 

@@ -251,14 +251,12 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             var uri = new Uri($"api/v1/claims/claim_and_download_url/${fakeClaimId}", UriKind.Relative);
             var response = await Client.GetAsync(uri);
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ClaimAndPreSignedDownloadUrlResponse>(jsonString);
 
             response.StatusCode.Should().Be(400);
         }
 
         [Test]
-        public async Task ClaimAndS3UploadRequestReturnsUploadPolicy()
+        public async Task ClaimAndS3UploadRequestReturnsUploadPolicyAndClaim()
         {
             var uri = new Uri($"api/v1/claims/claim_and_upload_policy", UriKind.Relative);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
@@ -269,7 +267,9 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
                 "\"apiCreatedBy\": \"some-api\"," +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
-                $"\"validUntil\": {formattedValidUntil}" +
+                $"\"validUntil\": {formattedValidUntil}," +
+                $"\"documentName\": \"some-name\"," +
+                $"\"documentDescription\": \"some-description\"" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -278,6 +278,9 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var responseAsObject = JsonConvert.DeserializeObject<ClaimAndS3UploadPolicyResponse>(readResponse);
 
             response.StatusCode.Should().Be(201);
+            responseAsObject.ClaimId.Should().NotBeEmpty();
+            responseAsObject.Document.Name.Should().Be("some-name");
+            responseAsObject.Document.Description.Should().Be("some-description");
             responseAsObject.S3UploadPolicy.Url.Should().NotBeNull();
         }
 

@@ -14,7 +14,7 @@ namespace DocumentsApi.V1.UseCase
 {
     public class CreateClaimUseCase : ICreateClaimUseCase
     {
-        private IDocumentsGateway _documentsGateway;
+        private readonly IDocumentsGateway _documentsGateway;
         private readonly ILogger<CreateClaimUseCase> _logger;
 
         public CreateClaimUseCase(IDocumentsGateway documentsGateway, ILogger<CreateClaimUseCase> logger)
@@ -32,29 +32,9 @@ namespace DocumentsApi.V1.UseCase
                 throw new BadRequestException(validation);
             }
 
-            var claim = BuildClaimRequest(request);
-
+            var claim = request.ToDomain();
             var created = _documentsGateway.CreateClaim(claim);
-
             return created.ToResponse();
-        }
-
-        private static Claim BuildClaimRequest(ClaimRequest request)
-        {
-            return new Claim
-            {
-                ApiCreatedBy = request.ApiCreatedBy,
-                ServiceAreaCreatedBy = request.ServiceAreaCreatedBy,
-                UserCreatedBy = request.UserCreatedBy,
-                RetentionExpiresAt = request.RetentionExpiresAt,
-                ValidUntil = request.ValidUntil,
-                TargetId = request.TargetId,
-                Document = new Document
-                {
-                    Name = request.DocumentName,
-                    Description = request.DocumentDescription
-                }
-            };
         }
     }
 }

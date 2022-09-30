@@ -268,8 +268,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "\"apiCreatedBy\": \"some-api\"," +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
-                $"\"documentName\": \"some-name\"," +
-                $"\"documentDescription\": \"some-description\"" +
+                "\"documentName\": \"some-name\"," +
+                "\"documentDescription\": \"some-description\"" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -304,7 +304,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(400);
         }
-
 
         [Test]
         public async Task ReturnsDownloadUrlWhenClaimIsFound()
@@ -355,7 +354,6 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             var response = await Client.GetAsync(uri);
             var jsonString = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Dictionary<string, List<ClaimResponse>>>(jsonString);
 
             var formattedCreatedAt = JsonConvert.SerializeObject(claim.CreatedAt);
             var formattedDocumentCreatedAt = JsonConvert.SerializeObject(claim.Document.CreatedAt);
@@ -371,9 +369,9 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   $"\"name\":\"{claim.Document.Name}\"," +
                                   $"\"description\":\"{claim.Document.Description}\"," +
-                                  $"\"fileSize\":0," +
-                                  $"\"fileType\":null," +
-                                  $"\"uploadedAt\":null" +
+                                  "\"fileSize\":0," +
+                                  "\"fileType\":null," +
+                                  "\"uploadedAt\":null" +
                               "}," +
                               $"\"serviceAreaCreatedBy\":\"{claim.ServiceAreaCreatedBy}\"," +
                               $"\"userCreatedBy\":\"{claim.UserCreatedBy}\"," +

@@ -140,10 +140,5 @@ namespace DocumentsApi.Tests.V1.Validators
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();
         }
-
-
-
-
-
     }
 }

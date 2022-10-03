@@ -21,6 +21,7 @@ namespace DocumentsApi.Tests.V1.Factories
             domain.Id.Should().Be(entity.Id);
             domain.CreatedAt.Should().Be(entity.CreatedAt);
             domain.Name.Should().Be(entity.Name);
+            domain.Description.Should().Be(entity.Description);
             domain.FileSize.Should().Be(entity.FileSize);
             domain.FileType.Should().Be(entity.FileType);
         }

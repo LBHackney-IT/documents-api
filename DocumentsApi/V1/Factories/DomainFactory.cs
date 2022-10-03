@@ -1,4 +1,5 @@
 using System;
+using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Domain;
 using DocumentsApi.V1.Infrastructure;
 
@@ -13,6 +14,7 @@ namespace DocumentsApi.V1.Factories
                 Id = entity.Id,
                 CreatedAt = entity.CreatedAt,
                 Name = entity.Name,
+                Description = entity.Description,
                 FileSize = entity.FileSize,
                 FileType = entity.FileType,
                 UploadedAt = entity.UploadedAt
@@ -31,6 +33,24 @@ namespace DocumentsApi.V1.Factories
                 RetentionExpiresAt = entity.RetentionExpiresAt,
                 ValidUntil = entity.ValidUntil,
                 TargetId = entity.TargetId
+            };
+        }
+
+        public static Claim ToDomain(this ClaimRequest request)
+        {
+            return new Claim
+            {
+                ApiCreatedBy = request.ApiCreatedBy,
+                ServiceAreaCreatedBy = request.ServiceAreaCreatedBy,
+                UserCreatedBy = request.UserCreatedBy,
+                RetentionExpiresAt = request.RetentionExpiresAt,
+                ValidUntil = request.ValidUntil,
+                TargetId = request.TargetId,
+                Document = new Document()
+                {
+                    Name = request.DocumentName,
+                    Description = request.DocumentDescription
+                }
             };
         }
 

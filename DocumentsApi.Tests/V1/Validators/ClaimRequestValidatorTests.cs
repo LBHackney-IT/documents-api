@@ -12,11 +12,13 @@ namespace DocumentsApi.Tests.V1.Validators
     {
         private Fixture _fixture = new Fixture();
         private ClaimRequestValidator _classUnderTest;
+        private DateTime _validRetentionDate;
 
         [SetUp]
         public void SetUp()
         {
             _classUnderTest = new ClaimRequestValidator();
+            _validRetentionDate = DateTime.UtcNow.AddDays(1);
         }
 
         [TestCase("")]
@@ -75,8 +77,10 @@ namespace DocumentsApi.Tests.V1.Validators
         [Test]
         public void FailsWithDocumentNameLongerThan300Characters()
         {
+            var tooLongName = new string('A', 301);
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.DocumentName, "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec p")
+                .With(x => x.DocumentName, tooLongName)
+                .With(x => x.RetentionExpiresAt, _validRetentionDate)
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeFalse();
@@ -87,6 +91,41 @@ namespace DocumentsApi.Tests.V1.Validators
         {
             var request = _fixture.Build<ClaimRequest>()
                 .With(x => x.DocumentName, "")
+                .With(x => x.RetentionExpiresAt, _validRetentionDate)
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void FailsWhenDocumentDescriptionLongerThan1000Characters()
+        {
+            var tooLongDescription = new string('T', 1001);
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentDescription, tooLongDescription)
+                .With(x => x.RetentionExpiresAt, _validRetentionDate)
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void AcceptsWhenDocumentDescriptionIsExactly1000Characters()
+        {
+            var validDescription = new string('T', 1000);
+            var requestWithValidDescription = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentDescription, validDescription)
+                .With(x => x.RetentionExpiresAt, _validRetentionDate)
+                .Create();
+
+            _classUnderTest.Validate(requestWithValidDescription).IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void FailsWhenDocumentDescriptionShorterThan1Character()
+        {
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.DocumentDescription, "")
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeFalse();
@@ -96,7 +135,7 @@ namespace DocumentsApi.Tests.V1.Validators
         public void ValidatesAValidRequest()
         {
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(1))
+                .With(x => x.RetentionExpiresAt, _validRetentionDate)
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();

@@ -26,21 +26,32 @@ namespace DocumentsApi.V1.UseCase
             var claims = new List<Claim>();
             Boolean hasNextPage = false;
 
-            if (request.After != null)
+            if (request.Before != null && request.After != null)
             {
-                var parsedAfter = Guid.Parse(Base64UrlHelpers.DecodeFromBase64Url(request.After));
-                claims = _documentsGateway.FindClaimsByTargetId(request.TargetId, request.Limit, parsedAfter, isNextPage: true);
-            }
-
-            if (request.Before != null)
-            {
-                var parsedBefore = Guid.Parse(Base64UrlHelpers.DecodeFromBase64Url(request.Before));
-                claims = _documentsGateway.FindClaimsByTargetId(request.TargetId, request.Limit, parsedBefore, isNextPage: false);
+                throw new BadRequestException("Please only pass before of after");
             }
 
             if (request.Before == null && request.After == null)
             {
-                claims = _documentsGateway.FindClaimsByTargetId(request.TargetId, request.Limit, null, null);
+                claims = _documentsGateway.FindClaimsByTargetId(request.TargetId, request.Limit);
+            }
+
+            else if (request.After != null)
+            {
+
+                var parsedAfter = Guid.Parse(Base64UrlHelpers.DecodeFromBase64Url(request.After));
+                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit, parsedAfter, isNextPage: true);
+            }
+
+            else
+            {
+                var parsedBefore = Guid.Parse(Base64UrlHelpers.DecodeFromBase64Url(request.Before));
+                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit, parsedBefore, isNextPage: false);
+            }
+
+            if (claims.Count == 0)
+            {
+                throw new NotFoundException($"No claims have been found with the specified parameters");
             }
 
             if (claims.Any() && claims.Count == request.Limit + 1)
@@ -49,10 +60,8 @@ namespace DocumentsApi.V1.UseCase
                 claims.RemoveAt(claims.Count - 1);
             }
 
-            // var before = Base64UrlHelpers.EncodeToBase64Url(claims.First().Id.ToString());
-            // var after = Base64UrlHelpers.EncodeToBase64Url(claims.Last().Id.ToString());
-            var before = claims.First().Id.ToString();
-            var after = claims.Last().Id.ToString();
+            var before = Base64UrlHelpers.EncodeToBase64Url(claims.First().Id.ToString());
+            var after = Base64UrlHelpers.EncodeToBase64Url(claims.Last().Id.ToString());
 
             var claimsResponse = new List<ClaimResponse>();
             foreach (var claim in claims)

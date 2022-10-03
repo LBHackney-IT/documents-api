@@ -201,6 +201,10 @@ namespace DocumentsApi.V1.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

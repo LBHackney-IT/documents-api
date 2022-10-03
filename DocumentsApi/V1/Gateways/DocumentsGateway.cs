@@ -61,36 +61,57 @@ namespace DocumentsApi.V1.Gateways
             return entity.ToDomain();
         }
 
-        public List<Claim> FindClaimsByTargetId(Guid targetId, int limit, Guid? cursor, bool? isNextPage)
+        public List<Claim> FindClaimsByTargetId(Guid targetId, int limit)
         {
-            IQueryable<ClaimEntity> entities;
-
-            if (cursor == null)
-            {
-                entities = _databaseContext.Claims
+            var entities = _databaseContext.Claims
                     .Where(claimEntity => claimEntity.TargetId == targetId)
                     .Include(claimEntity => claimEntity.Document)
-                    .OrderByDescending(claimEntity => claimEntity.CreatedAt).Take(limit + 1);
-            }
-            else
-            {
-                entities = _databaseContext.Claims
-                    .Where(
-                        claimEntity => claimEntity.TargetId == targetId &&
-                        isNextPage == true ?
-                            claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt
-                            :
-                            claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt)
-                    .Include(claimEntity => claimEntity.Document)
-                    .OrderByDescending(claimEntity => claimEntity.CreatedAt).Take(limit + 1);
-            }
+                    .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                    .Take(limit + 1);
 
             var claims = new List<Claim>();
             foreach (var entity in entities)
             {
                 claims.Add(entity.ToDomain());
             }
+            return claims;
+        }
 
+        public List<Claim> FindPaginatedClaimsByTargetId(Guid targetId, int limit, Guid? cursor, bool? isNextPage)
+        {
+            IQueryable<ClaimEntity> entities;
+
+            if (isNextPage == true)
+            {
+                entities = _databaseContext.Claims
+                    .Where(
+                        claimEntity => claimEntity.TargetId == targetId &&
+                            (claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt
+                            || (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt /*&& claimEntity.Id.CompareTo(cursor)>0*/))
+                            )
+                    .Include(claimEntity => claimEntity.Document)
+                    .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                    .OrderBy(claimEntity => claimEntity.Id)
+                    .Take(limit + 1);
+            }
+            else
+            {
+                entities = _databaseContext.Claims
+                    .Where(
+                        claimEntity => claimEntity.TargetId == targetId &&
+                            (claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt
+                            || (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt /*&& claimEntity.Id.CompareTo(cursor)>0*/))
+                            )
+                    .Include(claimEntity => claimEntity.Document)
+                    .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                    .OrderBy(claimEntity => claimEntity.Id)
+                    .Take(limit + 1);
+            }
+            var claims = new List<Claim>();
+            foreach (var entity in entities)
+            {
+                claims.Add(entity.ToDomain());
+            }
             return claims;
         }
 

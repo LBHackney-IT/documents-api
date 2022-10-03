@@ -1,7 +1,6 @@
 using System;
 using FluentAssertions;
 using NUnit.Framework;
-using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.Helpers;
 
 namespace DocumentsApi.Tests.V1.Helpers

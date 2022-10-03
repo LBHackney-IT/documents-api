@@ -6,6 +6,7 @@ using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Domain;
 using FluentAssertions;
 using NUnit.Framework;
+using DocumentsApi.V1.Helpers;
 
 namespace DocumentsApi.Tests.V1.Gateways
 {
@@ -125,7 +126,6 @@ namespace DocumentsApi.Tests.V1.Gateways
         public void CanFindClaimsByTargetId()
         {
             var targetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
-            var limit = 10;
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
             claimEntity1.TargetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
@@ -140,16 +140,39 @@ namespace DocumentsApi.Tests.V1.Gateways
                 claimEntity2.ToDomain()
             };
 
-            var found = _classUnderTest.FindClaimsByTargetId(targetId, limit);
+            var found = _classUnderTest.FindClaimsByTargetId(targetId, 10);
 
             found.Should().BeEquivalentTo(expected);
         }
 
         [Test]
+        public void CanFindPaginatedClaimsByTargetId()
+        {
+            var targetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
+            var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
+            claimEntity1.TargetId = targetId;
+            claimEntity2.TargetId = targetId;
+            claimEntity1.CreatedAt =  DateTime.UtcNow.AddDays(1);
+            claimEntity2.CreatedAt =  DateTime.UtcNow;
+            DatabaseContext.Add(claimEntity1);
+            DatabaseContext.Add(claimEntity2);
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<Claim>()
+            {
+                claimEntity2.ToDomain()
+            };
+
+            var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 0, claimEntity1.Id, true);
+
+            found.Should().BeEquivalentTo(expected);
+        }        
+
+        [Test]
         public void ReturnsEmptyCollectionWhenNoClaimContainsSpecifiedTargetId()
         {
-            var limit = 10;
-            var found = _classUnderTest.FindClaimsByTargetId(Guid.NewGuid(), limit);
+            var found = _classUnderTest.FindClaimsByTargetId(Guid.NewGuid(), 10);
             found.Should().BeEmpty();
         }
 
@@ -157,13 +180,12 @@ namespace DocumentsApi.Tests.V1.Gateways
         public void ReturnsEmptyClaimsCollectionIfTargetIdDoesNotMatch()
         {
             var targetId = new Guid("aff8e4e8-6628-4654-a0e9-140c4b5a5da6");
-            var limit = 10;
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             claimEntity1.TargetId = new Guid("591f0c9e-100c-402b-9344-4c623abc57bb");
             DatabaseContext.Add(claimEntity1);
             DatabaseContext.SaveChanges();
 
-            var found = _classUnderTest.FindClaimsByTargetId(targetId, limit);
+            var found = _classUnderTest.FindClaimsByTargetId(targetId, 10);
 
             found.Should().BeEmpty();
         }

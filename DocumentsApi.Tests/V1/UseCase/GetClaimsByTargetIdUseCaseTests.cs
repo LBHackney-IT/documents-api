@@ -57,7 +57,7 @@ namespace DocumentsApi.Tests.V1.UseCase
             };
             var result = _classUnderTest.Execute(request);
 
-            result["claims"].Should().BeEmpty();
+            result.Claims.Should().BeEmpty();
         }
     }
 }

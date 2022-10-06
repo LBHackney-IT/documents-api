@@ -15,7 +15,7 @@ namespace DocumentsApi.V1.Validators
         }
         private bool ReceiveOnlyBeforeOrAfter(PaginatedClaimRequest request)
         {
-            return !(request.Before != null && request.After != null);
+            return (request.Before == null || request.After == null);
         }
     }
 }

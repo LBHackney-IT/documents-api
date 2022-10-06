@@ -199,11 +199,7 @@ namespace DocumentsApi.V1.Controllers
             }
             catch (BadRequestException ex)
             {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
+                return BadRequest(ex.ValidationResponse.Errors);
             }
         }
     }

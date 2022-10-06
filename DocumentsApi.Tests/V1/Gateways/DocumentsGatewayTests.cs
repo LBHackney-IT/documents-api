@@ -153,8 +153,8 @@ namespace DocumentsApi.Tests.V1.Gateways
             var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
             claimEntity1.TargetId = targetId;
             claimEntity2.TargetId = targetId;
-            claimEntity1.CreatedAt =  DateTime.UtcNow.AddDays(1);
-            claimEntity2.CreatedAt =  DateTime.UtcNow;
+            claimEntity1.CreatedAt = DateTime.UtcNow.AddDays(1);
+            claimEntity2.CreatedAt = DateTime.UtcNow;
             DatabaseContext.Add(claimEntity1);
             DatabaseContext.Add(claimEntity2);
             DatabaseContext.SaveChanges();
@@ -167,7 +167,7 @@ namespace DocumentsApi.Tests.V1.Gateways
             var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 0, claimEntity1.Id, true);
 
             found.Should().BeEquivalentTo(expected);
-        }        
+        }
 
         [Test]
         public void ReturnsEmptyCollectionWhenNoClaimContainsSpecifiedTargetId()

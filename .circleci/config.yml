@@ -245,6 +245,8 @@ workflows:
           requires:
             - migrate-database-production
       - publish-to-swaggerhub:
-          context: api-assume-role-document-evidence-store-production-context
+          context:
+            - api-assume-role-document-evidence-store-production-context
+            - api-nuget-token-context
           requires:
             - deploy-to-production

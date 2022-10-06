@@ -78,10 +78,10 @@ namespace DocumentsApi.V1.Gateways
                     entities = _databaseContext.Claims
                         .Where(
                             claimEntity => claimEntity.TargetId == targetId &&
-                                claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt || 
-                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt && 
+                                claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
                                 claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
-                                // claimEntity.Id != _databaseContext.Claims.Find(cursor).Id)
+                        // claimEntity.Id != _databaseContext.Claims.Find(cursor).Id)
                         .Include(claimEntity => claimEntity.Document)
                         .OrderByDescending(claimEntity => claimEntity.CreatedAt).Take(limit + 1);
                 else
@@ -90,9 +90,9 @@ namespace DocumentsApi.V1.Gateways
                         .Where(
                             claimEntity => claimEntity.TargetId == targetId &&
                                 claimEntity.CreatedAt >= _databaseContext.Claims.Find(cursor).CreatedAt ||
-                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt && 
+                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
                                 claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
-                                // claimEntity.Id != _databaseContext.Claims.Find(cursor).Id)
+                        // claimEntity.Id != _databaseContext.Claims.Find(cursor).Id)
                         .Include(claimEntity => claimEntity.Document)
                         .OrderBy(claimEntity => claimEntity.CreatedAt).Take(limit + 1)
                         .OrderByDescending(claimEntity => claimEntity.CreatedAt);

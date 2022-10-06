@@ -7,8 +7,15 @@ namespace DocumentsApi.V1.Validators
     {
         public PaginatedClaimRequestValidator()
         {
-            RuleFor(x => x.Before).Null().Unless(x => x.After == null).WithMessage("Some error message");
+            RuleFor(x => x)
+                .Must(ReceiveOnlyBeforeOrAfter)
+                .WithName("Before/After")
+                .WithMessage("Please provide either Before or After or none of them");
             RuleFor(x => x.TargetId).NotEmpty().NotNull();
+        }
+        private bool ReceiveOnlyBeforeOrAfter(PaginatedClaimRequest request)
+        {
+            return !(request.Before != null && request.After != null);
         }
     }
 }

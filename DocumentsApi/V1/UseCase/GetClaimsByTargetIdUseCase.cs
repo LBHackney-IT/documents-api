@@ -35,6 +35,7 @@ namespace DocumentsApi.V1.UseCase
             }
 
             var claims = new List<Claim>();
+            Boolean hasPreviousPage = false;
             Boolean hasNextPage = false;
 
             if (request.Before == null && request.After == null)
@@ -55,15 +56,31 @@ namespace DocumentsApi.V1.UseCase
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit, parsedBefore, isNextPage: false);
             }
 
-            if (claims.Any() && claims.Count == request.Limit + 1)
+            if (request.Before != null)
             {
                 hasNextPage = true;
-                if (request.Before != null)
+
+                if (claims.Count == request.Limit + 1)
                 {
+                    hasPreviousPage = true;
                     claims.RemoveAt(0);
                 }
-                else
+            }
+            else if (request.After != null)
+            {
+                hasPreviousPage = true;
+
+                if (claims.Count == request.Limit + 1)
                 {
+                    hasNextPage = true;
+                    claims.RemoveAt(claims.Count - 1);
+                }
+            }
+            else
+            {
+                if (claims.Count == request.Limit + 1)
+                {
+                    hasNextPage = true;
                     claims.RemoveAt(claims.Count - 1);
                 }
             }
@@ -82,7 +99,7 @@ namespace DocumentsApi.V1.UseCase
             {
                 claimsResponse.Add(claim.ToResponse());
             }
-            var result = ResponseFactory.ToPaginatedClaimResponse(claimsResponse, before, after, hasNextPage);
+            var result = ResponseFactory.ToPaginatedClaimResponse(claimsResponse, before, after, hasPreviousPage, hasNextPage);
             return result;
         }
     }

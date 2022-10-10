@@ -32,7 +32,8 @@ namespace DocumentsApi.V1.Factories
                 ServiceAreaCreatedBy = entity.ServiceAreaCreatedBy,
                 RetentionExpiresAt = entity.RetentionExpiresAt,
                 ValidUntil = entity.ValidUntil,
-                TargetId = entity.TargetId
+                TargetId = entity.TargetId,
+                TargetType = entity.TargetType
             };
         }
 
@@ -46,6 +47,7 @@ namespace DocumentsApi.V1.Factories
                 RetentionExpiresAt = request.RetentionExpiresAt,
                 ValidUntil = request.ValidUntil,
                 TargetId = request.TargetId,
+                TargetType = request.TargetType,
                 Document = new Document()
                 {
                     Name = request.DocumentName,

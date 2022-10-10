@@ -12,5 +12,6 @@ namespace DocumentsApi.V1.Boundary.Request
         public Guid? TargetId { get; set; }
         public string DocumentName { get; set; }
         public string DocumentDescription { get; set; }
+        public string TargetType { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
                 "\"targetId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
+                "\"targetType\": \"Some target type\"," +
                 "\"documentName\": \"Some name\"," +
                 "\"documentDescription\": \"Some description\"" +
                 "}";
@@ -62,6 +63,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"apiCreatedBy\":\"evidence-api\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
+                              "\"targetType\": \"Some target type\"," +
                               "\"targetId\":\"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"" +
                               "}";
 
@@ -111,7 +113,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"apiCreatedBy\":\"evidence-api\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              "\"targetId\":null" +
+                              "\"targetId\":null," +
+                              "\"targetType\":null" +
                               "}";
 
             json.Should().Be(expected);
@@ -380,7 +383,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              $"\"targetId\":\"{claim.TargetId}\"" +
+                              $"\"targetId\":\"{claim.TargetId}\"," +
+                              $"\"targetType\":\"{claim.TargetType}\"" +
                               "}" +
                             "]," +
                             "\"paging\":{" +

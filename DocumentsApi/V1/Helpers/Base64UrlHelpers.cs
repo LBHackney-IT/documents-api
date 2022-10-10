@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DocumentsApi.V1.Helpers
 {
@@ -7,8 +9,9 @@ namespace DocumentsApi.V1.Helpers
     [SuppressMessage("ReSharper", "CA1054")]
     public static class Base64UrlHelpers
     {
-        public static string EncodeToBase64Url(string s)
+        public static string EncodeToBase64Url(JObject jsonObject)
         {
+            var s = JsonConvert.SerializeObject(jsonObject);
             var byteArrayId = StringToByteArray(s);
             string base64Url = Convert.ToBase64String(byteArrayId);
             base64Url = base64Url.Split('=')[0]; // Remove any trailing '='s
@@ -17,7 +20,7 @@ namespace DocumentsApi.V1.Helpers
             return base64Url;
         }
 
-        public static string DecodeFromBase64Url(string base64UrlEncoded)
+        public static JObject DecodeFromBase64Url(string base64UrlEncoded)
         {
             base64UrlEncoded = base64UrlEncoded.Replace('-', '+'); // 62nd char of encoding
             base64UrlEncoded = base64UrlEncoded.Replace('_', '/'); // 63rd char of encoding
@@ -30,7 +33,8 @@ namespace DocumentsApi.V1.Helpers
             }
             var decodedByteArray = Convert.FromBase64String(base64UrlEncoded);
             var decodedString = ByteArrayToString(decodedByteArray);
-            return decodedString;
+            var jsonObject = JObject.Parse(decodedString); // string to JObject
+            return jsonObject;
         }
 
         public static byte[] StringToByteArray(string s)

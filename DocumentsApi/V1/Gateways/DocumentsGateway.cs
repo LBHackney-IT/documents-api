@@ -72,7 +72,7 @@ namespace DocumentsApi.V1.Gateways
                     .Include(claimEntity => claimEntity.Document)
                     .OrderByDescending(claimEntity => claimEntity.CreatedAt)
                     .ThenBy(claimEntity => claimEntity.Id)
-                    .Take(limit + 1);
+                    .Take(limit);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace DocumentsApi.V1.Gateways
                         .Include(claimEntity => claimEntity.Document)
                         .OrderByDescending(claimEntity => claimEntity.CreatedAt)
                         .ThenBy(claimEntity => claimEntity.Id)
-                        .Take(limit + 1);
+                        .Take(limit);
                 else
                 {
                     entities = _databaseContext.Claims
@@ -97,7 +97,7 @@ namespace DocumentsApi.V1.Gateways
                                 claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
                         .Include(claimEntity => claimEntity.Document)
                         .OrderBy(claimEntity => claimEntity.CreatedAt)
-                        .Take(limit + 1)
+                        .Take(limit)
                         .OrderByDescending(claimEntity => claimEntity.CreatedAt)
                         .ThenBy(claimEntity => claimEntity.Id);
                 }

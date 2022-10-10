@@ -11,6 +11,7 @@ using DocumentsApi.V1.Boundary.Response.Exceptions;
 using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace DocumentsApi.V1.UseCase
 {
@@ -40,34 +41,19 @@ namespace DocumentsApi.V1.UseCase
 
             if (request.Before == null && request.After == null)
             {
-                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit, null, null);
-            }
-
-            else if (request.After != null)
-            {
-
-                var parsedAfter = Guid.Parse(Base64UrlHelpers.DecodeFromBase64Url(request.After));
-                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit, parsedAfter, isNextPage: true);
-            }
-
-            else
-            {
-                var parsedBefore = Guid.Parse(Base64UrlHelpers.DecodeFromBase64Url(request.Before));
-                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit, parsedBefore, isNextPage: false);
-            }
-
-            if (request.Before != null)
-            {
-                hasNextPage = true;
-
+                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, null, null);
                 if (claims.Count == request.Limit + 1)
                 {
-                    hasPreviousPage = true;
-                    claims.RemoveAt(0);
+                    hasNextPage = true;
+                    claims.RemoveAt(claims.Count - 1);
                 }
             }
+
             else if (request.After != null)
             {
+                var parsedAfter = Base64UrlHelpers.DecodeFromBase64Url(request.After);
+                var decodedNextPageCursorId = Guid.Parse((string) parsedAfter["id"]);
+                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedNextPageCursorId, isNextPage: true);
                 hasPreviousPage = true;
 
                 if (claims.Count == request.Limit + 1)
@@ -78,10 +64,15 @@ namespace DocumentsApi.V1.UseCase
             }
             else
             {
+                var parsedBefore = Base64UrlHelpers.DecodeFromBase64Url(request.Before);
+                var decodedPreviousPageCursorId = Guid.Parse((string) parsedBefore["id"]);
+                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedPreviousPageCursorId, isNextPage: false);
+                hasNextPage = true;
+
                 if (claims.Count == request.Limit + 1)
                 {
-                    hasNextPage = true;
-                    claims.RemoveAt(claims.Count - 1);
+                    hasPreviousPage = true;
+                    claims.RemoveAt(0);
                 }
             }
 
@@ -90,8 +81,10 @@ namespace DocumentsApi.V1.UseCase
 
             if (claims.Any())
             {
-                before = Base64UrlHelpers.EncodeToBase64Url(claims.First().Id.ToString());
-                after = Base64UrlHelpers.EncodeToBase64Url(claims.Last().Id.ToString());
+                var toBeEncodedBeforeCursor = JObject.Parse("{\"id\":\"" + $"{claims.First().Id.ToString()}" + "\"}");
+                var toBeEncodedAfterCursor = JObject.Parse("{\"id\":\"" + $"{claims.Last().Id.ToString()}" + "\"}");
+                before = Base64UrlHelpers.EncodeToBase64Url(toBeEncodedBeforeCursor);
+                after = Base64UrlHelpers.EncodeToBase64Url(toBeEncodedAfterCursor);
             }
 
             var claimsResponse = new List<ClaimResponse>();

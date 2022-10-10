@@ -29,8 +29,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "\"apiCreatedBy\": \"evidence-api\"," +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
-                "\"targetId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
                 "\"targetType\": \"Some target type\"," +
+                "\"targetId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
                 "\"documentName\": \"Some name\"," +
                 "\"documentDescription\": \"Some description\"" +
                 "}";
@@ -63,8 +63,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"apiCreatedBy\":\"evidence-api\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              "\"targetType\": \"Some target type\"," +
-                              "\"targetId\":\"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"" +
+                              "\"targetId\":\"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
+                              "\"targetType\":\"Some target type\"" +
                               "}";
 
             json.Should().Be(expected);

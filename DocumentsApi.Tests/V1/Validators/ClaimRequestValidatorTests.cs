@@ -131,6 +131,27 @@ namespace DocumentsApi.Tests.V1.Validators
             _classUnderTest.Validate(request).IsValid.Should().BeFalse();
         }
 
+
+        [Test]
+        public void AcceptsWhenTargetTypeIsEmpty()
+        {
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.TargetType, "")
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeTrue();
+        }
+        [Test]
+        public void FailsWhenTargetTypeIsOver50Character()
+        {
+            var targetTypeOver50Characters = new string('T', 51);
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.TargetType, targetTypeOver50Characters)
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
+        }
+
         [Test]
         public void ValidatesAValidRequest()
         {

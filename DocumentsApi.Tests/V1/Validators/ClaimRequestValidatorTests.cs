@@ -137,7 +137,7 @@ namespace DocumentsApi.Tests.V1.Validators
         public void AcceptsWhenTargetTypeIsNull(string value)
         {
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.TargetType,value)
+                .With(x => x.TargetType, value)
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();

@@ -22,13 +22,13 @@ namespace DocumentsApi.Tests.V1.Helpers
         {
             var s = JObject.Parse("{\"id\":\"" + $"this-is-my-id" + "\"}");
             var result = Base64UrlHelpers.EncodeToBase64Url(s);
-            result.Should().BeEquivalentTo("eyJpZCI6InRoaXMtaXMtbXktaWQifQ");
+            result.Should().BeEquivalentTo("ewogICJpZCI6ICJ0aGlzLWlzLW15LWlkIgp9");
         }
 
         [Test]
         public void DecodeReturnsExpectedString()
         {
-            var s = "eyJpZCI6ICJ0aGlzLWlzLW15LWlkIn0";
+            var s = "ewogICJpZCI6ICJ0aGlzLWlzLW15LWlkIgp9";
             var result = Base64UrlHelpers.DecodeFromBase64Url(s);
             result.Should().BeEquivalentTo(JObject.Parse("{\"id\":\"" + $"this-is-my-id" + "\"}"));
         }

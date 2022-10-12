@@ -133,10 +133,11 @@ namespace DocumentsApi.Tests.V1.Validators
 
 
         [Test]
-        public void AcceptsWhenTargetTypeIsNull()
+        [TestCase(null)]
+        public void AcceptsWhenTargetTypeIsNull(string value)
         {
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.TargetType)
+                .With(x => x.TargetType,value)
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();

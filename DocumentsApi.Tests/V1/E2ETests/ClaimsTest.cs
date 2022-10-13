@@ -30,12 +30,13 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
                 "\"targetId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
-                "\"documentName\": \"Some name\"" +
+                "\"documentName\": \"Some name\"," +
+                "\"documentDescription\": \"Some description\"" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
+            var json = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(201);
 
@@ -51,6 +52,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"name\":\"Some name\"," +
+                                  "\"description\":\"Some description\"," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -82,8 +84,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
+            var json = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(201);
 
@@ -99,6 +101,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"name\":\"Some name\"," +
+                                  "\"description\":null," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -128,7 +131,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                           "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
 
             response.StatusCode.Should().Be(400);
         }
@@ -142,8 +145,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             var uri = new Uri($"api/v1/claims/{claim.Id}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var jsonString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ClaimResponse>(jsonString);
 
             response.StatusCode.Should().Be(200);
@@ -156,7 +159,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         public async Task FindingAnInvalidDocumentReturns404()
         {
             var uri = new Uri($"api/v1/claims/{Guid.NewGuid()}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(404);
         }
@@ -179,12 +182,12 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/claims/{claim.Id}", UriKind.Relative);
 
             // Act
-            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PatchAsync(uri, jsonString);
 
             // Assert
             response.StatusCode.Should().Be(200);
 
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ClaimResponse>(json);
 
             result.Should().BeEquivalentTo(claim.ToDomain().ToResponse(),
@@ -211,7 +214,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/claims/{claim.Id}", UriKind.Relative);
 
             // Act
-            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PatchAsync(uri, jsonString);
 
             // Assert
             response.StatusCode.Should().Be(404);
@@ -229,8 +232,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
             MockS3Client.Setup(x => x.GetPreSignedURL(It.IsAny<GetPreSignedUrlRequest>())).Returns(expectedPreSignedDownloadUrl);
 
             var uri = new Uri($"api/v1/claims/claim_and_download_url/{claim.Id}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var jsonString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ClaimAndPreSignedDownloadUrlResponse>(jsonString);
 
             response.StatusCode.Should().Be(200);
@@ -247,15 +250,13 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var fakeClaimId = Guid.NewGuid();
 
             var uri = new Uri($"api/v1/claims/claim_and_download_url/${fakeClaimId}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<ClaimAndPreSignedDownloadUrlResponse>(jsonString);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(400);
         }
 
         [Test]
-        public async Task ClaimAndS3UploadRequestReturnsUploadPolicy()
+        public async Task ClaimAndS3UploadRequestReturnsUploadPolicyAndClaim()
         {
             var uri = new Uri($"api/v1/claims/claim_and_upload_policy", UriKind.Relative);
             var formattedRetentionExpiresAt = JsonConvert.SerializeObject(DateTime.UtcNow.AddDays(3));
@@ -266,7 +267,9 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "\"userCreatedBy\": \"staff@test.hackney.gov.uk\"," +
                 "\"apiCreatedBy\": \"some-api\"," +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
-                $"\"validUntil\": {formattedValidUntil}" +
+                $"\"validUntil\": {formattedValidUntil}," +
+                "\"documentName\": \"some-name\"," +
+                "\"documentDescription\": \"some-description\"" +
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -275,6 +278,9 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var responseAsObject = JsonConvert.DeserializeObject<ClaimAndS3UploadPolicyResponse>(readResponse);
 
             response.StatusCode.Should().Be(201);
+            responseAsObject.ClaimId.Should().NotBeEmpty();
+            responseAsObject.Document.Name.Should().Be("some-name");
+            responseAsObject.Document.Description.Should().Be("some-description");
             responseAsObject.S3UploadPolicy.Url.Should().NotBeNull();
         }
 
@@ -294,11 +300,10 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
 
             response.StatusCode.Should().Be(400);
         }
-
 
         [Test]
         public async Task ReturnsDownloadUrlWhenClaimIsFound()
@@ -316,7 +321,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             var uri = new Uri($"api/v1/claims/{claimId}/download_links", UriKind.Relative);
 
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(200);
         }
@@ -328,7 +333,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             var uri = new Uri($"api/v1/claims/{nonExistentClaimId}/download_links", UriKind.Relative);
 
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(404);
         }
@@ -365,9 +370,10 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   $"\"name\":\"{claim.Document.Name}\"," +
-                                  $"\"fileSize\":0," +
-                                  $"\"fileType\":null," +
-                                  $"\"uploadedAt\":null" +
+                                  $"\"description\":\"{claim.Document.Description}\"," +
+                                  "\"fileSize\":0," +
+                                  "\"fileType\":null," +
+                                  "\"uploadedAt\":null" +
                               "}," +
                               $"\"serviceAreaCreatedBy\":\"{claim.ServiceAreaCreatedBy}\"," +
                               $"\"userCreatedBy\":\"{claim.UserCreatedBy}\"," +
@@ -584,7 +590,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/claims?targetId={invalidTargetId}", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(400);
         }
@@ -607,7 +613,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             var uri = new Uri($"api/v1/claims?targetId={targetId}", UriKind.Relative);
 
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(401);
         }

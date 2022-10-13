@@ -17,6 +17,9 @@ namespace DocumentsApi.V1.Infrastructure
         [Column("name")]
         public string Name { get; set; }
 
+        [Column("description")]
+        public string Description { get; set; }
+
         [Column("file_size")]
         public long FileSize { get; set; }
 

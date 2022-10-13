@@ -223,6 +223,7 @@ namespace DocumentsApi.Tests.V1.Gateways
             claimEntity3.TargetId = targetId;
             claimEntity1.Id = new Guid("381a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity2.Id = new Guid("51907ce4-2d4a-4466-a5d7-f2668623b49f");
+            claimEntity3.Id = new Guid("781a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity1.CreatedAt = DateTime.UtcNow;
             claimEntity2.CreatedAt = claimEntity1.CreatedAt;
             claimEntity3.CreatedAt = claimEntity1.CreatedAt;
@@ -255,7 +256,8 @@ namespace DocumentsApi.Tests.V1.Gateways
             claimEntity3.TargetId = targetId;
             claimEntity1.Id = new Guid("381a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity2.Id = new Guid("51907ce4-2d4a-4466-a5d7-f2668623b49f");
-            claimEntity1.CreatedAt = DateTime.UtcNow.AddDays(-2);
+            claimEntity3.Id = new Guid("71907ce4-2d4a-4466-a5d7-f2668623b49f");
+            claimEntity1.CreatedAt = new DateTime(2022, 09, 01);
             claimEntity2.CreatedAt = claimEntity1.CreatedAt;
             claimEntity3.CreatedAt = claimEntity1.CreatedAt;
             DatabaseContext.Add(claimEntity1);
@@ -267,7 +269,6 @@ namespace DocumentsApi.Tests.V1.Gateways
             {
                 claimEntity1.ToDomain(),
                 claimEntity2.ToDomain()
-
             };
 
             var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 3, claimEntity3.Id, false);

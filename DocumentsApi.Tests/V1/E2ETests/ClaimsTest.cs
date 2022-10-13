@@ -337,6 +337,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         public async Task Returns200WhenItCanGetClaimsByTargetId()
         {
             var claim = TestDataHelper.CreateClaim().ToEntity();
+            claim.Id = new Guid("45a04de8-9a52-41d2-a09d-d3d6f5678c89");
             claim.Document.FileSize = 0;
             claim.Document.FileType = null;
             claim.Document.UploadedAt = null;
@@ -349,7 +350,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<Dictionary<string, List<ClaimResponse>>>(jsonString);
+            var result = JsonConvert.DeserializeObject<PaginatedClaimResponse>(jsonString);
 
             var formattedCreatedAt = JsonConvert.SerializeObject(claim.CreatedAt);
             var formattedDocumentCreatedAt = JsonConvert.SerializeObject(claim.Document.CreatedAt);
@@ -375,7 +376,201 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"validUntil\":{formattedValidUntil}," +
                               $"\"targetId\":\"{claim.TargetId}\"" +
                               "}" +
-                            "]}";
+                            "]," +
+                            "\"paging\":{" +
+                                "\"cursors\":{" +
+                                    "\"before\":\"ewogICJpZCI6ICI0NWEwNGRlOC05YTUyLTQxZDItYTA5ZC1kM2Q2ZjU2NzhjODkiCn0\"," +
+                                    "\"after\":\"ewogICJpZCI6ICI0NWEwNGRlOC05YTUyLTQxZDItYTA5ZC1kM2Q2ZjU2NzhjODkiCn0\"" +
+                                "}," +
+                                "\"hasPreviousPage\":false," +
+                                "\"hasNextPage\":false" +
+                            "}" +
+                        "}";
+
+            response.StatusCode.Should().Be(200);
+            jsonString.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task Returns200WhenItCanGetClaimsByTargetIdNextPage()
+        {
+            var targetId = new Guid("6e54aaad-2c5c-4e26-a84c-84563052368d");
+            var claim1 = TestDataHelper.CreateClaim().ToEntity();
+            claim1.Id = new Guid("45a04de8-9a52-41d2-a09d-d3d6f5678c89");
+            claim1.TargetId = targetId;
+            claim1.CreatedAt = new DateTime(2022, 9, 5).ToUniversalTime();
+            claim1.Document.FileSize = 0;
+            claim1.Document.FileType = null;
+            claim1.Document.UploadedAt = null;
+            DatabaseContext.Add(claim1);
+            DatabaseContext.Add(claim1.Document);
+
+            var claim2 = TestDataHelper.CreateClaim().ToEntity();
+            claim2.Id = new Guid("ae84084d-0c20-480f-a84e-e131a9a820bb");
+            claim2.TargetId = targetId;
+            claim2.CreatedAt = new DateTime(2021, 5, 23).ToUniversalTime();
+            claim2.Document.FileSize = 0;
+            claim2.Document.FileType = null;
+            claim2.Document.UploadedAt = null;
+            DatabaseContext.Add(claim2);
+            DatabaseContext.Add(claim2.Document);
+
+            var claim3 = TestDataHelper.CreateClaim().ToEntity();
+            claim3.Id = new Guid("dffbe7a7-f27c-4ec4-bea3-40b57899c8dd");
+            claim3.TargetId = targetId;
+            claim3.CreatedAt = new DateTime(2020, 4, 18).ToUniversalTime();
+            claim3.Document.FileSize = 0;
+            claim3.Document.FileType = null;
+            claim3.Document.UploadedAt = null;
+            DatabaseContext.Add(claim3);
+            DatabaseContext.Add(claim3.Document);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/claims?targetId={targetId}&limit=1&after=ew0KICAgICJpZCI6IjQ1YTA0ZGU4LTlhNTItNDFkMi1hMDlkLWQzZDZmNTY3OGM4OSINCn0", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<PaginatedClaimResponse>(jsonString);
+
+            var formattedCreatedAt = JsonConvert.SerializeObject(claim2.CreatedAt);
+            var formattedDocumentCreatedAt = JsonConvert.SerializeObject(claim2.Document.CreatedAt);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(claim2.RetentionExpiresAt);
+            var formattedValidUntil = JsonConvert.SerializeObject(claim2.ValidUntil);
+
+            string expected = "{" +
+                            "\"claims\":[{" +
+                              $"\"id\":\"{claim2.Id}\"," +
+                              $"\"createdAt\":{formattedCreatedAt}," +
+                              "\"document\":{" +
+                                  $"\"id\":\"{claim2.Document.Id}\"," +
+                                  $"\"createdAt\":{formattedDocumentCreatedAt}," +
+                                  $"\"name\":\"{claim2.Document.Name}\"," +
+                                  $"\"fileSize\":0," +
+                                  $"\"fileType\":null," +
+                                  $"\"uploadedAt\":null" +
+                              "}," +
+                              $"\"serviceAreaCreatedBy\":\"{claim2.ServiceAreaCreatedBy}\"," +
+                              $"\"userCreatedBy\":\"{claim2.UserCreatedBy}\"," +
+                              $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
+                              $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
+                              $"\"validUntil\":{formattedValidUntil}," +
+                              $"\"targetId\":\"{claim2.TargetId}\"" +
+                              "}" +
+                            "]," +
+                            "\"paging\":{" +
+                                "\"cursors\":{" +
+                                    "\"before\":\"ewogICJpZCI6ICJhZTg0MDg0ZC0wYzIwLTQ4MGYtYTg0ZS1lMTMxYTlhODIwYmIiCn0\"," +
+                                    "\"after\":\"ewogICJpZCI6ICJhZTg0MDg0ZC0wYzIwLTQ4MGYtYTg0ZS1lMTMxYTlhODIwYmIiCn0\"" +
+                                "}," +
+                                "\"hasPreviousPage\":true," +
+                                "\"hasNextPage\":true" +
+                            "}" +
+                        "}";
+
+            response.StatusCode.Should().Be(200);
+            jsonString.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task Returns200WhenItCanGetClaimsByTargetIdPreviousPage()
+        {
+            var targetId = new Guid("6e54aaad-2c5c-4e26-a84c-84563052368d");
+            var claim1 = TestDataHelper.CreateClaim().ToEntity();
+            claim1.Id = new Guid("45a04de8-9a52-41d2-a09d-d3d6f5678c89");
+            claim1.TargetId = targetId;
+            claim1.CreatedAt = new DateTime(2022, 9, 5).ToUniversalTime();
+            claim1.Document.FileSize = 0;
+            claim1.Document.FileType = null;
+            claim1.Document.UploadedAt = null;
+            DatabaseContext.Add(claim1);
+            DatabaseContext.Add(claim1.Document);
+
+            var claim2 = TestDataHelper.CreateClaim().ToEntity();
+            claim2.Id = new Guid("ae84084d-0c20-480f-a84e-e131a9a820bb");
+            claim2.TargetId = targetId;
+            claim2.CreatedAt = new DateTime(2021, 5, 23).ToUniversalTime();
+            claim2.Document.FileSize = 0;
+            claim2.Document.FileType = null;
+            claim2.Document.UploadedAt = null;
+            DatabaseContext.Add(claim2);
+            DatabaseContext.Add(claim2.Document);
+
+            var claim3 = TestDataHelper.CreateClaim().ToEntity();
+            claim3.Id = new Guid("dffbe7a7-f27c-4ec4-bea3-40b57899c8dd");
+            claim3.TargetId = targetId;
+            claim3.CreatedAt = new DateTime(2020, 4, 18).ToUniversalTime();
+            claim3.Document.FileSize = 0;
+            claim3.Document.FileType = null;
+            claim3.Document.UploadedAt = null;
+            DatabaseContext.Add(claim3);
+            DatabaseContext.Add(claim3.Document);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/claims?targetId={targetId}&limit=2&before=ew0KICAiaWQiOiJkZmZiZTdhNy1mMjdjLTRlYzQtYmVhMy00MGI1Nzg5OWM4ZGQiDQp9", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<PaginatedClaimResponse>(jsonString);
+
+            var formattedCreatedAt1 = JsonConvert.SerializeObject(claim1.CreatedAt);
+            var formattedDocumentCreatedAt1 = JsonConvert.SerializeObject(claim1.Document.CreatedAt);
+            var formattedRetentionExpiresAt1 = JsonConvert.SerializeObject(claim1.RetentionExpiresAt);
+            var formattedValidUntil1 = JsonConvert.SerializeObject(claim1.ValidUntil);
+
+            var formattedCreatedAt2 = JsonConvert.SerializeObject(claim2.CreatedAt);
+            var formattedDocumentCreatedAt2 = JsonConvert.SerializeObject(claim2.Document.CreatedAt);
+            var formattedRetentionExpiresAt2 = JsonConvert.SerializeObject(claim2.RetentionExpiresAt);
+            var formattedValidUntil2 = JsonConvert.SerializeObject(claim2.ValidUntil);
+
+            string expected = "{" +
+                            "\"claims\":[{" +
+                            $"\"id\":\"{claim1.Id}\"," +
+                              $"\"createdAt\":{formattedCreatedAt1}," +
+                              "\"document\":{" +
+                                  $"\"id\":\"{claim1.Document.Id}\"," +
+                                  $"\"createdAt\":{formattedDocumentCreatedAt1}," +
+                                  $"\"name\":\"{claim1.Document.Name}\"," +
+                                  $"\"fileSize\":0," +
+                                  $"\"fileType\":null," +
+                                  $"\"uploadedAt\":null" +
+                              "}," +
+                              $"\"serviceAreaCreatedBy\":\"{claim1.ServiceAreaCreatedBy}\"," +
+                              $"\"userCreatedBy\":\"{claim1.UserCreatedBy}\"," +
+                              $"\"apiCreatedBy\":\"{claim1.ApiCreatedBy}\"," +
+                              $"\"retentionExpiresAt\":{formattedRetentionExpiresAt1}," +
+                              $"\"validUntil\":{formattedValidUntil1}," +
+                              $"\"targetId\":\"{claim1.TargetId}\"" +
+                              "}," +
+                              "{" +
+                              $"\"id\":\"{claim2.Id}\"," +
+                              $"\"createdAt\":{formattedCreatedAt2}," +
+                              "\"document\":{" +
+                                  $"\"id\":\"{claim2.Document.Id}\"," +
+                                  $"\"createdAt\":{formattedDocumentCreatedAt2}," +
+                                  $"\"name\":\"{claim2.Document.Name}\"," +
+                                  $"\"fileSize\":0," +
+                                  $"\"fileType\":null," +
+                                  $"\"uploadedAt\":null" +
+                              "}," +
+                              $"\"serviceAreaCreatedBy\":\"{claim2.ServiceAreaCreatedBy}\"," +
+                              $"\"userCreatedBy\":\"{claim2.UserCreatedBy}\"," +
+                              $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
+                              $"\"retentionExpiresAt\":{formattedRetentionExpiresAt2}," +
+                              $"\"validUntil\":{formattedValidUntil2}," +
+                              $"\"targetId\":\"{claim2.TargetId}\"" +
+                              "}" +
+                            "]," +
+                            "\"paging\":{" +
+                                "\"cursors\":{" +
+                                    "\"before\":\"ewogICJpZCI6ICI0NWEwNGRlOC05YTUyLTQxZDItYTA5ZC1kM2Q2ZjU2NzhjODkiCn0\"," +
+                                    "\"after\":\"ewogICJpZCI6ICJhZTg0MDg0ZC0wYzIwLTQ4MGYtYTg0ZS1lMTMxYTlhODIwYmIiCn0\"" +
+                                "}," +
+                                "\"hasPreviousPage\":false," +
+                                "\"hasNextPage\":true" +
+                            "}" +
+                        "}";
 
             response.StatusCode.Should().Be(200);
             jsonString.Should().BeEquivalentTo(expected);
@@ -387,6 +582,17 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var invalidTargetId = "abc";
 
             var uri = new Uri($"api/v1/claims?targetId={invalidTargetId}", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task Returns400WhenPreviousAndNextPageAreRequested()
+        {
+            var uri = new Uri($"api/v1/claims?targetId={Guid.NewGuid()}&before=aaa&after=bbb", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);

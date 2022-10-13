@@ -45,8 +45,8 @@ namespace DocumentsApi.Tests.V1.UseCase
                 {
                     Cursors = new Cursors
                     {
-                        Before = "eyJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCJ9",
-                        After = "eyJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCJ9"
+                        Before = "ewogICJpZCI6ICIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiCn0",
+                        After = "ewogICJpZCI6ICIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiCn0"
                     },
                     HasPreviousPage = false,
                     HasNextPage = false
@@ -76,7 +76,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         [Test]
         public void ReturnsEmptyCollectionWhenNoClaimsWereFoundForTargetId()
         {
-            _documentsGateway.Setup(x => x.FindPaginatedClaimsByTargetId(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<Guid>(), It.IsAny<bool>())).Returns(new List<Claim>());
+            _documentsGateway.Setup(x => x.FindPaginatedClaimsByTargetId(It.IsAny<Guid>(), It.IsAny<int>(), null, null)).Returns(new List<Claim>());
 
             var request = new PaginatedClaimRequest()
             {
@@ -115,8 +115,8 @@ namespace DocumentsApi.Tests.V1.UseCase
                 {
                     Cursors = new Cursors
                     {
-                        Before = "eyJpZCI6IjQzMTY2MTAyLWZmMjUtNGJkMC1hYzdkLTRmNzAwYTM3MjQxMyJ9",
-                        After = "eyJpZCI6IjQzMTY2MTAyLWZmMjUtNGJkMC1hYzdkLTRmNzAwYTM3MjQxMyJ9"
+                        Before = "ewogICJpZCI6ICI0MzE2NjEwMi1mZjI1LTRiZDAtYWM3ZC00ZjcwMGEzNzI0MTMiCn0",
+                        After = "ewogICJpZCI6ICI0MzE2NjEwMi1mZjI1LTRiZDAtYWM3ZC00ZjcwMGEzNzI0MTMiCn0"
                     },
                     HasPreviousPage = true,
                     HasNextPage = true
@@ -155,8 +155,8 @@ namespace DocumentsApi.Tests.V1.UseCase
                 {
                     Cursors = new Cursors
                     {
-                        Before = "eyJpZCI6IjVhZWMwMmE1LTE1YTQtNDExNi05ZmNmLWI0MzUxNTU4Y2I3MCJ9",
-                        After = "eyJpZCI6IjVhZWMwMmE1LTE1YTQtNDExNi05ZmNmLWI0MzUxNTU4Y2I3MCJ9"
+                        Before = "ewogICJpZCI6ICI1YWVjMDJhNS0xNWE0LTQxMTYtOWZjZi1iNDM1MTU1OGNiNzAiCn0",
+                        After = "ewogICJpZCI6ICI1YWVjMDJhNS0xNWE0LTQxMTYtOWZjZi1iNDM1MTU1OGNiNzAiCn0"
                     },
                     HasPreviousPage = true,
                     HasNextPage = true

@@ -353,8 +353,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/claims?targetId={claim.TargetId}", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var jsonString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<PaginatedClaimResponse>(jsonString);
 
             var formattedCreatedAt = JsonConvert.SerializeObject(claim.CreatedAt);
@@ -452,6 +452,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim2.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   $"\"name\":\"{claim2.Document.Name}\"," +
+                                  $"\"description\":\"{claim2.Document.Description}\"," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +
@@ -538,6 +539,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim1.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt1}," +
                                   $"\"name\":\"{claim1.Document.Name}\"," +
+                                  $"\"description\":\"{claim1.Document.Description}\"," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +
@@ -556,6 +558,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim2.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt2}," +
                                   $"\"name\":\"{claim2.Document.Name}\"," +
+                                  $"\"description\":\"{claim2.Document.Description}\"," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +

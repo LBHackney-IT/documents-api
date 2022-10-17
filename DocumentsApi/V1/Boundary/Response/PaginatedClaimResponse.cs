@@ -12,8 +12,8 @@ namespace DocumentsApi.V1.Boundary.Response
     public class Paging
     {
         public Cursors Cursors { get; set; } = null;
-        public bool HasPreviousPage { get; set; }
-        public bool HasNextPage { get; set; }
+        public bool HasBefore { get; set; }
+        public bool HasAfter { get; set; }
     }
 
     public class Cursors

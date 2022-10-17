@@ -388,8 +388,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                     "\"before\":\"ewogICJpZCI6ICI0NWEwNGRlOC05YTUyLTQxZDItYTA5ZC1kM2Q2ZjU2NzhjODkiCn0\"," +
                                     "\"after\":\"ewogICJpZCI6ICI0NWEwNGRlOC05YTUyLTQxZDItYTA5ZC1kM2Q2ZjU2NzhjODkiCn0\"" +
                                 "}," +
-                                "\"hasPreviousPage\":false," +
-                                "\"hasNextPage\":false" +
+                                "\"hasBefore\":false," +
+                                "\"hasAfter\":false" +
                             "}" +
                         "}";
 
@@ -470,8 +470,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                     "\"before\":\"ewogICJpZCI6ICJhZTg0MDg0ZC0wYzIwLTQ4MGYtYTg0ZS1lMTMxYTlhODIwYmIiCn0\"," +
                                     "\"after\":\"ewogICJpZCI6ICJhZTg0MDg0ZC0wYzIwLTQ4MGYtYTg0ZS1lMTMxYTlhODIwYmIiCn0\"" +
                                 "}," +
-                                "\"hasPreviousPage\":true," +
-                                "\"hasNextPage\":true" +
+                                "\"hasBefore\":true," +
+                                "\"hasAfter\":true" +
                             "}" +
                         "}";
 
@@ -576,8 +576,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                     "\"before\":\"ewogICJpZCI6ICI0NWEwNGRlOC05YTUyLTQxZDItYTA5ZC1kM2Q2ZjU2NzhjODkiCn0\"," +
                                     "\"after\":\"ewogICJpZCI6ICJhZTg0MDg0ZC0wYzIwLTQ4MGYtYTg0ZS1lMTMxYTlhODIwYmIiCn0\"" +
                                 "}," +
-                                "\"hasPreviousPage\":false," +
-                                "\"hasNextPage\":true" +
+                                "\"hasBefore\":false," +
+                                "\"hasAfter\":true" +
                             "}" +
                         "}";
 

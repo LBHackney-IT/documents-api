@@ -36,15 +36,15 @@ namespace DocumentsApi.V1.UseCase
             }
 
             var claims = new List<Claim>();
-            Boolean hasPreviousPage = false;
-            Boolean hasNextPage = false;
+            Boolean hasBefore = false;
+            Boolean hasAfter = false;
 
             if (request.Before == null && request.After == null)
             {
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, null, null);
                 if (claims.Count == request.Limit + 1)
                 {
-                    hasNextPage = true;
+                    hasAfter = true;
                     claims.RemoveAt(claims.Count - 1);
                 }
             }
@@ -54,11 +54,11 @@ namespace DocumentsApi.V1.UseCase
                 var parsedAfter = Base64UrlHelpers.DecodeFromBase64Url(request.After);
                 var decodedNextPageCursorId = Guid.Parse((string) parsedAfter["id"]);
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedNextPageCursorId, isNextPage: true);
-                hasPreviousPage = true;
+                hasBefore = true;
 
                 if (claims.Count == request.Limit + 1)
                 {
-                    hasNextPage = true;
+                    hasAfter = true;
                     claims.RemoveAt(claims.Count - 1);
                 }
             }
@@ -67,11 +67,11 @@ namespace DocumentsApi.V1.UseCase
                 var parsedBefore = Base64UrlHelpers.DecodeFromBase64Url(request.Before);
                 var decodedPreviousPageCursorId = Guid.Parse((string) parsedBefore["id"]);
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedPreviousPageCursorId, isNextPage: false);
-                hasNextPage = true;
+                hasAfter = true;
 
                 if (claims.Count == request.Limit + 1)
                 {
-                    hasPreviousPage = true;
+                    hasBefore = true;
                     claims.RemoveAt(0);
                 }
             }
@@ -92,7 +92,7 @@ namespace DocumentsApi.V1.UseCase
             {
                 claimsResponse.Add(claim.ToResponse());
             }
-            var result = ResponseFactory.ToPaginatedClaimResponse(claimsResponse, before, after, hasPreviousPage, hasNextPage);
+            var result = ResponseFactory.ToPaginatedClaimResponse(claimsResponse, before, after, hasBefore, hasAfter);
             return result;
         }
     }

@@ -73,7 +73,7 @@ namespace DocumentsApi.V1.Factories
             };
         }
 
-        public static PaginatedClaimResponse ToPaginatedClaimResponse(List<ClaimResponse> claims, string before, string after, bool hasPreviousPage, bool hasNextPage)
+        public static PaginatedClaimResponse ToPaginatedClaimResponse(List<ClaimResponse> claims, string before, string after, bool hasBefore, bool hasAfter)
         {
             return new PaginatedClaimResponse
             {
@@ -85,8 +85,8 @@ namespace DocumentsApi.V1.Factories
                         Before = before,
                         After = after
                     },
-                    HasPreviousPage = hasPreviousPage,
-                    HasNextPage = hasNextPage
+                    HasBefore = hasBefore,
+                    HasAfter = hasAfter
                 }
             };
         }

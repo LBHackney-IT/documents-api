@@ -48,8 +48,8 @@ namespace DocumentsApi.Tests.V1.UseCase
                         Before = "ewogICJpZCI6ICIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiCn0",
                         After = "ewogICJpZCI6ICIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiCn0"
                     },
-                    HasPreviousPage = false,
-                    HasNextPage = false
+                    HasBefore = false,
+                    HasAfter = false
                 }
             };
 
@@ -118,8 +118,8 @@ namespace DocumentsApi.Tests.V1.UseCase
                         Before = "ewogICJpZCI6ICI0MzE2NjEwMi1mZjI1LTRiZDAtYWM3ZC00ZjcwMGEzNzI0MTMiCn0",
                         After = "ewogICJpZCI6ICI0MzE2NjEwMi1mZjI1LTRiZDAtYWM3ZC00ZjcwMGEzNzI0MTMiCn0"
                     },
-                    HasPreviousPage = true,
-                    HasNextPage = true
+                    HasBefore = true,
+                    HasAfter = true
                 }
             };
 
@@ -158,8 +158,8 @@ namespace DocumentsApi.Tests.V1.UseCase
                         Before = "ewogICJpZCI6ICI1YWVjMDJhNS0xNWE0LTQxMTYtOWZjZi1iNDM1MTU1OGNiNzAiCn0",
                         After = "ewogICJpZCI6ICI1YWVjMDJhNS0xNWE0LTQxMTYtOWZjZi1iNDM1MTU1OGNiNzAiCn0"
                     },
-                    HasPreviousPage = true,
-                    HasNextPage = true
+                    HasBefore = true,
+                    HasAfter = true
                 }
             };
 

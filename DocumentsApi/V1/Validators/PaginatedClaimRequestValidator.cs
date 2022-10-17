@@ -13,7 +13,7 @@ namespace DocumentsApi.V1.Validators
                 .WithMessage("Please provide either Before or After or none of them");
             RuleFor(x => x.TargetId).NotEmpty().NotNull();
         }
-        
+
         private bool ReceiveOnlyBeforeOrAfter(PaginatedClaimRequest request)
         {
             return (request.Before == null || request.After == null);

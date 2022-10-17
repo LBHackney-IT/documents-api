@@ -32,7 +32,7 @@ namespace DocumentsApi.Tests.V1.Helpers
             var result = Base64UrlHelpers.DecodeFromBase64Url(s);
             result.Should().BeEquivalentTo(JObject.Parse("{\"id\":\"" + $"this-is-my-id" + "\"}"));
         }
-        
+
         [Test]
         public void DecodeThrowsExceptionToMalformedString()
         {

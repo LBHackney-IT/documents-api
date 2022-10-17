@@ -51,8 +51,16 @@ namespace DocumentsApi.V1.UseCase
 
             else if (request.After != null)
             {
-                var parsedAfter = Base64UrlHelpers.DecodeFromBase64Url(request.After);
-                var decodedNextPageCursorId = Guid.Parse((string) parsedAfter["id"]);
+                Guid decodedNextPageCursorId;
+                try
+                {
+                    var parsedAfter = Base64UrlHelpers.DecodeFromBase64Url(request.After);
+                    decodedNextPageCursorId = Guid.Parse((string) parsedAfter["id"]);
+                }
+                catch (Exception e)
+                {
+                    throw new BadRequestException($"Error when trying to decode the base64url: {e.Message}");
+                }
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedNextPageCursorId, isNextPage: true);
                 hasBefore = true;
 

@@ -199,6 +199,10 @@ namespace DocumentsApi.V1.Controllers
             }
             catch (BadRequestException ex)
             {
+                if (ex.ValidationResponse?.Errors == null || ex.ValidationResponse.Errors.Count == 0)
+                {
+                    return BadRequest(ex.Message);
+                }
                 return BadRequest(ex.ValidationResponse.Errors);
             }
         }

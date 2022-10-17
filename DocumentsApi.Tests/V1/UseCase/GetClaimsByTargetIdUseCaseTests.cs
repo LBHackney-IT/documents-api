@@ -74,6 +74,20 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ThrowsErrorWhenUnableToDecodePaginationToken()
+        {
+            var request = new PaginatedClaimRequest()
+            {
+                TargetId = Guid.NewGuid(),
+                Limit = 10,
+                After = "sjkabkjsahkjscxzlcnxzlcnz"
+            };
+
+            Func<PaginatedClaimResponse> testDelegate = () => _classUnderTest.Execute(request);
+            testDelegate.Should().Throw<BadRequestException>();
+        }
+
+        [Test]
         public void ReturnsEmptyCollectionWhenNoClaimsWereFoundForTargetId()
         {
             _documentsGateway.Setup(x => x.FindPaginatedClaimsByTargetId(It.IsAny<Guid>(), It.IsAny<int>(), null, null)).Returns(new List<Claim>());

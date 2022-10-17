@@ -610,9 +610,20 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task Returns400WhenUnableToDecodePaginationToken()
+        public async Task Returns400WhenUnableToDecodeAfterToken()
         {
             var uri = new Uri($"api/v1/claims?targetId={Guid.NewGuid()}&after=sjkabkjsahkjscxzlcnxzlcnz", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task Returns400WhenUnableToDecodeBeforeToken()
+        {
+            var uri = new Uri($"api/v1/claims?targetId={Guid.NewGuid()}&before=sjkabkjsahkjscxzlcnxzlcnz", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);

@@ -59,7 +59,7 @@ namespace DocumentsApi.V1.UseCase
                 }
                 catch (Exception e)
                 {
-                    throw new BadRequestException($"Error when trying to decode the base64url: {e.Message}");
+                    throw new BadRequestException($"Error when trying to decode the 'after' token: {e.Message}");
                 }
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedNextPageCursorId, isNextPage: true);
                 hasBefore = true;
@@ -72,8 +72,16 @@ namespace DocumentsApi.V1.UseCase
             }
             else
             {
-                var parsedBefore = Base64UrlHelpers.DecodeFromBase64Url(request.Before);
-                var decodedPreviousPageCursorId = Guid.Parse((string) parsedBefore["id"]);
+                Guid decodedPreviousPageCursorId;
+                try
+                {
+                    var parsedBefore = Base64UrlHelpers.DecodeFromBase64Url(request.Before);
+                    decodedPreviousPageCursorId = Guid.Parse((string) parsedBefore["id"]);
+                }
+                catch (Exception e)
+                {
+                    throw new BadRequestException($"Error when trying to decode the 'before': {e.Message}");
+                }
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedPreviousPageCursorId, isNextPage: false);
                 hasAfter = true;
 

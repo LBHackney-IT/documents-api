@@ -74,13 +74,27 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsErrorWhenUnableToDecodePaginationToken()
+        public void ThrowsErrorWhenUnableToDecodeAfterToken()
         {
             var request = new PaginatedClaimRequest()
             {
                 TargetId = Guid.NewGuid(),
                 Limit = 10,
                 After = "sjkabkjsahkjscxzlcnxzlcnz"
+            };
+
+            Func<PaginatedClaimResponse> testDelegate = () => _classUnderTest.Execute(request);
+            testDelegate.Should().Throw<BadRequestException>();
+        }
+
+        [Test]
+        public void ThrowsErrorWhenUnableToDecodeBeforeToken()
+        {
+            var request = new PaginatedClaimRequest()
+            {
+                TargetId = Guid.NewGuid(),
+                Limit = 10,
+                Before = "sjkabkjsahkjscxzlcnxzlcnz"
             };
 
             Func<PaginatedClaimResponse> testDelegate = () => _classUnderTest.Execute(request);

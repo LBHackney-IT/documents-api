@@ -102,7 +102,7 @@ namespace DocumentsApi.V1.UseCase
                 var parsedAfter = Base64UrlHelpers.DecodeFromBase64Url(token);
                 decodedTokenCursorId = Guid.Parse((string) parsedAfter["id"]);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new BadRequestException($"Error when trying to decode the pagination token: {e.Message}");
             }

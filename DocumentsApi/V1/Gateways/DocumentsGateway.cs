@@ -6,6 +6,7 @@ using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace DocumentsApi.V1.Gateways
 {
@@ -60,9 +61,47 @@ namespace DocumentsApi.V1.Gateways
             return entity.ToDomain();
         }
 
-        public List<Claim> FindClaimsByTargetId(Guid targetId)
+        public List<Claim> FindPaginatedClaimsByTargetId(Guid targetId, int limit, Guid? cursor, bool? isNextPage)
         {
-            var entities = _databaseContext.Claims.Where(claimEntity => claimEntity.TargetId == targetId).Include(claimEntity => claimEntity.Document);
+            IQueryable<ClaimEntity> entities;
+
+            if (cursor == null)
+            {
+                entities = _databaseContext.Claims
+                    .Where(claimEntity => claimEntity.TargetId == targetId)
+                    .Include(claimEntity => claimEntity.Document)
+                    .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                    .ThenBy(claimEntity => claimEntity.Id)
+                    .Take(limit);
+            }
+            else
+            {
+                if (isNextPage == true)
+                    entities = _databaseContext.Claims
+                        .Where(
+                            claimEntity => claimEntity.TargetId == targetId &&
+                                claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
+                        .Include(claimEntity => claimEntity.Document)
+                        .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                        .ThenBy(claimEntity => claimEntity.Id)
+                        .Take(limit);
+                else
+                {
+                    entities = _databaseContext.Claims
+                        .Where(
+                            claimEntity => claimEntity.TargetId == targetId &&
+                                claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
+                        .Include(claimEntity => claimEntity.Document)
+                        .OrderBy(claimEntity => claimEntity.CreatedAt)
+                        .Take(limit)
+                        .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                        .ThenBy(claimEntity => claimEntity.Id);
+                }
+            }
 
             var claims = new List<Claim>();
             foreach (var entity in entities)

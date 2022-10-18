@@ -58,7 +58,7 @@ out/
 bin/
 .idea/
 tmp/
-.vs/
+.vscode/
 /documents-api.Tests/Properties/launchSettings.json
 /DocumentsApi/V1/Node/node_modules
 /DocumentsApi/python/lambda-orchestrator.zip

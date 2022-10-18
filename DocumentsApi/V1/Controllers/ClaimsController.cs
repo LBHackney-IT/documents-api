@@ -190,16 +190,20 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
         [AuthorizeByGroups("GET_CLAIMS_ALLOWED_GOOGLE_GROUPS")]
-        public IActionResult GetClaimsByTargetId([FromQuery] Guid targetId)
+        public IActionResult GetClaimsByTargetId([FromQuery] PaginatedClaimRequest request)
         {
             try
             {
-                var result = _getClaimsByTargetIdUseCase.Execute(targetId);
+                var result = _getClaimsByTargetIdUseCase.Execute(request);
                 return Ok(result);
             }
             catch (BadRequestException ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.ValidationResponse?.Errors == null || ex.ValidationResponse.Errors.Count == 0)
+                {
+                    return BadRequest(ex.Message);
+                }
+                return BadRequest(ex.ValidationResponse.Errors);
             }
         }
     }

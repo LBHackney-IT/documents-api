@@ -1,6 +1,7 @@
 using DocumentsApi.V1.Boundary.Response;
 using DocumentsApi.V1.Domain;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 
 namespace DocumentsApi.V1.Factories
 {
@@ -69,6 +70,24 @@ namespace DocumentsApi.V1.Factories
                 ValidUntil = claim.ValidUntil,
                 TargetId = claim.TargetId,
                 S3UploadPolicy = s3UploadPolicy
+            };
+        }
+
+        public static PaginatedClaimResponse ToPaginatedClaimResponse(List<ClaimResponse> claims, string before, string after, bool hasBefore, bool hasAfter)
+        {
+            return new PaginatedClaimResponse
+            {
+                Claims = claims,
+                Paging = new Paging()
+                {
+                    Cursors = new Cursors()
+                    {
+                        Before = before,
+                        After = after
+                    },
+                    HasBefore = hasBefore,
+                    HasAfter = hasAfter
+                }
             };
         }
     }

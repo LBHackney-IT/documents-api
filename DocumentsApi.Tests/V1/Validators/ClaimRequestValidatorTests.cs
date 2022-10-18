@@ -131,22 +131,11 @@ namespace DocumentsApi.Tests.V1.Validators
             _classUnderTest.Validate(request).IsValid.Should().BeFalse();
         }
 
-
-        [Test]
-        public void AcceptsWhenTargetTypeIsNull(string value)
-        {
-            var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.TargetType, value)
-                .Create();
-
-            _classUnderTest.Validate(request).IsValid.Should().BeTrue();
-        }
         [Test]
         public void FailsWhenTargetTypeIsLessThanOneCharacter()
         {
-            var targetTypeLessThanOneCharacter = "";
             var request = _fixture.Build<ClaimRequest>()
-                .With(x => x.TargetType, targetTypeLessThanOneCharacter)
+                .With(x => x.TargetType, "")
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeFalse();

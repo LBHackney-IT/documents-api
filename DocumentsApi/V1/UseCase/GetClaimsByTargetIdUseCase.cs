@@ -51,16 +51,7 @@ namespace DocumentsApi.V1.UseCase
 
             else if (request.After != null)
             {
-                Guid decodedNextPageCursorId;
-                try
-                {
-                    var parsedAfter = Base64UrlHelpers.DecodeFromBase64Url(request.After);
-                    decodedNextPageCursorId = Guid.Parse((string) parsedAfter["id"]);
-                }
-                catch (Exception e)
-                {
-                    throw new BadRequestException($"Error when trying to decode the 'after' token: {e.Message}");
-                }
+                var decodedNextPageCursorId = DecodePaginationToken(request.After);
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedNextPageCursorId, isNextPage: true);
                 hasBefore = true;
 
@@ -72,16 +63,7 @@ namespace DocumentsApi.V1.UseCase
             }
             else
             {
-                Guid decodedPreviousPageCursorId;
-                try
-                {
-                    var parsedBefore = Base64UrlHelpers.DecodeFromBase64Url(request.Before);
-                    decodedPreviousPageCursorId = Guid.Parse((string) parsedBefore["id"]);
-                }
-                catch (Exception e)
-                {
-                    throw new BadRequestException($"Error when trying to decode the 'before': {e.Message}");
-                }
+                var decodedPreviousPageCursorId = DecodePaginationToken(request.Before);
                 claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedPreviousPageCursorId, isNextPage: false);
                 hasAfter = true;
 
@@ -110,6 +92,21 @@ namespace DocumentsApi.V1.UseCase
             }
             var result = ResponseFactory.ToPaginatedClaimResponse(claimsResponse, before, after, hasBefore, hasAfter);
             return result;
+        }
+
+        private static Guid DecodePaginationToken(string token)
+        {
+            Guid decodedTokenCursorId;
+            try
+            {
+                var parsedAfter = Base64UrlHelpers.DecodeFromBase64Url(token);
+                decodedTokenCursorId = Guid.Parse((string) parsedAfter["id"]);
+            }
+            catch(Exception e)
+            {
+                throw new BadRequestException($"Error when trying to decode the pagination token: {e.Message}");
+            }
+            return decodedTokenCursorId;
         }
     }
 }

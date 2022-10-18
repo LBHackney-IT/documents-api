@@ -16,6 +16,5 @@ namespace DocumentsApi.V1.Boundary.Response
         public Guid? TargetId { get; set; } = null;
         public S3UploadPolicy S3UploadPolicy { get; set; }
         public string TargetType { get; set; }
-
     }
 }

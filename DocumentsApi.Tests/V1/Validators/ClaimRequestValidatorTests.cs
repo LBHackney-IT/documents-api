@@ -133,7 +133,6 @@ namespace DocumentsApi.Tests.V1.Validators
 
 
         [Test]
-        [TestCase(null)]
         public void AcceptsWhenTargetTypeIsNull(string value)
         {
             var request = _fixture.Build<ClaimRequest>()
@@ -141,6 +140,16 @@ namespace DocumentsApi.Tests.V1.Validators
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();
+        }
+        [Test]
+        public void FailsWhenTargetTypeIsLessThanOneCharacter()
+        {
+            var targetTypeLessThanOneCharacter = "";
+            var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.TargetType, targetTypeLessThanOneCharacter)
+                .Create();
+
+            _classUnderTest.Validate(request).IsValid.Should().BeFalse();
         }
         [Test]
         public void FailsWhenTargetTypeIsOver50Character()

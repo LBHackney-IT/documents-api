@@ -14,7 +14,6 @@ namespace DocumentsApi.V1.Boundary.Response
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
         public Guid? TargetId { get; set; } = null;
-
         public string TargetType { get; set; }
     }
 }

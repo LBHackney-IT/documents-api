@@ -1,6 +1,7 @@
 using System;
 using DocumentsApi.V1.Boundary.Request;
 using FluentValidation;
+using Hackney.Core.Enums;
 
 namespace DocumentsApi.V1.Validators
 {
@@ -14,7 +15,7 @@ namespace DocumentsApi.V1.Validators
             RuleFor(x => x.RetentionExpiresAt).NotNull().GreaterThan(DateTime.UtcNow);
             RuleFor(x => x.DocumentName).MinimumLength(1).MaximumLength(300);
             RuleFor(x => x.DocumentDescription).MinimumLength(1).MaximumLength(1000);
-            RuleFor(x => x.TargetType).MinimumLength(1).MaximumLength(50);
+            RuleFor(x => x.TargetType).IsTargetType();
         }
     }
 }

@@ -466,7 +466,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              $"\"targetId\":\"{claim2.TargetId}\"" +
+                              $"\"targetId\":\"{claim2.TargetId}\"," +
+                              $"\"targetType\":\"{claim2.TargetType}\"" +
                               "}" +
                             "]," +
                             "\"paging\":{" +
@@ -553,7 +554,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim1.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt1}," +
                               $"\"validUntil\":{formattedValidUntil1}," +
-                              $"\"targetId\":\"{claim1.TargetId}\"" +
+                              $"\"targetId\":\"{claim1.TargetId}\"," +
                               $"\"targetType\":\"{claim1.TargetType}\"" +
                               "}," +
                               "{" +
@@ -573,8 +574,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt2}," +
                               $"\"validUntil\":{formattedValidUntil2}," +
-                              $"\"targetId\":\"{claim2.TargetId}\"" +
-                              $"\"targetType\":\"{claim1.TargetType}\"" +
+                              $"\"targetId\":\"{claim2.TargetId}\"," +
+                              $"\"targetType\":\"{claim2.TargetType}\"" +
                               "}" +
                             "]," +
                             "\"paging\":{" +

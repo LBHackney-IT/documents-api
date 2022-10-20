@@ -554,6 +554,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt1}," +
                               $"\"validUntil\":{formattedValidUntil1}," +
                               $"\"targetId\":\"{claim1.TargetId}\"" +
+                              $"\"targetType\":\"{claim1.TargetType}\"" +
                               "}," +
                               "{" +
                               $"\"id\":\"{claim2.Id}\"," +
@@ -573,6 +574,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt2}," +
                               $"\"validUntil\":{formattedValidUntil2}," +
                               $"\"targetId\":\"{claim2.TargetId}\"" +
+                              $"\"targetType\":\"{claim1.TargetType}\"" +
                               "}" +
                             "]," +
                             "\"paging\":{" +

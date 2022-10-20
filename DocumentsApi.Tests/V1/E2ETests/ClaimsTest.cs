@@ -29,6 +29,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 "\"apiCreatedBy\": \"evidence-api\"," +
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
+                "\"targetType\": \"person\"," +
                 "\"targetId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
                 "\"documentName\": \"Some name\"," +
                 "\"documentDescription\": \"Some description\"" +
@@ -62,7 +63,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"apiCreatedBy\":\"evidence-api\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              "\"targetId\":\"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"" +
+                              "\"targetId\":\"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
+                              "\"targetType\":\"person\"" +
                               "}";
 
             json.Should().Be(expected);
@@ -111,7 +113,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"apiCreatedBy\":\"evidence-api\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              "\"targetId\":null" +
+                              "\"targetId\":null," +
+                              "\"targetType\":null" +
                               "}";
 
             json.Should().Be(expected);
@@ -380,7 +383,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              $"\"targetId\":\"{claim.TargetId}\"" +
+                              $"\"targetId\":\"{claim.TargetId}\"," +
+                              $"\"targetType\":\"{claim.TargetType}\"" +
                               "}" +
                             "]," +
                             "\"paging\":{" +
@@ -462,7 +466,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              $"\"targetId\":\"{claim2.TargetId}\"" +
+                              $"\"targetId\":\"{claim2.TargetId}\"," +
+                              $"\"targetType\":\"{claim2.TargetType}\"" +
                               "}" +
                             "]," +
                             "\"paging\":{" +
@@ -549,7 +554,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim1.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt1}," +
                               $"\"validUntil\":{formattedValidUntil1}," +
-                              $"\"targetId\":\"{claim1.TargetId}\"" +
+                              $"\"targetId\":\"{claim1.TargetId}\"," +
+                              $"\"targetType\":\"{claim1.TargetType}\"" +
                               "}," +
                               "{" +
                               $"\"id\":\"{claim2.Id}\"," +
@@ -568,7 +574,8 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt2}," +
                               $"\"validUntil\":{formattedValidUntil2}," +
-                              $"\"targetId\":\"{claim2.TargetId}\"" +
+                              $"\"targetId\":\"{claim2.TargetId}\"," +
+                              $"\"targetType\":\"{claim2.TargetType}\"" +
                               "}" +
                             "]," +
                             "\"paging\":{" +

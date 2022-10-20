@@ -44,5 +44,8 @@ namespace DocumentsApi.V1.Infrastructure
 
         [Column("target_id")]
         public Guid? TargetId { get; set; } = null;
+
+        [Column("target_type")]
+        public string TargetType { get; set; }
     }
 }

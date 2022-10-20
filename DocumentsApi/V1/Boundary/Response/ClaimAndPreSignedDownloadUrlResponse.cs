@@ -17,5 +17,6 @@ namespace DocumentsApi.V1.Boundary.Response
         public DateTime ValidUntil { get; set; }
         public Guid? TargetId { get; set; } = null;
         public string PreSignedDownloadUrl { get; set; }
+        public string TargetType { get; set; }
     }
 }

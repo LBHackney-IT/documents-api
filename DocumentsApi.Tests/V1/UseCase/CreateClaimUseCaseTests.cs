@@ -35,6 +35,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             var request = _fixture.Build<ClaimRequest>()
                 .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(1))
+                .With(x => x.TargetType, "person")
                 .Create();
 
             Func<ClaimResponse> execute = () => _classUnderTest.Execute(request);
@@ -48,6 +49,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         public void ReturnsAClaimResponse()
         {
             var request = _fixture.Build<ClaimRequest>()
+                .With(x => x.TargetType, "person")
                 .With(x => x.RetentionExpiresAt, DateTime.UtcNow.AddDays(1))
                 .Create();
 

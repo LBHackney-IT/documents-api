@@ -147,7 +147,7 @@ namespace DocumentsApi.Tests.V1.Validators
         {
             var request = _fixture.Build<ClaimRequest>()
                 .With(x => x.RetentionExpiresAt, _validRetentionDate)
-                .With(x => x.TargetType, "person")
+                .With(x => x.TargetType, "process")
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();

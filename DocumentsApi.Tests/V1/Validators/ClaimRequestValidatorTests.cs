@@ -116,7 +116,7 @@ namespace DocumentsApi.Tests.V1.Validators
             var requestWithValidDescription = _fixture.Build<ClaimRequest>()
                 .With(x => x.DocumentDescription, validDescription)
                 .With(x => x.RetentionExpiresAt, _validRetentionDate)
-                .With(x => x.TargetType, "person")
+                .With(x => x.TargetType, "Person")
                 .Create();
 
             _classUnderTest.Validate(requestWithValidDescription).IsValid.Should().BeTrue();
@@ -147,7 +147,7 @@ namespace DocumentsApi.Tests.V1.Validators
         {
             var request = _fixture.Build<ClaimRequest>()
                 .With(x => x.RetentionExpiresAt, _validRetentionDate)
-                .With(x => x.TargetType, "process")
+                .With(x => x.TargetType, "Process")
                 .Create();
 
             _classUnderTest.Validate(request).IsValid.Should().BeTrue();

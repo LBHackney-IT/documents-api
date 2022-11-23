@@ -53,7 +53,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"name\":\"Some name\"," +
-                                  "\"description\":\"Some description\"," +
+                                  "\"documentDescription\":\"Some description\"," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -103,7 +103,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   "\"name\":\"Some name\"," +
-                                  "\"description\":null," +
+                                  "\"documentDescription\":null," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -283,7 +283,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(201);
             responseAsObject.ClaimId.Should().NotBeEmpty();
             responseAsObject.Document.Name.Should().Be("some-name");
-            responseAsObject.Document.Description.Should().Be("some-description");
+            responseAsObject.Document.DocumentDescription.Should().Be("some-description");
             responseAsObject.S3UploadPolicy.Url.Should().NotBeNull();
         }
 
@@ -373,7 +373,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   $"\"name\":\"{claim.Document.Name}\"," +
-                                  $"\"description\":\"{claim.Document.Description}\"," +
+                                  $"\"documentDescription\":\"{claim.Document.Description}\"," +
                                   "\"fileSize\":0," +
                                   "\"fileType\":null," +
                                   "\"uploadedAt\":null" +
@@ -456,7 +456,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim2.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt}," +
                                   $"\"name\":\"{claim2.Document.Name}\"," +
-                                  $"\"description\":\"{claim2.Document.Description}\"," +
+                                  $"\"documentDescription\":\"{claim2.Document.Description}\"," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +
@@ -544,7 +544,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim1.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt1}," +
                                   $"\"name\":\"{claim1.Document.Name}\"," +
-                                  $"\"description\":\"{claim1.Document.Description}\"," +
+                                  $"\"documentDescription\":\"{claim1.Document.Description}\"," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +
@@ -564,7 +564,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                                   $"\"id\":\"{claim2.Document.Id}\"," +
                                   $"\"createdAt\":{formattedDocumentCreatedAt2}," +
                                   $"\"name\":\"{claim2.Document.Name}\"," +
-                                  $"\"description\":\"{claim2.Document.Description}\"," +
+                                  $"\"documentDescription\":\"{claim2.Document.Description}\"," +
                                   $"\"fileSize\":0," +
                                   $"\"fileType\":null," +
                                   $"\"uploadedAt\":null" +

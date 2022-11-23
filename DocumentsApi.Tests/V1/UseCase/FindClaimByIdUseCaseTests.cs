@@ -30,7 +30,8 @@ namespace DocumentsApi.Tests.V1.UseCase
 
             var result = _classUnderTest.Execute(found.Id);
 
-            result.Should().BeEquivalentTo(found, opts => opts.Excluding(c => c.Document.Uploaded).Excluding(c => c.Expired));
+            result.Should().BeEquivalentTo(found, opts => opts.Excluding(c => c.Document.Uploaded).Excluding(c => c.Expired).Excluding(c => c.Document.Description));
+            result.Document.DocumentDescription.Should().Be(found.Document.Description);
             result.Should().BeOfType<ClaimResponse>();
 
             _documentsGateway.VerifyAll();

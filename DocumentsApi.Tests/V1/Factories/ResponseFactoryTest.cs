@@ -23,7 +23,7 @@ namespace DocumentsApi.Tests.V1.Factories
             var response = claim.ToResponse();
 
             response.Should().BeEquivalentTo(claim, opt => opt.Excluding(x => x.Document.Uploaded).Excluding(x => x.Expired).Excluding(x => x.Document.Description));
-            response.Document.DocumentDescription.Should().Be(claim.Document.Description);
+            response.Document.Description.Should().Be(claim.Document.Description);
         }
 
         [Test]

@@ -56,7 +56,7 @@ namespace DocumentsApi.Tests.V1.UseCase
             var result = _classUnderTest.Execute(request);
 
             result.Should().BeEquivalentTo(_claim, opt => opt.Excluding(x => x.Document.Uploaded).Excluding(x => x.Expired).Excluding(x => x.Document.Description));
-            result.Document.DocumentDescription.Should().Be(_claim.Document.Description);
+            result.Document.Description.Should().Be(_claim.Document.Description);
         }
 
         [Test]

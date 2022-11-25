@@ -1,7 +1,7 @@
 service: documents-api
 provider:
   name: aws
-  runtime: dotnetcore3.1
+  runtime: dotnet6
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
@@ -39,7 +39,7 @@ provider:
             AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
 
 package:
-  artifact: ./bin/release/netcoreapp3.1/documents-api.zip
+  artifact: ./bin/release/net6.0/documents-api.zip
   individually: true
 
 functions:

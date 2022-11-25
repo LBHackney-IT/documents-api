@@ -14,6 +14,7 @@ public class GlobalSetup
         try
         {
             DotEnv.Load();
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
         catch
         {

@@ -4,8 +4,8 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 ## Stack
 
--   .NET Core v3.1 as a web framework.
--   nUnit v3.11 as a test framework.
+-   .NET 6.0 as a web framework.
+-   nUnit v3.12 as a test framework.
 
 ## What does it do?
 

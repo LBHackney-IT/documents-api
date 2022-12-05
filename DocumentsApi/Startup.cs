@@ -43,7 +43,6 @@ namespace DocumentsApi
                 {
                     c.Filters.Add<HandleExceptionAttribute>();
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddFluentValidation();
 
             var apiVersions = new List<ApiVersion>();
@@ -122,11 +121,8 @@ namespace DocumentsApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            var success = DotEnv.AutoConfig(5);
-            if (success)
-            {
-                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
-            }
+            DotEnv.Load();
+            Console.WriteLine("LOADED ENVIRONMENT FROM .env");
 
             services.AddTokenFactory()
                 .AddHttpContextWrapper();

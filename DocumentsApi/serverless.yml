@@ -48,7 +48,7 @@ functions:
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     package:
-      artifact: ./bin/release/netcoreapp3.1/documents-api.zip
+      artifact: ./bin/release/net6.0/documents-api.zip
     layers:
       - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
     events:
@@ -66,7 +66,7 @@ functions:
     handler: DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated
     role: lambdaExecutionRole
     package:
-      artifact: ./bin/release/netcoreapp3.1/documents-api.zip
+      artifact: ./bin/release/net6.0/documents-api.zip
   DocumentsOrchestrator:
     runtime: python3.7
     name: ${self:service}-documents-orchestrator

@@ -18,6 +18,8 @@ namespace DocumentsApi
             var serviceCollection = new ServiceCollection();
             ServiceConfigurator.ConfigureServices(serviceCollection);
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }
 

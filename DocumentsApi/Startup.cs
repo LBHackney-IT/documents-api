@@ -124,6 +124,8 @@ namespace DocumentsApi
             DotEnv.Load();
             Console.WriteLine("LOADED ENVIRONMENT FROM .env");
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             services.AddTokenFactory()
                 .AddHttpContextWrapper();
 

@@ -121,7 +121,7 @@ namespace DocumentsApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            DotEnv.Load();
+            DotEnv.Fluent().WithEnvFiles(Path.Combine(Directory.GetCurrentDirectory(), "../.env")).Load();
             Console.WriteLine("LOADED ENVIRONMENT FROM .env");
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

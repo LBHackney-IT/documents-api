@@ -42,6 +42,9 @@ package:
   artifact: ./bin/release/net6.0/documents-api.zip
   individually: true
 
+plugins:
+  - serverless-plugin-lambda-insights
+
 functions:
   DocumentsApi:
     name: ${self:service}

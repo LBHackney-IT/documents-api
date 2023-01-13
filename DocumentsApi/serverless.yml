@@ -42,10 +42,14 @@ package:
   artifact: ./bin/release/net6.0/documents-api.zip
   individually: true
 
+plugins:
+  - serverless-plugin-lambda-insights
+
 functions:
   DocumentsApi:
     name: ${self:service}
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
+    lambdaInsights: true
     role: lambdaExecutionRole
     package:
       artifact: ./bin/release/net6.0/documents-api.zip
@@ -64,6 +68,7 @@ functions:
   DocumentsMalwareScanSuccessfulFunction:
     name: ${self:service}-malware-scan-successful
     handler: DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated
+    lambdaInsights: true
     role: lambdaExecutionRole
     package:
       artifact: ./bin/release/net6.0/documents-api.zip
@@ -71,6 +76,7 @@ functions:
     runtime: python3.7
     name: ${self:service}-documents-orchestrator
     handler: lambda-orchestrator.lambda_handler
+    lambdaInsights: true
     package:
       artifact: ./python/lambda-orchestrator.zip
     role: lambdaExecutionRole

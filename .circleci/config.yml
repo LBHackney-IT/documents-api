@@ -72,6 +72,7 @@ commands:
           name: Deploy lambda
           command: |
             cd ./DocumentsApi/
+            npm install --save-dev serverless-plugin-lambda-insights
             sls deploy --stage <<parameters.stage>> --conceal
   publish-to-swaggerhub:
     description: "Publishes API docs to SwaggerHub"
@@ -105,7 +106,7 @@ commands:
       - setup_remote_docker
       - run:
           name: Install Unzip
-          command: apt-get update && apt-get install unzip          
+          command: apt-get update && apt-get install unzip
       - run:
           name: Install ssh
           command: apt-get update && apt-get install -y --no-install-recommends ssh-client && rm -rf /var/lib/apt/lists/*

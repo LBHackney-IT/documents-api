@@ -11,7 +11,7 @@ namespace DocumentsApi.V1.Validators
                 .Must(ReceiveOnlyBeforeOrAfter)
                 .WithName("Before/After")
                 .WithMessage("Please provide either Before or After or none of them");
-            RuleFor(x => x.TargetId).NotEmpty().NotNull();
+            RuleFor(x => x.GroupId).NotEmpty().NotNull();
         }
 
         private bool ReceiveOnlyBeforeOrAfter(PaginatedClaimRequest request)

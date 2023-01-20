@@ -30,7 +30,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                 $"\"retentionExpiresAt\": {formattedRetentionExpiresAt}," +
                 $"\"validUntil\": {formattedValidUntil}," +
                 "\"targetType\": \"Person\"," +
-                "\"GroupId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
+                "\"groupId\": \"eaed0ee5-d88c-4cf1-9df9-268a24ea0450\"," +
                 "\"documentName\": \"Some name\"," +
                 "\"documentDescription\": \"Some description\"" +
                 "}";
@@ -113,7 +113,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               "\"apiCreatedBy\":\"evidence-api\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              "\"GroupId\":null," +
+                              "\"groupId\":null," +
                               "\"targetType\":null" +
                               "}";
 

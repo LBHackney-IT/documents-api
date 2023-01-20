@@ -47,7 +47,7 @@ namespace DocumentsApi
             services.AddScoped<IGetClaimAndPreSignedDownloadUrlUseCase, GetClaimAndPreSignedDownloadUrlUseCase>();
             services.AddScoped<ICreateUploadPolicyUseCase, CreateUploadPolicyUseCase>();
             services.AddScoped<IGeneratePreSignedDownloadUrlUseCase, GeneratePreSignedDownloadUrlUseCase>();
-            services.AddScoped<IGetClaimsByTargetIdUseCase, GetClaimsByTargetIdUseCase>();
+            services.AddScoped<IGetClaimsByGroupIdUseCase, GetClaimsByGroupIdUseCase>();
         }
     }
 }

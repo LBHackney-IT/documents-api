@@ -353,7 +353,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             DatabaseContext.Add(claim.Document);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/claims?GroupId={claim.GroupId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={claim.GroupId}", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri);
@@ -383,7 +383,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              $"\"GroupId\":\"{claim.GroupId}\"," +
+                              $"\"groupId\":\"{claim.GroupId}\"," +
                               $"\"targetType\":\"{claim.TargetType}\"" +
                               "}" +
                             "]," +
@@ -436,7 +436,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             DatabaseContext.Add(claim3.Document);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/claims?GroupId={groupId}&limit=1&after=ew0KICAgICJpZCI6IjQ1YTA0ZGU4LTlhNTItNDFkMi1hMDlkLWQzZDZmNTY3OGM4OSINCn0", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={groupId}&limit=1&after=ew0KICAgICJpZCI6IjQ1YTA0ZGU4LTlhNTItNDFkMi1hMDlkLWQzZDZmNTY3OGM4OSINCn0", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
@@ -466,7 +466,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                               $"\"validUntil\":{formattedValidUntil}," +
-                              $"\"GroupId\":\"{claim2.GroupId}\"," +
+                              $"\"groupId\":\"{claim2.GroupId}\"," +
                               $"\"targetType\":\"{claim2.TargetType}\"" +
                               "}" +
                             "]," +
@@ -519,7 +519,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
             DatabaseContext.Add(claim3.Document);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/claims?GroupId={groupId}&limit=2&before=ew0KICAiaWQiOiJkZmZiZTdhNy1mMjdjLTRlYzQtYmVhMy00MGI1Nzg5OWM4ZGQiDQp9", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={groupId}&limit=2&before=ew0KICAiaWQiOiJkZmZiZTdhNy1mMjdjLTRlYzQtYmVhMy00MGI1Nzg5OWM4ZGQiDQp9", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
@@ -554,7 +554,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim1.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt1}," +
                               $"\"validUntil\":{formattedValidUntil1}," +
-                              $"\"GroupId\":\"{claim1.GroupId}\"," +
+                              $"\"groupId\":\"{claim1.GroupId}\"," +
                               $"\"targetType\":\"{claim1.TargetType}\"" +
                               "}," +
                               "{" +
@@ -574,7 +574,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
                               $"\"apiCreatedBy\":\"{claim2.ApiCreatedBy}\"," +
                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt2}," +
                               $"\"validUntil\":{formattedValidUntil2}," +
-                              $"\"GroupId\":\"{claim2.GroupId}\"," +
+                              $"\"groupId\":\"{claim2.GroupId}\"," +
                               $"\"targetType\":\"{claim2.TargetType}\"" +
                               "}" +
                             "]," +
@@ -597,7 +597,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         {
             var invalidGroupId = "abc";
 
-            var uri = new Uri($"api/v1/claims?GroupId={invalidGroupId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={invalidGroupId}", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri);
@@ -608,7 +608,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         [Test]
         public async Task Returns400WhenPreviousAndNextPageAreRequested()
         {
-            var uri = new Uri($"api/v1/claims?GroupId={Guid.NewGuid()}&before=aaa&after=bbb", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={Guid.NewGuid()}&before=aaa&after=bbb", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
@@ -630,7 +630,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         [Test]
         public async Task Returns400WhenUnableToDecodeBeforeToken()
         {
-            var uri = new Uri($"api/v1/claims?GroupId={Guid.NewGuid()}&before=sjkabkjsahkjscxzlcnxzlcnz", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={Guid.NewGuid()}&before=sjkabkjsahkjscxzlcnxzlcnz", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
@@ -643,7 +643,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         {
             var groupId = "c585f2d3-69c8-4a5e-b74f-c0570665c2d8";
 
-            var uri = new Uri($"api/v1/claims?GroupId={groupId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={groupId}", UriKind.Relative);
 
             var response = await Client.GetAsync(uri);
 

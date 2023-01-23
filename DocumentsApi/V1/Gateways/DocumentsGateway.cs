@@ -61,14 +61,14 @@ namespace DocumentsApi.V1.Gateways
             return entity.ToDomain();
         }
 
-        public List<Claim> FindPaginatedClaimsByTargetId(Guid targetId, int limit, Guid? cursor, bool? isNextPage)
+        public List<Claim> FindPaginatedClaimsByGroupId(Guid groupId, int limit, Guid? cursor, bool? isNextPage)
         {
             IQueryable<ClaimEntity> entities;
 
             if (cursor == null)
             {
                 entities = _databaseContext.Claims
-                    .Where(claimEntity => claimEntity.TargetId == targetId)
+                    .Where(claimEntity => claimEntity.GroupId == groupId)
                     .Include(claimEntity => claimEntity.Document)
                     .OrderByDescending(claimEntity => claimEntity.CreatedAt)
                     .ThenBy(claimEntity => claimEntity.Id)
@@ -79,10 +79,10 @@ namespace DocumentsApi.V1.Gateways
                 if (isNextPage == true)
                     entities = _databaseContext.Claims
                         .Where(
-                            claimEntity => claimEntity.TargetId == targetId &&
-                                claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
-                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
-                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
+                            claimEntity => claimEntity.GroupId == groupId &&
+                                           claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                           (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                            claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
                         .Include(claimEntity => claimEntity.Document)
                         .OrderByDescending(claimEntity => claimEntity.CreatedAt)
                         .ThenBy(claimEntity => claimEntity.Id)
@@ -91,7 +91,7 @@ namespace DocumentsApi.V1.Gateways
                 {
                     entities = _databaseContext.Claims
                         .Where(
-                            claimEntity => claimEntity.TargetId == targetId &&
+                            claimEntity => claimEntity.GroupId == groupId &&
                                 claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
                                 (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
                                 claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))

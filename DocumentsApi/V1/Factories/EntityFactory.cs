@@ -32,7 +32,7 @@ namespace DocumentsApi.V1.Factories
                 ServiceAreaCreatedBy = domain.ServiceAreaCreatedBy,
                 RetentionExpiresAt = domain.RetentionExpiresAt,
                 ValidUntil = domain.ValidUntil,
-                TargetId = domain.TargetId,
+                GroupId = domain.GroupId,
                 TargetType = domain.TargetType
             };
         }

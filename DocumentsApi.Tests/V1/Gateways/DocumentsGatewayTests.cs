@@ -122,17 +122,17 @@ namespace DocumentsApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void CanFindPaginatedClaimsByTargetIdIfCursorIsNull()
+        public void CanFindPaginatedClaimsByGroupIdIfCursorIsNull()
         {
-            var targetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            var groupId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
             claimEntity1.Id = new Guid("381a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity2.Id = new Guid("51907ce4-2d4a-4466-a5d7-f2668623b49f");
             claimEntity1.CreatedAt = DateTime.UtcNow;
             claimEntity2.CreatedAt = claimEntity1.CreatedAt; //same date to demonstrate that it's picked up because of different ids
-            claimEntity1.TargetId = targetId;
-            claimEntity2.TargetId = targetId;
+            claimEntity1.GroupId = groupId;
+            claimEntity2.GroupId = groupId;
             DatabaseContext.Add(claimEntity1);
             DatabaseContext.Add(claimEntity2);
             DatabaseContext.SaveChanges();
@@ -143,21 +143,21 @@ namespace DocumentsApi.Tests.V1.Gateways
                 claimEntity2.ToDomain()
             };
 
-            var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 10, null, null);
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(groupId, 10, null, null);
 
             found.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Test]
-        public void CanFindNextPaginatedClaimsByTargetId()
+        public void CanFindNextPaginatedClaimsByGroupId()
         {
-            var targetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            var groupId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity3 = TestDataHelper.CreateClaim().ToEntity();
-            claimEntity1.TargetId = targetId;
-            claimEntity2.TargetId = targetId;
-            claimEntity3.TargetId = targetId;
+            claimEntity1.GroupId = groupId;
+            claimEntity2.GroupId = groupId;
+            claimEntity3.GroupId = groupId;
             claimEntity1.Id = new Guid("381a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity2.Id = new Guid("51907ce4-2d4a-4466-a5d7-f2668623b49f");
             claimEntity1.CreatedAt = DateTime.UtcNow;
@@ -174,21 +174,21 @@ namespace DocumentsApi.Tests.V1.Gateways
                 claimEntity2.ToDomain()
             };
 
-            var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 3, claimEntity3.Id, true);
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(groupId, 3, claimEntity3.Id, true);
 
             found.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Test]
-        public void CanFindPreviousPaginatedClaimsByTargetId()
+        public void CanFindPreviousPaginatedClaimsByGroupId()
         {
-            var targetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            var groupId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity3 = TestDataHelper.CreateClaim().ToEntity();
-            claimEntity1.TargetId = targetId;
-            claimEntity2.TargetId = targetId;
-            claimEntity3.TargetId = targetId;
+            claimEntity1.GroupId = groupId;
+            claimEntity2.GroupId = groupId;
+            claimEntity3.GroupId = groupId;
             claimEntity1.Id = new Guid("381a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity2.Id = new Guid("51907ce4-2d4a-4466-a5d7-f2668623b49f");
             claimEntity1.CreatedAt = DateTime.UtcNow;
@@ -206,7 +206,7 @@ namespace DocumentsApi.Tests.V1.Gateways
 
             };
 
-            var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 3, claimEntity3.Id, false);
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(groupId, 3, claimEntity3.Id, false);
 
             found.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
@@ -214,13 +214,13 @@ namespace DocumentsApi.Tests.V1.Gateways
         [Test]
         public void CanFindNextPageWhenRecordsHaveSameDateAsCursor()
         {
-            var targetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            var groupId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity3 = TestDataHelper.CreateClaim().ToEntity();
-            claimEntity1.TargetId = targetId;
-            claimEntity2.TargetId = targetId;
-            claimEntity3.TargetId = targetId;
+            claimEntity1.GroupId = groupId;
+            claimEntity2.GroupId = groupId;
+            claimEntity3.GroupId = groupId;
             claimEntity1.Id = new Guid("381a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity2.Id = new Guid("51907ce4-2d4a-4466-a5d7-f2668623b49f");
             claimEntity3.Id = new Guid("781a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
@@ -239,7 +239,7 @@ namespace DocumentsApi.Tests.V1.Gateways
 
             };
 
-            var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 3, claimEntity3.Id, false);
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(groupId, 3, claimEntity3.Id, false);
 
             found.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
@@ -247,13 +247,13 @@ namespace DocumentsApi.Tests.V1.Gateways
         [Test]
         public void CanFindPreviousPageWhenRecordsHaveSameDateAsCursor()
         {
-            var targetId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            var groupId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
             var claimEntity3 = TestDataHelper.CreateClaim().ToEntity();
-            claimEntity1.TargetId = targetId;
-            claimEntity2.TargetId = targetId;
-            claimEntity3.TargetId = targetId;
+            claimEntity1.GroupId = groupId;
+            claimEntity2.GroupId = groupId;
+            claimEntity3.GroupId = groupId;
             claimEntity1.Id = new Guid("381a6cbf-fef4-403d-85a5-ab48b2a2ccb2");
             claimEntity2.Id = new Guid("51907ce4-2d4a-4466-a5d7-f2668623b49f");
             claimEntity3.Id = new Guid("71907ce4-2d4a-4466-a5d7-f2668623b49f");
@@ -271,28 +271,28 @@ namespace DocumentsApi.Tests.V1.Gateways
                 claimEntity2.ToDomain()
             };
 
-            var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 3, claimEntity3.Id, false);
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(groupId, 3, claimEntity3.Id, false);
 
             found.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Test]
-        public void ReturnsEmptyCollectionWhenNoClaimContainsSpecifiedTargetId()
+        public void ReturnsEmptyCollectionWhenNoClaimContainsSpecifiedGroupId()
         {
-            var found = _classUnderTest.FindPaginatedClaimsByTargetId(Guid.NewGuid(), 10, null, null);
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(Guid.NewGuid(), 10, null, null);
             found.Should().BeEmpty();
         }
 
         [Test]
-        public void ReturnsEmptyClaimsCollectionIfTargetIdDoesNotMatch()
+        public void ReturnsEmptyClaimsCollectionIfGroupIdDoesNotMatch()
         {
-            var targetId = new Guid("aff8e4e8-6628-4654-a0e9-140c4b5a5da6");
+            var groupId = new Guid("aff8e4e8-6628-4654-a0e9-140c4b5a5da6");
             var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
-            claimEntity1.TargetId = new Guid("591f0c9e-100c-402b-9344-4c623abc57bb");
+            claimEntity1.GroupId = new Guid("591f0c9e-100c-402b-9344-4c623abc57bb");
             DatabaseContext.Add(claimEntity1);
             DatabaseContext.SaveChanges();
 
-            var found = _classUnderTest.FindPaginatedClaimsByTargetId(targetId, 10, null, null);
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(groupId, 10, null, null);
 
             found.Should().BeEmpty();
         }

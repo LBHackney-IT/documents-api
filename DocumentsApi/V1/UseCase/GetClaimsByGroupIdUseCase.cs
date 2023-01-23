@@ -15,12 +15,12 @@ using Newtonsoft.Json.Linq;
 
 namespace DocumentsApi.V1.UseCase
 {
-    public class GetClaimsByTargetIdUseCase : IGetClaimsByTargetIdUseCase
+    public class GetClaimsByGroupIdUseCase : IGetClaimsByGroupIdUseCase
     {
         private readonly IDocumentsGateway _documentsGateway;
-        private readonly ILogger<GetClaimsByTargetIdUseCase> _logger;
+        private readonly ILogger<GetClaimsByGroupIdUseCase> _logger;
 
-        public GetClaimsByTargetIdUseCase(IDocumentsGateway documentsGateway, ILogger<GetClaimsByTargetIdUseCase> logger)
+        public GetClaimsByGroupIdUseCase(IDocumentsGateway documentsGateway, ILogger<GetClaimsByGroupIdUseCase> logger)
         {
             _documentsGateway = documentsGateway;
             _logger = logger;
@@ -41,7 +41,7 @@ namespace DocumentsApi.V1.UseCase
 
             if (request.Before == null && request.After == null)
             {
-                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, null, null);
+                claims = _documentsGateway.FindPaginatedClaimsByGroupId(request.GroupId, request.Limit + 1, null, null);
                 if (claims.Count == request.Limit + 1)
                 {
                     hasAfter = true;
@@ -52,7 +52,7 @@ namespace DocumentsApi.V1.UseCase
             else if (request.After != null)
             {
                 var decodedNextPageCursorId = DecodePaginationToken(request.After);
-                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedNextPageCursorId, isNextPage: true);
+                claims = _documentsGateway.FindPaginatedClaimsByGroupId(request.GroupId, request.Limit + 1, decodedNextPageCursorId, isNextPage: true);
                 hasBefore = true;
 
                 if (claims.Count == request.Limit + 1)
@@ -64,7 +64,7 @@ namespace DocumentsApi.V1.UseCase
             else
             {
                 var decodedPreviousPageCursorId = DecodePaginationToken(request.Before);
-                claims = _documentsGateway.FindPaginatedClaimsByTargetId(request.TargetId, request.Limit + 1, decodedPreviousPageCursorId, isNextPage: false);
+                claims = _documentsGateway.FindPaginatedClaimsByGroupId(request.GroupId, request.Limit + 1, decodedPreviousPageCursorId, isNextPage: false);
                 hasAfter = true;
 
                 if (claims.Count == request.Limit + 1)

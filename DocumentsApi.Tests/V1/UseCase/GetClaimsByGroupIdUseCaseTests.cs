@@ -15,29 +15,29 @@ using NUnit.Framework;
 namespace DocumentsApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class GetClaimsByTargetIdUseCaseTests
+    public class GetClaimsByGroupIdUseCaseTests
     {
         private readonly Mock<IDocumentsGateway> _documentsGateway = new Mock<IDocumentsGateway>();
-        private readonly Mock<ILogger<GetClaimsByTargetIdUseCase>> _logger = new Mock<ILogger<GetClaimsByTargetIdUseCase>>();
-        private GetClaimsByTargetIdUseCase _classUnderTest;
+        private readonly Mock<ILogger<GetClaimsByGroupIdUseCase>> _logger = new Mock<ILogger<GetClaimsByGroupIdUseCase>>();
+        private GetClaimsByGroupIdUseCase _classUnderTest;
 
-        public GetClaimsByTargetIdUseCaseTests()
+        public GetClaimsByGroupIdUseCaseTests()
         {
-            _classUnderTest = new GetClaimsByTargetIdUseCase(_documentsGateway.Object, _logger.Object);
+            _classUnderTest = new GetClaimsByGroupIdUseCase(_documentsGateway.Object, _logger.Object);
         }
 
         [Test]
-        public void ReturnsClaimsByTargetIdWhenOnlyOnePage()
+        public void ReturnsClaimsByGroupIdWhenOnlyOnePage()
         {
             var request = new PaginatedClaimRequest()
             {
-                TargetId = Guid.NewGuid(),
+                GroupId = Guid.NewGuid(),
                 Limit = 10
             };
             var existingClaim = TestDataHelper.CreateClaim();
-            existingClaim.TargetId = request.TargetId;
+            existingClaim.GroupId = request.GroupId;
             var gatewayResponse = new List<Claim>() { existingClaim };
-            _documentsGateway.Setup(x => x.FindPaginatedClaimsByTargetId(request.TargetId, It.IsAny<int>(), null, null)).Returns(gatewayResponse);
+            _documentsGateway.Setup(x => x.FindPaginatedClaimsByGroupId(request.GroupId, It.IsAny<int>(), null, null)).Returns(gatewayResponse);
             var expected = new PaginatedClaimResponse
             {
                 Claims = new List<ClaimResponse>() { existingClaim.ToResponse() },
@@ -63,7 +63,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             var request = new PaginatedClaimRequest()
             {
-                TargetId = Guid.NewGuid(),
+                GroupId = Guid.NewGuid(),
                 Limit = 10,
                 Before = "asdswd",
                 After = "zxcsxv"
@@ -78,7 +78,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             var request = new PaginatedClaimRequest()
             {
-                TargetId = Guid.NewGuid(),
+                GroupId = Guid.NewGuid(),
                 Limit = 10,
                 After = "sjkabkjsahkjscxzlcnxzlcnz"
             };
@@ -92,7 +92,7 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             var request = new PaginatedClaimRequest()
             {
-                TargetId = Guid.NewGuid(),
+                GroupId = Guid.NewGuid(),
                 Limit = 10,
                 Before = "sjkabkjsahkjscxzlcnxzlcnz"
             };
@@ -102,13 +102,13 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsEmptyCollectionWhenNoClaimsWereFoundForTargetId()
+        public void ReturnsEmptyCollectionWhenNoClaimsWereFoundForGroupId()
         {
-            _documentsGateway.Setup(x => x.FindPaginatedClaimsByTargetId(It.IsAny<Guid>(), It.IsAny<int>(), null, null)).Returns(new List<Claim>());
+            _documentsGateway.Setup(x => x.FindPaginatedClaimsByGroupId(It.IsAny<Guid>(), It.IsAny<int>(), null, null)).Returns(new List<Claim>());
 
             var request = new PaginatedClaimRequest()
             {
-                TargetId = Guid.NewGuid(),
+                GroupId = Guid.NewGuid(),
                 Limit = 10
             };
             var result = _classUnderTest.Execute(request);
@@ -117,11 +117,11 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsClaimsByTargetIdWhenNextPageIsRequested()
+        public void ReturnsClaimsByGroupIdWhenNextPageIsRequested()
         {
             var request = new PaginatedClaimRequest()
             {
-                TargetId = Guid.NewGuid(),
+                GroupId = Guid.NewGuid(),
                 Limit = 1,
                 After = "eyJpZCI6IjcxYzE1MWY3LTE5MWEtNDY2YS1hOWMyLWE1NGYxNjJhNjRiZiJ9"
             };
@@ -129,13 +129,13 @@ namespace DocumentsApi.Tests.V1.UseCase
             var existingClaim1 = TestDataHelper.CreateClaim();
             existingClaim1.Id = new Guid("43166102-ff25-4bd0-ac7d-4f700a372413");
             existingClaim1.CreatedAt = new DateTime(2021, 10, 28);
-            existingClaim1.TargetId = request.TargetId;
+            existingClaim1.GroupId = request.GroupId;
             var existingClaim2 = TestDataHelper.CreateClaim();
             existingClaim2.Id = new Guid("5aec02a5-15a4-4116-9fcf-b4351558cb70");
             existingClaim2.CreatedAt = new DateTime(2021, 9, 12);
-            existingClaim2.TargetId = request.TargetId;
+            existingClaim2.GroupId = request.GroupId;
             var gatewayResponse = new List<Claim>() { existingClaim1, existingClaim2 };
-            _documentsGateway.Setup(x => x.FindPaginatedClaimsByTargetId(request.TargetId, It.IsAny<int>(), cursor, true)).Returns(gatewayResponse);
+            _documentsGateway.Setup(x => x.FindPaginatedClaimsByGroupId(request.GroupId, It.IsAny<int>(), cursor, true)).Returns(gatewayResponse);
             var expected = new PaginatedClaimResponse
             {
                 Claims = new List<ClaimResponse>() { existingClaim1.ToResponse() },
@@ -157,11 +157,11 @@ namespace DocumentsApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsClaimsByTargetIdWhenPreviousPageIsRequested()
+        public void ReturnsClaimsByGroupIdWhenPreviousPageIsRequested()
         {
             var request = new PaginatedClaimRequest()
             {
-                TargetId = Guid.NewGuid(),
+                GroupId = Guid.NewGuid(),
                 Limit = 1,
                 Before = "eyJpZCI6IjcxYzE1MWY3LTE5MWEtNDY2YS1hOWMyLWE1NGYxNjJhNjRiZiJ9"
             };
@@ -169,13 +169,13 @@ namespace DocumentsApi.Tests.V1.UseCase
             var existingClaim1 = TestDataHelper.CreateClaim();
             existingClaim1.Id = new Guid("43166102-ff25-4bd0-ac7d-4f700a372413");
             existingClaim1.CreatedAt = new DateTime(2021, 10, 28);
-            existingClaim1.TargetId = request.TargetId;
+            existingClaim1.GroupId = request.GroupId;
             var existingClaim2 = TestDataHelper.CreateClaim();
             existingClaim2.Id = new Guid("5aec02a5-15a4-4116-9fcf-b4351558cb70");
             existingClaim2.CreatedAt = new DateTime(2021, 9, 12);
-            existingClaim2.TargetId = request.TargetId;
+            existingClaim2.GroupId = request.GroupId;
             var gatewayResponse = new List<Claim>() { existingClaim1, existingClaim2 };
-            _documentsGateway.Setup(x => x.FindPaginatedClaimsByTargetId(request.TargetId, It.IsAny<int>(), cursor, false)).Returns(gatewayResponse);
+            _documentsGateway.Setup(x => x.FindPaginatedClaimsByGroupId(request.GroupId, It.IsAny<int>(), cursor, false)).Returns(gatewayResponse);
             var expected = new PaginatedClaimResponse
             {
                 Claims = new List<ClaimResponse>() { existingClaim2.ToResponse() },

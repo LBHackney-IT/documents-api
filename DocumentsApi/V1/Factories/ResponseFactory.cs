@@ -33,7 +33,7 @@ namespace DocumentsApi.V1.Factories
                 RetentionExpiresAt = domain.RetentionExpiresAt,
                 UserCreatedBy = domain.UserCreatedBy,
                 ValidUntil = domain.ValidUntil,
-                TargetId = domain.TargetId,
+                GroupId = domain.GroupId,
                 TargetType = domain.TargetType
             };
         }
@@ -52,7 +52,7 @@ namespace DocumentsApi.V1.Factories
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 UserCreatedBy = claim.UserCreatedBy,
                 ValidUntil = claim.ValidUntil,
-                TargetId = claim.TargetId,
+                GroupId = claim.GroupId,
                 TargetType = claim.TargetType,
                 PreSignedDownloadUrl = preSignedDownloadUrl
             };
@@ -70,7 +70,7 @@ namespace DocumentsApi.V1.Factories
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 UserCreatedBy = claim.UserCreatedBy,
                 ValidUntil = claim.ValidUntil,
-                TargetId = claim.TargetId,
+                GroupId = claim.GroupId,
                 TargetType = claim.TargetType,
                 S3UploadPolicy = s3UploadPolicy
             };

@@ -13,7 +13,7 @@ namespace DocumentsApi.V1.Boundary.Response
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
-        public Guid? TargetId { get; set; } = null;
+        public Guid? GroupId { get; set; } = null;
         public string TargetType { get; set; }
     }
 }

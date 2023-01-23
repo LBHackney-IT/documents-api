@@ -50,7 +50,7 @@ namespace DocumentsApi.Tests.V1.Factories
             domain.UserCreatedBy.Should().Be(entity.UserCreatedBy);
             domain.ServiceAreaCreatedBy.Should().Be(entity.ServiceAreaCreatedBy);
             domain.RetentionExpiresAt.Should().Be(entity.RetentionExpiresAt);
-            domain.TargetId.Should().Be(entity.TargetId);
+            domain.GroupId.Should().Be(entity.GroupId);
             domain.TargetType.Should().Be(entity.TargetType);
         }
 

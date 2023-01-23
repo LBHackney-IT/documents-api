@@ -22,7 +22,7 @@ namespace DocumentsApi.V1.Controllers
         private readonly ICreateClaimAndS3UploadPolicyUseCase _createClaimAndS3UploadPolicyUseCase;
         private readonly IGetClaimAndPreSignedDownloadUrlUseCase _getClaimAndPreSignedDownloadUrlUseCase;
         private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
-        private readonly IGetClaimsByTargetIdUseCase _getClaimsByTargetIdUseCase;
+        private readonly IGetClaimsByGroupIdUseCase _getClaimsByGroupIdUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
@@ -31,7 +31,7 @@ namespace DocumentsApi.V1.Controllers
             ICreateClaimAndS3UploadPolicyUseCase createClaimAndS3UploadPolicyUseCase,
             IGetClaimAndPreSignedDownloadUrlUseCase getClaimAndPreSignedDownloadUrlUseCase,
             IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase,
-            IGetClaimsByTargetIdUseCase getClaimsByTargetIdUseCase
+            IGetClaimsByGroupIdUseCase getClaimsByGroupIdUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
@@ -40,7 +40,7 @@ namespace DocumentsApi.V1.Controllers
             _createClaimAndS3UploadPolicyUseCase = createClaimAndS3UploadPolicyUseCase;
             _getClaimAndPreSignedDownloadUrlUseCase = getClaimAndPreSignedDownloadUrlUseCase;
             _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
-            _getClaimsByTargetIdUseCase = getClaimsByTargetIdUseCase;
+            _getClaimsByGroupIdUseCase = getClaimsByGroupIdUseCase;
         }
 
         /// <summary>
@@ -190,11 +190,11 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
         [AuthorizeByGroups("GET_CLAIMS_ALLOWED_GOOGLE_GROUPS")]
-        public IActionResult GetClaimsByTargetId([FromQuery] PaginatedClaimRequest request)
+        public IActionResult GetClaimsByGroupId([FromQuery] PaginatedClaimRequest request)
         {
             try
             {
-                var result = _getClaimsByTargetIdUseCase.Execute(request);
+                var result = _getClaimsByGroupIdUseCase.Execute(request);
                 return Ok(result);
             }
             catch (BadRequestException ex)

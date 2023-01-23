@@ -10,7 +10,7 @@ namespace DocumentsApi.V1.Gateways.Interfaces
         public Claim CreateClaim(Claim request);
         public Document FindDocument(Guid id);
         public Claim FindClaim(Guid id);
-        public List<Claim> FindPaginatedClaimsByTargetId(Guid targetId, int limit, Guid? cursor, bool? isNextPage);
+        public List<Claim> FindPaginatedClaimsByGroupId(Guid groupId, int limit, Guid? cursor, bool? isNextPage);
         public Claim SaveClaim(Claim request);
     }
 }

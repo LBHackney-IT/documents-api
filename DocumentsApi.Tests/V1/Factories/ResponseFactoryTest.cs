@@ -46,7 +46,7 @@ namespace DocumentsApi.Tests.V1.Factories
                 ApiCreatedBy = response.ApiCreatedBy,
                 RetentionExpiresAt = response.RetentionExpiresAt,
                 ValidUntil = response.ValidUntil,
-                TargetId = response.TargetId,
+                GroupId = response.GroupId,
                 TargetType = response.TargetType,
                 S3UploadPolicy = response.S3UploadPolicy
             };
@@ -74,7 +74,7 @@ namespace DocumentsApi.Tests.V1.Factories
                 ApiCreatedBy = response.ApiCreatedBy,
                 RetentionExpiresAt = response.RetentionExpiresAt,
                 ValidUntil = response.ValidUntil,
-                TargetId = response.TargetId,
+                GroupId = response.GroupId,
                 TargetType = response.TargetType,
                 PreSignedDownloadUrl = s3PreSignedDownloadUrl
             };

@@ -77,7 +77,7 @@ namespace DocumentsApi.V1.UseCase
             string before = "";
             string after = "";
 
-            if (claims.Any())
+            if (claims.Any() && request.Limit > 0)
             {
                 var toBeEncodedBeforeCursor = JObject.Parse("{\"id\":\"" + $"{claims.First().Id.ToString()}" + "\"}");
                 var toBeEncodedAfterCursor = JObject.Parse("{\"id\":\"" + $"{claims.Last().Id.ToString()}" + "\"}");

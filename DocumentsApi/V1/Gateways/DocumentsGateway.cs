@@ -61,7 +61,7 @@ namespace DocumentsApi.V1.Gateways
             return entity.ToDomain();
         }
 
-        public List<Claim> FindPaginatedClaimsByGroupId(Guid groupId, int limit, Guid? cursor, bool? isNextPage)
+        public List<Claim> FindPaginatedClaimsByGroupId(Guid groupId, int? limit, Guid? cursor, bool? isNextPage)
         {
             IQueryable<ClaimEntity> entities;
 
@@ -71,8 +71,7 @@ namespace DocumentsApi.V1.Gateways
                     .Where(claimEntity => claimEntity.GroupId == groupId)
                     .Include(claimEntity => claimEntity.Document)
                     .OrderByDescending(claimEntity => claimEntity.CreatedAt)
-                    .ThenBy(claimEntity => claimEntity.Id)
-                    .Take(limit);
+                    .ThenBy(claimEntity => claimEntity.Id);
             }
             else
             {
@@ -85,8 +84,7 @@ namespace DocumentsApi.V1.Gateways
                                             claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
                         .Include(claimEntity => claimEntity.Document)
                         .OrderByDescending(claimEntity => claimEntity.CreatedAt)
-                        .ThenBy(claimEntity => claimEntity.Id)
-                        .Take(limit);
+                        .ThenBy(claimEntity => claimEntity.Id);
                 else
                 {
                     entities = _databaseContext.Claims
@@ -97,10 +95,14 @@ namespace DocumentsApi.V1.Gateways
                                 claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
                         .Include(claimEntity => claimEntity.Document)
                         .OrderBy(claimEntity => claimEntity.CreatedAt)
-                        .Take(limit)
                         .OrderByDescending(claimEntity => claimEntity.CreatedAt)
                         .ThenBy(claimEntity => claimEntity.Id);
                 }
+            }
+
+            if (limit > 0)
+            {
+                entities = entities.Take(limit ?? default(int));
             }
 
             var claims = new List<Claim>();

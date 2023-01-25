@@ -76,33 +76,61 @@ namespace DocumentsApi.V1.Gateways
             else
             {
                 if (isNextPage == true)
-                    entities = _databaseContext.Claims
-                        .Where(
-                            claimEntity => claimEntity.GroupId == groupId &&
-                                           claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
-                                           (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
-                                            claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
-                        .Include(claimEntity => claimEntity.Document)
-                        .OrderByDescending(claimEntity => claimEntity.CreatedAt)
-                        .ThenBy(claimEntity => claimEntity.Id);
+                    if (limit > 0)
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                               claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                               (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id)
+                            .Take(limit ?? default(int));
+                    }
+                    else
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                               claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                               (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id);
+                    }
                 else
                 {
-                    entities = _databaseContext.Claims
-                        .Where(
-                            claimEntity => claimEntity.GroupId == groupId &&
-                                claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
-                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
-                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
-                        .Include(claimEntity => claimEntity.Document)
-                        .OrderBy(claimEntity => claimEntity.CreatedAt)
-                        .OrderByDescending(claimEntity => claimEntity.CreatedAt)
-                        .ThenBy(claimEntity => claimEntity.Id);
+                    if (limit > 0)
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                    claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                    (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                    claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderBy(claimEntity => claimEntity.CreatedAt)
+                            .Take(limit ?? default(int))
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id);
+                    }
+                    else
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                    claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                    (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                    claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderBy(claimEntity => claimEntity.CreatedAt)
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id);
+                    }
                 }
-            }
-
-            if (limit > 0)
-            {
-                entities = entities.Take(limit ?? default(int));
             }
 
             var claims = new List<Claim>();

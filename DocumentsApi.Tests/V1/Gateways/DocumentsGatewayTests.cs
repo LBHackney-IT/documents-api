@@ -306,7 +306,6 @@ namespace DocumentsApi.Tests.V1.Gateways
             found.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
-
         [Test]
         public void ReturnsEmptyCollectionWhenNoClaimContainsSpecifiedGroupId()
         {

@@ -277,6 +277,36 @@ namespace DocumentsApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void ReturnsAllClaimsIfNoLimitSpecified()
+        {
+            var groupId = new Guid("b81a61ed-f74f-4598-8d82-8155c867a74c");
+            var claimEntity1 = TestDataHelper.CreateClaim().ToEntity();
+            var claimEntity2 = TestDataHelper.CreateClaim().ToEntity();
+            var claimEntity3 = TestDataHelper.CreateClaim().ToEntity();
+            claimEntity1.GroupId = groupId;
+            claimEntity2.GroupId = groupId;
+            claimEntity3.GroupId = groupId;
+            claimEntity1.CreatedAt = new DateTime(2022, 09, 01);
+            claimEntity2.CreatedAt = claimEntity1.CreatedAt.AddHours(1);
+            claimEntity3.CreatedAt = claimEntity1.CreatedAt.AddHours(2);
+            DatabaseContext.Add(claimEntity1);
+            DatabaseContext.Add(claimEntity2);
+            DatabaseContext.Add(claimEntity3);
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<Claim>()
+            {
+                claimEntity3.ToDomain(),
+                claimEntity2.ToDomain(),
+                claimEntity1.ToDomain()
+            };
+
+            var found = _classUnderTest.FindPaginatedClaimsByGroupId(groupId, null, null, false);
+
+            found.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Test]
         public void ReturnsEmptyCollectionWhenNoClaimContainsSpecifiedGroupId()
         {
             var found = _classUnderTest.FindPaginatedClaimsByGroupId(Guid.NewGuid(), 10, null, null);

@@ -61,7 +61,7 @@ namespace DocumentsApi.V1.Gateways
             return entity.ToDomain();
         }
 
-        public List<Claim> FindPaginatedClaimsByGroupId(Guid groupId, int limit, Guid? cursor, bool? isNextPage)
+        public List<Claim> FindPaginatedClaimsByGroupId(Guid groupId, int? limit, Guid? cursor, bool? isNextPage)
         {
             IQueryable<ClaimEntity> entities;
 
@@ -71,35 +71,65 @@ namespace DocumentsApi.V1.Gateways
                     .Where(claimEntity => claimEntity.GroupId == groupId)
                     .Include(claimEntity => claimEntity.Document)
                     .OrderByDescending(claimEntity => claimEntity.CreatedAt)
-                    .ThenBy(claimEntity => claimEntity.Id)
-                    .Take(limit);
+                    .ThenBy(claimEntity => claimEntity.Id);
             }
             else
             {
                 if (isNextPage == true)
-                    entities = _databaseContext.Claims
-                        .Where(
-                            claimEntity => claimEntity.GroupId == groupId &&
-                                           claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
-                                           (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
-                                            claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
-                        .Include(claimEntity => claimEntity.Document)
-                        .OrderByDescending(claimEntity => claimEntity.CreatedAt)
-                        .ThenBy(claimEntity => claimEntity.Id)
-                        .Take(limit);
+                    if (limit > 0)
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                               claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                               (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id)
+                            .Take(limit ?? default(int));
+                    }
+                    else
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                               claimEntity.CreatedAt < _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                               (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) > 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id);
+                    }
                 else
                 {
-                    entities = _databaseContext.Claims
-                        .Where(
-                            claimEntity => claimEntity.GroupId == groupId &&
-                                claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
-                                (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
-                                claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
-                        .Include(claimEntity => claimEntity.Document)
-                        .OrderBy(claimEntity => claimEntity.CreatedAt)
-                        .Take(limit)
-                        .OrderByDescending(claimEntity => claimEntity.CreatedAt)
-                        .ThenBy(claimEntity => claimEntity.Id);
+                    if (limit > 0)
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                    claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                    (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                    claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderBy(claimEntity => claimEntity.CreatedAt)
+                            .Take(limit ?? default(int))
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id);
+                    }
+                    else
+                    {
+                        entities = _databaseContext.Claims
+                            .Where(
+                                claimEntity => claimEntity.GroupId == groupId &&
+                                    claimEntity.CreatedAt > _databaseContext.Claims.Find(cursor).CreatedAt ||
+                                    (claimEntity.CreatedAt == _databaseContext.Claims.Find(cursor).CreatedAt &&
+                                    claimEntity.Id.CompareTo(_databaseContext.Claims.Find(cursor).Id) < 0))
+                            .Include(claimEntity => claimEntity.Document)
+                            .OrderBy(claimEntity => claimEntity.CreatedAt)
+                            .OrderByDescending(claimEntity => claimEntity.CreatedAt)
+                            .ThenBy(claimEntity => claimEntity.Id);
+                    }
                 }
             }
 

@@ -42,7 +42,7 @@ namespace DocumentsApi
             services.AddScoped<ICreateClaimUseCase, CreateClaimUseCase>();
             services.AddScoped<IUpdateUploadedDocumentUseCase, UpdateUploadedDocumentUseCase>();
             services.AddScoped<IFindClaimByIdUseCase, FindClaimByIdUseCase>();
-            services.AddScoped<IUpdateClaimStateUseCase, UpdateClaimStateUseCase>();
+            services.AddScoped<IUpdateClaimUseCase, UpdateClaimUseCase>();
             services.AddScoped<ICreateClaimAndS3UploadPolicyUseCase, CreateClaimAndS3UploadPolicyUseCase>();
             services.AddScoped<IGetClaimAndPreSignedDownloadUrlUseCase, GetClaimAndPreSignedDownloadUrlUseCase>();
             services.AddScoped<ICreateUploadPolicyUseCase, CreateUploadPolicyUseCase>();

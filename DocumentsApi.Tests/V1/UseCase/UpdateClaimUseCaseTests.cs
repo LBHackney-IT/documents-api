@@ -6,20 +6,23 @@ using DocumentsApi.V1.UseCase;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentsApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class UpdateClaimStateUseCaseTests
+    public class UpdateClaimUseCaseTests
     {
-        private UpdateClaimStateUseCase _classUnderTest;
+        private UpdateClaimUseCase _classUnderTest;
         private Mock<IDocumentsGateway> _documentsGateway;
+        private Mock<ILogger<UpdateClaimUseCase>> _logger;
 
         [SetUp]
         public void SetUp()
         {
             _documentsGateway = new Mock<IDocumentsGateway>();
-            _classUnderTest = new UpdateClaimStateUseCase(_documentsGateway.Object);
+            _logger = new Mock<ILogger<UpdateClaimUseCase>>();
+            _classUnderTest = new UpdateClaimUseCase(_documentsGateway.Object, _logger.Object);
         }
 
         [Test]
@@ -27,11 +30,13 @@ namespace DocumentsApi.Tests.V1.UseCase
         {
             // Arrange
             var id = Guid.NewGuid();
+            var groupId = Guid.NewGuid();
             var claim = TestDataHelper.CreateClaim();
             claim.Id = id;
+            claim.GroupId = groupId;
             _documentsGateway.Setup(x => x.FindClaim(id)).Returns(claim);
             var validUntil = DateTime.UtcNow.AddDays(5);
-            var claimUpdateRequest = CreateClaimUpdateRequest(validUntil);
+            var claimUpdateRequest = CreateClaimUpdateRequest(validUntil, groupId);
 
             // Act
             var result = _classUnderTest.Execute(id, claimUpdateRequest);
@@ -39,6 +44,7 @@ namespace DocumentsApi.Tests.V1.UseCase
             // Assert
             result.Id.Should().Be(claim.Id);
             result.ValidUntil.Should().Be(validUntil);
+            result.GroupId.Should().Be(groupId);
         }
 
         [Test]
@@ -84,11 +90,12 @@ namespace DocumentsApi.Tests.V1.UseCase
             act.Should().Throw<BadRequestException>().WithMessage("The date cannot be in the past.");
         }
 
-        private static ClaimUpdateRequest CreateClaimUpdateRequest(DateTime validUntil)
+        private static ClaimUpdateRequest CreateClaimUpdateRequest(DateTime validUntil, Guid? groupId = null)
         {
             return new ClaimUpdateRequest()
             {
-                ValidUntil = validUntil
+                ValidUntil = validUntil,
+                GroupId = groupId
             };
         }
     }

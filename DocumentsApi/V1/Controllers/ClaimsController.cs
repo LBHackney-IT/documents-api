@@ -18,7 +18,7 @@ namespace DocumentsApi.V1.Controllers
     {
         private ICreateClaimUseCase _createClaimUseCase;
         private readonly IFindClaimByIdUseCase _findClaimByIdUseCase;
-        private readonly IUpdateClaimStateUseCase _updateClaimStateUseCase;
+        private readonly IUpdateClaimUseCase _updateClaimUseCase;
         private readonly ICreateClaimAndS3UploadPolicyUseCase _createClaimAndS3UploadPolicyUseCase;
         private readonly IGetClaimAndPreSignedDownloadUrlUseCase _getClaimAndPreSignedDownloadUrlUseCase;
         private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
@@ -27,7 +27,7 @@ namespace DocumentsApi.V1.Controllers
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
             IFindClaimByIdUseCase findClaimByIdUseCase,
-            IUpdateClaimStateUseCase updateClaimStateUseCase,
+            IUpdateClaimUseCase updateClaimUseCase,
             ICreateClaimAndS3UploadPolicyUseCase createClaimAndS3UploadPolicyUseCase,
             IGetClaimAndPreSignedDownloadUrlUseCase getClaimAndPreSignedDownloadUrlUseCase,
             IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase,
@@ -36,7 +36,7 @@ namespace DocumentsApi.V1.Controllers
         {
             _createClaimUseCase = createClaimUseCase;
             _findClaimByIdUseCase = findClaimByIdUseCase;
-            _updateClaimStateUseCase = updateClaimStateUseCase;
+            _updateClaimUseCase = updateClaimUseCase;
             _createClaimAndS3UploadPolicyUseCase = createClaimAndS3UploadPolicyUseCase;
             _getClaimAndPreSignedDownloadUrlUseCase = getClaimAndPreSignedDownloadUrlUseCase;
             _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
@@ -132,7 +132,7 @@ namespace DocumentsApi.V1.Controllers
         }
 
         /// <summary>
-        /// Updates the state of a claim
+        /// Updates a claim
         /// </summary>
         /// <response code="200">Found</response>
         /// <response code="400">Request contains invalid parameters</response>
@@ -140,16 +140,20 @@ namespace DocumentsApi.V1.Controllers
         /// <response code="404">Claim not found</response>
         [HttpPatch]
         [Route("{id}")]
-        public IActionResult UpdateClaimState([Required][FromRoute] Guid id, [FromBody] ClaimUpdateRequest request)
+        public IActionResult UpdateClaim([Required][FromRoute] Guid id, [FromBody] ClaimUpdateRequest request)
         {
             try
             {
-                var result = _updateClaimStateUseCase.Execute(id, request);
+                var result = _updateClaimUseCase.Execute(id, request);
                 return Ok(result);
             }
             catch (BadRequestException ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.ValidationResponse?.Errors == null || ex.ValidationResponse.Errors.Count == 0)
+                {
+                    return BadRequest(ex.Message);
+                }
+                return BadRequest(ex.ValidationResponse.Errors);
             }
             catch (NotFoundException ex)
             {

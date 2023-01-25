@@ -168,7 +168,7 @@ namespace DocumentsApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CanUpdateClaimWithValidParams()
+        public async Task CanUpdateClaimWithValidUntilValidParameter()
         {
             // Arrange
             var claim = TestDataHelper.CreateClaim().ToEntity();
@@ -199,6 +199,38 @@ namespace DocumentsApi.Tests.V1.E2ETests
             result.Document.Should().BeEquivalentTo(claim.Document.ToDomain().ToResponse());
             // Check we have persisted the updated claim with a different ValidUntil date
             DatabaseContext.Claims.Find(claim.Id).ValidUntil.Should().Be(validUntil);
+        }
+
+        [Test]
+        public async Task CanUpdateClaimWithGroupIdValidParameter()
+        {
+            // Arrange
+            var claim = TestDataHelper.CreateClaim().ToEntity();
+            DatabaseContext.Add(claim);
+            DatabaseContext.SaveChanges();
+
+            var groupId = Guid.NewGuid();
+            string body = "{" +
+                          $"\"groupId\": \"{groupId}\"" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/claims/{claim.Id}", UriKind.Relative);
+
+            // Act
+            var response = await Client.PatchAsync(uri, jsonString);
+
+            // Assert
+            response.StatusCode.Should().Be(200);
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ClaimResponse>(json);
+
+            result.Should().BeEquivalentTo(claim.ToDomain().ToResponse(),
+                opts => opts.Excluding(x => x.GroupId));
+            result.GroupId.Should().Be(groupId);
+            result.Document.Should().BeEquivalentTo(claim.Document.ToDomain().ToResponse());
+            DatabaseContext.Claims.Find(claim.Id).GroupId.Should().Be(groupId);
         }
 
         [Test]

@@ -1,3 +1,4 @@
+using System;
 using Amazon;
 using Amazon.S3;
 using Jering.Javascript.NodeJS;
@@ -22,6 +23,8 @@ namespace DocumentsApi
             services.AddNodeJS();
             // var serviceProvider = services.BuildServiceProvider();
             // var nodeJSService = serviceProvider.GetRequiredService<INodeJSService>();
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             // Database Context
             services.AddDbContext<DocumentsContext>(

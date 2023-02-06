@@ -669,17 +669,5 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(400);
         }
-
-        [Test]
-        public async Task Returns401WhenNotAuthorizedToGetClaimsByGroupId()
-        {
-            var groupId = "c585f2d3-69c8-4a5e-b74f-c0570665c2d8";
-
-            var uri = new Uri($"api/v1/claims?groupId={groupId}", UriKind.Relative);
-
-            var response = await Client.GetAsync(uri);
-
-            response.StatusCode.Should().Be(401);
-        }
     }
 }

@@ -3,6 +3,9 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0
 # disable microsoft telematry
 ENV DOTNET_CLI_TELEMETRY_OPTOUT='true'
 
+ARG LBHPACKAGESTOKEN
+ENV LBHPACKAGESTOKEN=$LBHPACKAGESTOKEN
+
 RUN apt-get update \
      && apt-get install curl gnupg -yq \
      && curl -sL https://deb.nodesource.com/setup_14.x | bash \

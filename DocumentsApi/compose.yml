@@ -3,6 +3,8 @@ services:
     build:
       context: ../
       dockerfile: ./DocumentsApi/Dockerfile
+      args:
+        - LBHPACKAGESTOKEN=${LBHPACKAGESTOKEN}
     env_file: ../.env
     environment:
       CONNECTION_STRING: Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword

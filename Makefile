@@ -1,7 +1,7 @@
 .PHONY: build-test
 build-test:
 	docker-compose -f DocumentsApi.Tests/compose.yml build
-	
+
 .PHONY: serve-test
 serve-test:
 	make build-test && make start-test
@@ -15,7 +15,7 @@ start-test:
 .PHONY: build-local
 build-local:
 	docker-compose -f DocumentsApi/compose.yml build
-	
+
 .PHONY: serve-local
 serve-local:
 	make build-local && make start-local
@@ -24,7 +24,7 @@ serve-local:
 start-local:
 	docker compose -f DocumentsApi/compose.yml stop
 	docker compose -f DocumentsApi/compose.yml up -d
-	
+
 .PHONY: stop-local
 stop-local:
 	docker compose -f DocumentsApi/compose.yml stop

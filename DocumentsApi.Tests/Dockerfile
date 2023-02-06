@@ -17,6 +17,7 @@ WORKDIR /app
 COPY ./DocumentsApi.sln ./
 COPY ./DocumentsApi/DocumentsApi.csproj ./DocumentsApi/
 COPY ./DocumentsApi.Tests/DocumentsApi.Tests.csproj ./DocumentsApi.Tests/
+COPY ./NuGet.Config /root/.nuget/NuGet/NuGet.Config
 
 RUN dotnet restore ./DocumentsApi/DocumentsApi.csproj
 RUN dotnet restore ./DocumentsApi.Tests/DocumentsApi.Tests.csproj

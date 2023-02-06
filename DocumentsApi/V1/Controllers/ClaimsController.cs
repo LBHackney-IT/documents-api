@@ -6,7 +6,6 @@ using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Amazon.S3;
 using System.Threading.Tasks;
-using DocumentsApi.V1.Authorization;
 
 namespace DocumentsApi.V1.Controllers
 {

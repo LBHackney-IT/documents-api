@@ -208,10 +208,8 @@ workflows:
   check-and-deploy-staging-and-production:
     jobs:
       # Build & Test
-      - check-code-formatting:
-          context: api-nuget-token-context
-      - build-and-test:
-          context: api-nuget-token-context
+      - check-code-formatting
+      - build-and-test
 
       # Staging deploy
       - assume-role-staging:
@@ -223,11 +221,9 @@ workflows:
               only:
                 - main
       - migrate-database-staging:
-          context: api-nuget-token-context
           requires:
             - assume-role-staging
       - deploy-to-staging:
-          context: api-nuget-token-context
           requires:
             - migrate-database-staging
 

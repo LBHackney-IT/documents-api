@@ -149,5 +149,21 @@ namespace DocumentsApi.V1.Gateways
 
             return entity.ToDomain();
         }
+
+        public List<Claim> UpdateClaimsGroupId(Guid oldGroupId, Guid newGroupId)
+        {
+            var entities = _databaseContext.Claims
+                    .Where(claimEntity =>
+                    claimEntity.GroupId == oldGroupId)
+                    .ToList();
+            var claims = new List<Claim>();
+            for (int i = 0; i < entities.Count(); ++i)
+            {
+                entities[i].GroupId = newGroupId;
+                claims.Add(entities[i].ToDomain());
+            }
+            _databaseContext.SaveChanges();
+            return claims;
+        }
     }
 }

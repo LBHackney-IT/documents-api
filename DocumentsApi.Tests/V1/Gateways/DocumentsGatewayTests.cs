@@ -326,5 +326,50 @@ namespace DocumentsApi.Tests.V1.Gateways
 
             found.Should().BeEmpty();
         }
+
+        [Test]
+        public void CanUpdateCLaimsGroupId()
+        {
+            var oldGroupId = Guid.NewGuid();
+            var newGroupId = Guid.NewGuid();
+            var claim1 = TestDataHelper.CreateClaim().ToEntity();
+            var claim2 = TestDataHelper.CreateClaim().ToEntity();
+            var claim3 = TestDataHelper.CreateClaim().ToEntity();
+            claim1.GroupId = oldGroupId;
+            claim2.GroupId = oldGroupId;
+            claim3.GroupId = oldGroupId;
+            DatabaseContext.Add(claim1);
+            DatabaseContext.Add(claim2);
+            DatabaseContext.Add(claim3);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.UpdateClaimsGroupId(oldGroupId, newGroupId);
+
+            result[0].GroupId.Should().Be(newGroupId);
+            result[1].GroupId.Should().Be(newGroupId);
+            result[2].GroupId.Should().Be(newGroupId);
+        }
+
+        [Test]
+        public void ReturnsEmptyIfNoClaimContainsTheGroupId()
+        {
+            var oldGroupId = Guid.NewGuid();
+            var newGroupId = Guid.NewGuid();
+            var randomGroupId = Guid.NewGuid();
+            var claim1 = TestDataHelper.CreateClaim().ToEntity();
+            var claim2 = TestDataHelper.CreateClaim().ToEntity();
+            var claim3 = TestDataHelper.CreateClaim().ToEntity();
+            claim1.GroupId = randomGroupId;
+            claim2.GroupId = randomGroupId;
+            claim3.GroupId = randomGroupId;
+            DatabaseContext.Add(claim1);
+            DatabaseContext.Add(claim2);
+            DatabaseContext.Add(claim3);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.UpdateClaimsGroupId(oldGroupId, newGroupId);
+
+            result.Count.Should().Be(0);
+        }
     }
 }

@@ -669,5 +669,77 @@ namespace DocumentsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(400);
         }
+
+        [Test]
+        public async Task Returns200WhenItCanUpdateClaimsGroupId()
+        {
+            var oldGroupId = Guid.NewGuid();
+            var newGroupId = Guid.NewGuid();
+            var claim1 = TestDataHelper.CreateClaim().ToEntity();
+            var claim2 = TestDataHelper.CreateClaim().ToEntity();
+            var claim3 = TestDataHelper.CreateClaim().ToEntity();
+            claim1.GroupId = oldGroupId;
+            claim2.GroupId = oldGroupId;
+            claim3.GroupId = oldGroupId;
+            DatabaseContext.Add(claim1);
+            DatabaseContext.Add(claim2);
+            DatabaseContext.Add(claim3);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri("api/v1/claims/update", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+            string body = "{" +
+                $"\"oldGroupId\": \"{oldGroupId}\"," +
+                $"\"newGroupId\": \"{newGroupId}\"" +
+                "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task Returns400WithInvalidParameters()
+        {
+            var oldGroupId = Guid.NewGuid();
+            var newGroupId = "abc";
+            var uri = new Uri("api/v1/claims/update", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+            string body = "{" +
+                $"\"oldGroupId\": \"{oldGroupId}\"," +
+                $"\"newGroupId\": \"{newGroupId}\"" +
+                "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task Returns200ButEmptyCollectionWhenCannotFindClaimsForGroupId()
+        {
+            var oldGroupId = Guid.NewGuid();
+            var newGroupId = Guid.NewGuid();
+            var claim1 = TestDataHelper.CreateClaim().ToEntity();
+            var claim2 = TestDataHelper.CreateClaim().ToEntity();
+            DatabaseContext.Add(claim1);
+            DatabaseContext.Add(claim2);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri("api/v1/claims/update", UriKind.Relative);
+            Client.DefaultRequestHeaders.Add("Authorization", TestToken.Value);
+            string body = "{" +
+                $"\"oldGroupId\": \"{oldGroupId}\"," +
+                $"\"newGroupId\": \"{newGroupId}\"" +
+                "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync();
+            response.StatusCode.Should().Be(200);
+            json.Should().Be("[]");
+        }
     }
 }

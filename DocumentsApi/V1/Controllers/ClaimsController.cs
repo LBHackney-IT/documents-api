@@ -22,6 +22,7 @@ namespace DocumentsApi.V1.Controllers
         private readonly IGetClaimAndPreSignedDownloadUrlUseCase _getClaimAndPreSignedDownloadUrlUseCase;
         private readonly IGeneratePreSignedDownloadUrlUseCase _generatePreSignedDownloadUrlUseCase;
         private readonly IGetClaimsByGroupIdUseCase _getClaimsByGroupIdUseCase;
+        private readonly IUpdateClaimsGroupIdUseCase _updateClaimsGroupIdUseCase;
 
         public ClaimsController(
             ICreateClaimUseCase createClaimUseCase,
@@ -30,7 +31,8 @@ namespace DocumentsApi.V1.Controllers
             ICreateClaimAndS3UploadPolicyUseCase createClaimAndS3UploadPolicyUseCase,
             IGetClaimAndPreSignedDownloadUrlUseCase getClaimAndPreSignedDownloadUrlUseCase,
             IGeneratePreSignedDownloadUrlUseCase generatePreSignedDownloadUrlUseCase,
-            IGetClaimsByGroupIdUseCase getClaimsByGroupIdUseCase
+            IGetClaimsByGroupIdUseCase getClaimsByGroupIdUseCase,
+            IUpdateClaimsGroupIdUseCase updateClaimsGroupIdUseCase
         )
         {
             _createClaimUseCase = createClaimUseCase;
@@ -40,6 +42,7 @@ namespace DocumentsApi.V1.Controllers
             _getClaimAndPreSignedDownloadUrlUseCase = getClaimAndPreSignedDownloadUrlUseCase;
             _generatePreSignedDownloadUrlUseCase = generatePreSignedDownloadUrlUseCase;
             _getClaimsByGroupIdUseCase = getClaimsByGroupIdUseCase;
+            _updateClaimsGroupIdUseCase = updateClaimsGroupIdUseCase;
         }
 
         /// <summary>
@@ -206,6 +209,31 @@ namespace DocumentsApi.V1.Controllers
                     return BadRequest(ex.Message);
                 }
                 return BadRequest(ex.ValidationResponse.Errors);
+            }
+        }
+
+        /// <summary>
+        /// Update claims group ID
+        /// </summary>
+        /// <response code="200">Update successful</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpPost]
+        [Route("update")]
+        public IActionResult UpdateClaimsGroupId([FromBody] ClaimsUpdateRequest request)
+        {
+            try
+            {
+                var result = _updateClaimsGroupIdUseCase.Execute(request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
     }

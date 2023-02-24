@@ -12,5 +12,6 @@ namespace DocumentsApi.V1.Gateways.Interfaces
         public Claim FindClaim(Guid id);
         public List<Claim> FindPaginatedClaimsByGroupId(Guid groupId, int? limit, Guid? cursor, bool? isNextPage);
         public Claim SaveClaim(Claim request);
+        public List<Claim> UpdateClaimsGroupId(Guid oldGroupId, Guid newGroupId);
     }
 }

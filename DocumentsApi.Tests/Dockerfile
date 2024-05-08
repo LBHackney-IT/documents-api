@@ -8,7 +8,7 @@ ENV LBHPACKAGESTOKEN=$LBHPACKAGESTOKEN
 
 RUN apt-get update \
      && apt-get install curl gnupg -yq \
-     && curl -sL https://deb.nodesource.com/setup_14.x | bash \
+     && curl -sL https://deb.nodesource.com/setup_20.x | bash \
      && apt-get install nodejs -yq
 
 WORKDIR /app

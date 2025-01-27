@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0
+FROM mcr.microsoft.com/dotnet/sdk:8.0
 
 ARG LBHPACKAGESTOKEN
 ENV LBHPACKAGESTOKEN=$LBHPACKAGESTOKEN
@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Install dotnet-ef globally
 ENV PATH $PATH:/root/.dotnet/tools
-RUN dotnet tool install --global dotnet-ef --version 7.0.0
+RUN dotnet tool install --global dotnet-ef --version 8.0.0
 
 RUN apt-get update
 RUN apt-get install sudo

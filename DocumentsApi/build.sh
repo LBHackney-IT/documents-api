@@ -18,6 +18,6 @@ then
 fi
 
 dotnet restore
-dotnet lambda package --configuration release --framework net6.0 --output-package ./bin/release/net6.0/documents-api.zip
+dotnet lambda package --configuration release --framework net8.0 --output-package ./bin/release/net8.0/documents-api.zip
 
 cd python && zip -rv ../lambda-orchestrator.zip ./*

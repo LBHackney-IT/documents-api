@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@0.1.9
+  aws-cli: circleci/aws-cli@5.1.1
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
 executors:
@@ -10,7 +10,7 @@ executors:
       - image: circleci/python:3.7
   docker-dotnet:
     docker:
-      - image: mcr.microsoft.com/dotnet/sdk:6.0
+      - image: mcr.microsoft.com/dotnet/sdk:8.0
 
 references:
   workspace_root: &workspace_root "~"
@@ -46,7 +46,7 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | bash -
+            curl -sL https://deb.nodesource.com/setup_22.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install serverless CLI
@@ -83,7 +83,7 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | bash -
+            curl -sL https://deb.nodesource.com/setup_22.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install SwaggerHub CLI
@@ -123,7 +123,7 @@ commands:
             dpkg -i session-manager-plugin.deb
       - run:
           name: Install dotnet ef core
-          command: dotnet tool install dotnet-ef --version 7.0.0 --tool-path ./dotnet-ef-local/
+          command: dotnet tool install dotnet-ef --version 8.0.0 --tool-path ./dotnet-ef-local/
       - run:
           name: SSH into RDS and migrate database
           command: |
@@ -227,7 +227,9 @@ workflows:
           requires:
             - assume-role-staging
       - deploy-to-staging:
-          context: api-nuget-token-context
+          context: 
+            - api-nuget-token-context
+            - "Serverless Framework"
           requires:
             - migrate-database-staging
 
@@ -245,7 +247,9 @@ workflows:
           requires:
             - assume-role-production
       - deploy-to-production:
-          context: api-nuget-token-context
+          context: 
+            - api-nuget-token-context
+            - "Serverless Framework"
           requires:
             - migrate-database-production
       - publish-to-swaggerhub:

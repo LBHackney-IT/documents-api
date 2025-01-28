@@ -1,6 +1,6 @@
 .PHONY: build-test
 build-test:
-	docker-compose -f DocumentsApi.Tests/compose.yml build
+	docker compose -f DocumentsApi.Tests/compose.yml build
 
 .PHONY: serve-test
 serve-test:
@@ -14,7 +14,7 @@ start-test:
 
 .PHONY: build-local
 build-local:
-	docker-compose -f DocumentsApi/compose.yml build
+	docker compose -f DocumentsApi/compose.yml build
 
 .PHONY: serve-local
 serve-local:
@@ -32,7 +32,7 @@ stop-local:
 
 .PHONY: shell
 shell:
-	docker-compose run documents-api bash
+	docker compose run documents-api bash
 
 .PHONY: lint
 lint:
@@ -45,4 +45,4 @@ restart-db:
 	docker stop $$(docker ps -q --filter ancestor=test-database -a)
 	-docker rm $$(docker ps -q --filter ancestor=test-database -a)
 	docker rmi test-database
-	docker-compose up -d test-database
+	docker compose up -d test-database

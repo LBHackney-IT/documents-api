@@ -1,2 +1,2 @@
 dotnet restore
-dotnet lambda package --configuration release --framework netcoreapp3.1 --output-package bin/release/netcoreapp3.1/documents-api.zip
+dotnet lambda package --configuration release --framework netcoreapp8.0 --output-package bin/release/netcoreapp8.0/documents-api.zip

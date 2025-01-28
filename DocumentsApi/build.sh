@@ -8,7 +8,7 @@ then
 fi
 
 #dotnet restore
-dotnet tool install --global Amazon.Lambda.Tools --version 4.0.0
+dotnet tool install --global Amazon.Lambda.Tools --version 5.12.4
 
 
 # (for CI) ensure that the newly-installed tools are on PATH
@@ -18,6 +18,6 @@ then
 fi
 
 dotnet restore
-dotnet lambda package --configuration release --framework net6.0 --output-package ./bin/release/net6.0/documents-api.zip
+dotnet lambda package --configuration release --framework net8.0 --output-package ./bin/release/net8.0/documents-api.zip
 
 cd python && zip -rv ../lambda-orchestrator.zip ./*

@@ -1,7 +1,7 @@
 service: documents-api
 provider:
   name: aws
-  runtime: dotnet6
+  runtime: dotnet8
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
@@ -38,7 +38,7 @@ provider:
             AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
 
 package:
-  artifact: ./bin/release/net6.0/documents-api.zip
+  artifact: ./bin/release/net8.0/documents-api.zip
   individually: true
 
 plugins:
@@ -51,7 +51,7 @@ functions:
     lambdaInsights: true
     role: lambdaExecutionRole
     package:
-      artifact: ./bin/release/net6.0/documents-api.zip
+      artifact: ./bin/release/net8.0/documents-api.zip
     layers:
       - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
     events:
@@ -70,7 +70,7 @@ functions:
     lambdaInsights: true
     role: lambdaExecutionRole
     package:
-      artifact: ./bin/release/net6.0/documents-api.zip
+      artifact: ./bin/release/net8.0/documents-api.zip
   DocumentsOrchestrator:
     runtime: python3.7
     name: ${self:service}-documents-orchestrator

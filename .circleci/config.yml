@@ -1,7 +1,6 @@
 version: 2.1
 
-orbs:
-  aws-cli: circleci/aws-cli@5.1.1
+orbs:  
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
 executors:
@@ -123,7 +122,7 @@ commands:
             dpkg -i session-manager-plugin.deb
       - run:
           name: Install dotnet ef core
-          command: dotnet tool install dotnet-ef --version 8.0.0 --tool-path ./dotnet-ef-local/
+          command: dotnet tool install dotnet-ef --version 8.0.12 --tool-path ./dotnet-ef-local/
       - run:
           name: SSH into RDS and migrate database
           command: |

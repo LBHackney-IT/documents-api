@@ -114,7 +114,7 @@ This application contains two lambda functions — an API, and a function which 
 
 To test the S3 Lambda function with the staging AWS account, follow these steps:
 
-1. Install [AWS lambda test tool](e18ebff8-2a46-4ee3-8d27-c36706ac006f): `dotnet tool install -g Amazon.Lambda.TestTool-3.1`
+1. Install [AWS lambda test tool](e18ebff8-2a46-4ee3-8d27-c36706ac006f): `dotnet tool install -g Amazon.Lambda.TestTool-8.0`
 2. Create a document in the staging S3 bucket with the key `e18ebff8-2a46-4ee3-8d27-c36706ac006f`
 3. Create the equivalent record in your local database:
     ```shell script
@@ -122,7 +122,7 @@ To test the S3 Lambda function with the staging AWS account, follow these steps:
     ```
 4. Run the test:
     ```shell script
-    bin/dotnet lambda-test-tool-3.1 --no-ui \
+    bin/dotnet lambda-test-tool-8.0 --no-ui \
       --profile AWS_PROFILE_NAME \
       --path `pwd`/DocumentsApi \
       --function-handler DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated \
@@ -149,11 +149,6 @@ Our staging and production environments are hosted by AWS. We would deploy to pr
 
 Before you commit or push your code, you will need to run:
 
-```sh
- dotnet tool install dotnet-format --version 5.1.225507
-```
-
-Otherwise your PR will automatically fail the CircleCI checks. This will install the formatting tool for the repository. From thereon, you can run:
 ```sh
 dotnet dotnet-format
 ```

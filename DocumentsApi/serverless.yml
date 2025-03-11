@@ -9,8 +9,7 @@ provider:
     apiKeys:
       - secureAccess:
         - api-key-$(self:service)-${self:provider.stage}
-    usagePlan:
-      - secureAccess:
+    usagePlan:      
         throttle:
           burstLimit: 200
           rateLimit: 100

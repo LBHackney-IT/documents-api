@@ -5,12 +5,7 @@ provider:
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
-  usagePlan:
-    - secureAccess:
-        throttle:
-          burstLimit: 200
-          rateLimit: 100
-  timeout: 30
+  timeout: 29
   tracing:
     apiGateway: true
     lambda: true

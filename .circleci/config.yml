@@ -221,6 +221,7 @@ workflows:
             branches:
               only:
                 - main
+                - serverless-config
       - migrate-database-staging:
           context: api-nuget-token-context
           requires:

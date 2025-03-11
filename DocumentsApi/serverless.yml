@@ -10,15 +10,15 @@ provider:
   #       throttle:
   #         burstLimit: 200
   #         rateLimit: 100
-  apiKeys:
-    - secureAccess:
-      - api-key-${self:service}-${self:provider.stage}
-  usagePlan:
-    - secureAccess:
-        throttle:
-          burstLimit: 200
-          rateLimit: 100
-      
+  apiGateway:
+    apiKeys:
+      - secureAccess:
+        - api-key-${self:service}-${self:provider.stage}
+    usagePlan:
+      - secureAccess:
+          throttle:
+            burstLimit: 200
+            rateLimit: 100      
   timeout: 30
   tracing:
     apiGateway: true

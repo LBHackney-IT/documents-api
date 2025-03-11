@@ -5,21 +5,7 @@ provider:
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
-  # usagePlan:
-  #   - secureAccess:
-  #       throttle:
-  #         burstLimit: 200
-  #         rateLimit: 100
-  apiGateway:
-    apiKeys:
-      - secureAccess:
-        - api-key-${self:service}-${self:provider.stage}
-    usagePlan:
-      - secureAccess:
-          throttle:
-            burstLimit: 200
-            rateLimit: 100      
-  timeout: 30
+  timeout: 29
   tracing:
     apiGateway: true
     lambda: true
@@ -62,7 +48,7 @@ functions:
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:
-      - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
+      - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs20:5
     events:
       - http:
           path: /{proxy+}

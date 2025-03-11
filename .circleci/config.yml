@@ -220,8 +220,7 @@ workflows:
           filters:
             branches:
               only:
-                - main
-                - serverless-config
+                - main                
       - migrate-database-staging:
           context: api-nuget-token-context
           requires:

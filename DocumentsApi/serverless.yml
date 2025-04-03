@@ -54,7 +54,7 @@ functions:
           path: /{proxy+}
           method: ANY
           authorizer:
-            arn: ${ssm:/platform-apis-lambda-authorizer-arn}
+            arn: ${self:custom.authorizerArns.${opt:stage}}
             type: request
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
@@ -148,6 +148,10 @@ resources:
                   - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
 
 custom:
+  authorizerArns:
+    development: arn:aws:lambda:eu-west-2:859159924354:function:api-auth-verify-token-new-development-apiauthverifytokennew
+    staging:     arn:aws:lambda:eu-west-2:715003523189:function:api-auth-verify-token-new-staging-apiauthverifytokennew
+    production:  arn:aws:lambda:eu-west-2:153306643385:function:api-auth-verify-token-new-production-apiauthverifytokennew
   corsDomains:
     staging:
       - "https://*.hackney.gov.uk"

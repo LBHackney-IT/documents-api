@@ -279,7 +279,7 @@ workflows:
       - build-and-test:
           context: api-nuget-token-context
 
-      #Dr deploy
+      #DR deploy
       - assume-role-disaster-recovery:
           requires:
             - build-and-test

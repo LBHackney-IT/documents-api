@@ -46,10 +46,7 @@ resource "aws_security_group" "documents_api_db_traffic" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
-    tags = merge(
-        {
+    tags = {
             "Name" = "documents_api_db_traffic-dr"
-        },
-        module.tags.values,
-    )
+        }
 }

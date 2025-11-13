@@ -50,3 +50,11 @@ resource "aws_security_group" "documents_api_db_traffic" {
             "Name" = "documents_api_db_traffic-dr"
         }
 }
+
+resource "aws_db_subnet_group" "documents_api_subnets" {
+    name       = "documents-api-subnet-group-dr"
+    subnet_ids = ["subnet-0e6bc9b4ac24493cc","subnet-05e595c59b7d6c8df"]
+    lifecycle {
+        create_before_destroy = true
+    }
+}

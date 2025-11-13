@@ -1,6 +1,6 @@
 version: 2.1
 
-orbs:  
+orbs:
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
 executors:
@@ -10,6 +10,9 @@ executors:
   docker-dotnet:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:8.0
+  docker-terraform:
+    docker:
+      - image: "hashicorp/terraform:light"
 
 references:
   workspace_root: &workspace_root "~"
@@ -33,6 +36,46 @@ commands:
           root: *workspace_root
           paths:
             - .aws
+
+  terraform-init-then-preview:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: preview
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform plan
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -auto-approve
+
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -174,6 +217,30 @@ jobs:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
 
+  assume-role-disaster-recovery:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DISASTER_RECOVERY
+
+  preview-terraform-dr-changes:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-preview:
+          environment: "production"
+
+  terraform-init-and-apply-to-dr:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
+
+  deploy-dr:
+    executor: docker-dotnet
+    steps:
+      - deploy-lambda:
+          stage: "production"
+
   deploy-to-staging:
     executor: docker-dotnet
     steps:
@@ -212,6 +279,42 @@ workflows:
       - build-and-test:
           context: api-nuget-token-context
 
+      #Dr deploy
+      - assume-role-disaster-recovery:
+          requires:
+            - build-and-test
+          context:
+            - api-assume-role-disaster-recovery-context
+          filters:
+            branches:
+              only:
+                - dr-testing
+
+      - preview-terraform-dr-changes:
+          requires:
+            - assume-role-disaster-recovery
+
+      - permit-terraform-dr-changes:
+          type: approval
+          requires:
+            - preview-terraform-dr-changes
+
+      - terraform-init-and-apply-to-dr:
+          requires:
+            - permit-terraform-dr-changes
+
+#      - permit-release-dr:
+#          type: approval
+#          requires:
+#            - terraform-init-and-apply-to-dr
+#
+#      - deploy-dr:
+#          context:
+#            - api-nuget-token-context
+#            - 'Serverless Framework'
+#          requires:
+#            - permit-release-dr
+
       # Staging deploy
       - assume-role-staging:
           context: api-assume-role-document-evidence-store-staging-context
@@ -226,7 +329,7 @@ workflows:
           requires:
             - assume-role-staging
       - deploy-to-staging:
-          context: 
+          context:
             - api-nuget-token-context
             - "Serverless Framework"
           requires:
@@ -246,7 +349,7 @@ workflows:
           requires:
             - assume-role-production
       - deploy-to-production:
-          context: 
+          context:
             - api-nuget-token-context
             - "Serverless Framework"
           requires:

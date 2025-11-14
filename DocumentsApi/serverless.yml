@@ -21,7 +21,7 @@ provider:
   s3:
     documentsBucket:
       accessControl: Private
-      name: ${self:provider.environment.BUCKET_NAME}
+      name: document-evidence-store-dr-bucket
       bucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:

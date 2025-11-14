@@ -172,7 +172,7 @@ custom:
         - subnet-012870b02db9a3bf8
     production:
       securityGroupIds:
-        - sg-0c5a580a550bf3a3f
+        - sg-0ad1c09f043d9f572
       subnetIds:
-        - subnet-0a00b445652b2d8e8
-        - subnet-0c31b6c3961a84548
+        - subnet-0e6bc9b4ac24493cc
+        - subnet-05e595c59b7d6c8df

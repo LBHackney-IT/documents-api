@@ -72,20 +72,20 @@ functions:
     role: lambdaExecutionRole
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
-  DocumentsOrchestrator:
-    runtime: python3.7
-    name: ${self:service}-documents-orchestrator
-    handler: lambda-orchestrator.lambda_handler
-    lambdaInsights: true
-    package:
-      artifact: ./python/lambda-orchestrator.zip
-    role: lambdaExecutionRole
-    events:
-      - s3:
-          bucket: documentsBucket
-          event: s3:ObjectCreated:*
-          rules:
-            - prefix: pre-scan/
+#  DocumentsOrchestrator:
+#    runtime: python3.7
+#    name: ${self:service}-documents-orchestrator
+#    handler: lambda-orchestrator.lambda_handler
+#    lambdaInsights: true
+#    package:
+#      artifact: ./python/lambda-orchestrator.zip
+#    role: lambdaExecutionRole
+#    events:
+#      - s3:
+#          bucket: documentsBucket
+#          event: s3:ObjectCreated:*
+#          rules:
+#            - prefix: pre-scan/
 
 resources:
   Resources:
@@ -139,19 +139,19 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
-          - PolicyName: documentsBucketAccess
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                Action:
-                  - s3:GetObject
-                  - s3:GetObjectTagging
-                  - s3:PutObject
-                  - s3:PutObjectTagging
-                  - s3:DeleteObject
-                Effect: "Allow"
-                Resource:
-                  - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
+#          - PolicyName: documentsBucketAccess
+#            PolicyDocument:
+#              Version: "2012-10-17"
+#              Statement:
+#                Action:
+#                  - s3:GetObject
+#                  - s3:GetObjectTagging
+#                  - s3:PutObject
+#                  - s3:PutObjectTagging
+#                  - s3:DeleteObject
+#                Effect: "Allow"
+#                Resource:
+#                  - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
 
 custom:
   authorizerArns:

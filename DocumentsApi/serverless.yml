@@ -17,26 +17,26 @@ provider:
       level: INFO
   environment:
     CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
-    #BUCKET_NAME: document-evidence-store-${self:provider.stage}-bucket
-  s3:
-    documentsBucket:
-      accessControl: Private
-      name: document-evidence-store-dr-bucket
-      bucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
-      publicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      corsConfiguration:
-        CorsRules:
-          - AllowedMethods:
-              - GET
-              - POST
-            AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
+    BUCKET_NAME: document-evidence-store-${self:provider.stage}-bucket
+#  s3:
+#    documentsBucket:
+#      accessControl: Private
+#      name: ${self:provider.environment.BUCKET_NAME}
+#      bucketEncryption:
+#        ServerSideEncryptionConfiguration:
+#          - ServerSideEncryptionByDefault:
+#              SSEAlgorithm: AES256
+#      publicAccessBlockConfiguration:
+#        BlockPublicAcls: true
+#        BlockPublicPolicy: true
+#        IgnorePublicAcls: true
+#        RestrictPublicBuckets: true
+#      corsConfiguration:
+#        CorsRules:
+#          - AllowedMethods:
+#              - GET
+#              - POST
+#            AllowedOrigins: ${self:custom.corsDomains.${self:provider.stage}}
 
 package:
   artifact: ./bin/release/net8.0/documents-api.zip
@@ -139,19 +139,19 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
-#          - PolicyName: documentsBucketAccess
-#            PolicyDocument:
-#              Version: "2012-10-17"
-#              Statement:
-#                Action:
-#                  - s3:GetObject
-#                  - s3:GetObjectTagging
-#                  - s3:PutObject
-#                  - s3:PutObjectTagging
-#                  - s3:DeleteObject
-#                Effect: "Allow"
-#                Resource:
-#                  - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
+          - PolicyName: documentsBucketAccess
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectTagging
+                  - s3:PutObject
+                  - s3:PutObjectTagging
+                  - s3:DeleteObject
+                Effect: "Allow"
+                Resource:
+                  - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
 
 custom:
   authorizerArns:

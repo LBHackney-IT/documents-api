@@ -1,6 +1,6 @@
 version: 2.1
 
-orbs:  
+orbs:
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
 executors:
@@ -217,16 +217,16 @@ workflows:
           context: api-assume-role-document-evidence-store-staging-context
           requires:
             - build-and-test
-          filters:
-            branches:
-              only:
-                - main
+#          filters:
+#            branches:
+#              only:
+#                - main
       - migrate-database-staging:
           context: api-nuget-token-context
           requires:
             - assume-role-staging
       - deploy-to-staging:
-          context: 
+          context:
             - api-nuget-token-context
             - "Serverless Framework"
           requires:
@@ -246,7 +246,7 @@ workflows:
           requires:
             - assume-role-production
       - deploy-to-production:
-          context: 
+          context:
             - api-nuget-token-context
             - "Serverless Framework"
           requires:

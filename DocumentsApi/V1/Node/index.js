@@ -1,5 +1,5 @@
-const { createPresignedPost } = "@aws-sdk/s3-presigned-post";
-const { S3Client } = "@aws-sdk/client-s3";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { S3Client } from "@aws-sdk/client-s3";
 
 /* TODO: Node being added to create signed Post Policies
    (see this issue: https://github.com/LBHackney-IT/documents-api/pull/6)

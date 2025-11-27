@@ -45,6 +45,14 @@ package:
 plugins:
   - serverless-plugin-lambda-insights
 
+layers:
+  Node22:
+    path: ./Node
+    name: Node22Layer
+    compatibleRuntimes:
+      - nodejs22.x
+      - nodejs20.x
+
 functions:
   DocumentsApi:
     name: ${self:service}
@@ -54,7 +62,7 @@ functions:
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:
-      - arn:aws:lambda:eu-west-2:770693421928:layer:AWSLambda-NodeJS22:1
+      - !Ref: Node22LayerLambdaLayer
     events:
       - http:
           path: /{proxy+}

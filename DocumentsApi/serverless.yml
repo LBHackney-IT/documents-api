@@ -54,7 +54,7 @@ functions:
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:
-      - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs12:38
+      - arn:aws:lambda:${self:provider.region}:553035198032:layer:nodejs22
     events:
       - http:
           path: /{proxy+}

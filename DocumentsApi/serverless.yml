@@ -62,7 +62,7 @@ functions:
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:
-      - !Ref: Node22LayerLambdaLayer
+      - { Ref: Node22LayerLambdaLayer }
     events:
       - http:
           path: /{proxy+}

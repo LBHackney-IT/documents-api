@@ -61,8 +61,8 @@ functions:
     role: lambdaExecutionRole
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
-#    layers:
-#      - { Ref: Node22LayerLambdaLayer }
+    layers:
+      - { Ref: Node22LayerLambdaLayer }
     events:
       - http:
           path: /{proxy+}

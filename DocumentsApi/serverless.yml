@@ -58,6 +58,9 @@ functions:
     handler: DocumentsApi::DocumentsApi.LambdaEntryPoint::FunctionHandlerAsync
     lambdaInsights: true
     role: lambdaExecutionRole
+    environment:
+      environment:
+        NODE_PATH: "./:/opt/nodejs/node22/node_modules"
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:

@@ -51,7 +51,6 @@ layers:
     name: Node22Layer
     compatibleRuntimes:
       - nodejs22.x
-      - nodejs20.x
 
 functions:
   DocumentsApi:

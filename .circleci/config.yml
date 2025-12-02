@@ -53,7 +53,7 @@ commands:
       - run:
           name: Install Node dependencies
           command: |
-            cd ./DocumentsApi/V1/Node
+            cd ./DocumentsApi/V1/Node/nodejs
             npm install
       - run:
           name: Build python lambda

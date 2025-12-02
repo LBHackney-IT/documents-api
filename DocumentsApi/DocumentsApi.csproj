@@ -46,7 +46,8 @@
 
   <ItemGroup>
       <Content Include="V1/Node/nodejs/index.js" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
-     <Content Include="V1/Node/nodejs/node_modules/**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
+      <Content Include="V1/Node/nodejs/node_modules/**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
+      <Content Include="V1/Node/nodejs/**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
    </ItemGroup>
 
 </Project>

@@ -59,11 +59,11 @@ functions:
     lambdaInsights: true
     role: lambdaExecutionRole
     environment:
-      NODE_PATH: "./:/opt/node_modules"
+      NODE_PATH: "./node_modules"
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:
-      - arn:aws:lambda:eu-west-2:549011513230:layer:Node22Layer:1
+      - arn:aws:lambda:eu-west-2:549011513230:layer:Node22Layer:2
     events:
       - http:
           path: /{proxy+}

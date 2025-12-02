@@ -47,7 +47,7 @@ plugins:
 
 layers:
   Node22:
-    path: ./V1/Node
+    path: ./V1/Node/nodejs
     name: Node22Layer
     compatibleRuntimes:
       - nodejs22.x

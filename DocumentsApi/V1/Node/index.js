@@ -6,12 +6,8 @@ const { S3Client } = require("@aws-sdk/client-s3");
    Can be removed when presigned post policies are available in .NET
  */
 
-console.log('/opt/');
-fs.readdirSync('/opt/').forEach(file => {
-    console.log(file);
-});
-
 module.exports = (callback, bucketName, key, expiry) => {
+    console.log(process.env.NODE_PATH);
     try {
         const expiryInSeconds = parseInt(expiry);
         const client = new S3Client({

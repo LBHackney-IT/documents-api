@@ -59,7 +59,7 @@ functions:
     lambdaInsights: true
     role: lambdaExecutionRole
     environment:
-      NODE_PATH: "./opt/nodejs/node_modules"
+      NODE_PATH: "./node_modules"
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:

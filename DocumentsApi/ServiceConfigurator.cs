@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Amazon;
 using Amazon.S3;
 using Jering.Javascript.NodeJS;
@@ -21,6 +22,13 @@ namespace DocumentsApi
             services.AddSingleton<AppOptions>(x => options);
 
             services.AddNodeJS();
+            services.Configure<NodeJSProcessOptions>(nodeJSProcessOptions =>
+            {
+                nodeJSProcessOptions.EnvironmentVariables = new Dictionary<string, string>
+                {
+                    { "NODE_PATH", Environment.GetEnvironmentVariable("NODE_PATH") }
+                };
+            });
             // var serviceProvider = services.BuildServiceProvider();
             // var nodeJSService = serviceProvider.GetRequiredService<INodeJSService>();
 

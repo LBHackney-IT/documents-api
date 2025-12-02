@@ -47,7 +47,7 @@ plugins:
 
 layers:
   Node22:
-    path: ./V1/Node
+    path: ./V1/Node/nodejs
     name: Node22Layer
     compatibleRuntimes:
       - nodejs22.x
@@ -61,7 +61,7 @@ functions:
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
     layers:
-      - arn:aws:lambda:eu-west-2:549011513230:layer:Node22Layer:2
+      - arn:aws:lambda:eu-west-2:549011513230:layer:Node22Layer:4
     events:
       - http:
           path: /{proxy+}

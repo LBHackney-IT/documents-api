@@ -22,6 +22,10 @@ namespace DocumentsApi
             services.AddSingleton<AppOptions>(x => options);
 
             services.AddNodeJS();
+            services.Configure<NodeJSProcessOptions>(o =>
+            {
+                o.ExecutablePath = "/opt/bin/node";
+            });
             // var serviceProvider = services.BuildServiceProvider();
             // var nodeJSService = serviceProvider.GetRequiredService<INodeJSService>();
 

@@ -57,6 +57,8 @@ namespace DocumentsApi.V1.Controllers
         {
             var files = Directory.GetFiles("/opt", "*", SearchOption.AllDirectories);
             Console.WriteLine("OPT FILES:\n" + string.Join("\n", files));
+            Console.WriteLine("Node exists: " + System.IO.File.Exists("/opt/nodejs/bin/node"));
+            Console.WriteLine("Node exists: " + System.IO.File.Exists("/opt/bin/node"));
             try
             {
                 var result = _createClaimUseCase.Execute(request);

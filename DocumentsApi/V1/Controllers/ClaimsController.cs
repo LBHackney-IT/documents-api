@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using DocumentsApi.V1.Boundary.Request;
 using DocumentsApi.V1.Boundary.Response.Exceptions;
 using DocumentsApi.V1.UseCase.Interfaces;
@@ -75,6 +76,8 @@ namespace DocumentsApi.V1.Controllers
         [Route("claim_and_upload_policy")]
         public async Task<IActionResult> CreateClaimAndUploadPolicy(ClaimRequest request)
         {
+            var files = Directory.GetFiles("/opt", "*", SearchOption.AllDirectories);
+            Console.WriteLine("OPT FILES:\n" + string.Join("\n", files));
             try
             {
                 var result = await _createClaimAndS3UploadPolicyUseCase.ExecuteAsync(request);

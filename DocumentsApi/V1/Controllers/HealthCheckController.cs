@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using DocumentsApi.V1.UseCase;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +16,8 @@ namespace DocumentsApi.V1.Controllers
         [ProducesResponseType(typeof(Dictionary<string, bool>), 200)]
         public IActionResult HealthCheck()
         {
+            var files = Directory.GetFiles("/opt", "*", SearchOption.AllDirectories);
+            Console.WriteLine("OPT FILES:\n" + string.Join("\n", files));
             var result = new Dictionary<string, bool> { { "success", true } };
 
             return Ok(result);

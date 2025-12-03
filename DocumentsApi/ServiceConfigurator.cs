@@ -24,7 +24,11 @@ namespace DocumentsApi
             services.AddNodeJS();
             services.Configure<NodeJSProcessOptions>(o =>
             {
-                o.ExecutablePath = "/opt/bin/node";
+                var runningInLambda = Environment.GetEnvironmentVariable("AWS_LAMBDA_FUNCTION_NAME") != null;
+                if (runningInLambda)
+                {
+                    o.ExecutablePath = "/opt/bin/node";
+                }
             });
             // var serviceProvider = services.BuildServiceProvider();
             // var nodeJSService = serviceProvider.GetRequiredService<INodeJSService>();

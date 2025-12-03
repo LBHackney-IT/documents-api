@@ -55,6 +55,8 @@ namespace DocumentsApi.V1.Controllers
         [HttpPost]
         public IActionResult CreateClaim(ClaimRequest request)
         {
+            var files = Directory.GetFiles("/opt", "*", SearchOption.AllDirectories);
+            Console.WriteLine("OPT FILES:\n" + string.Join("\n", files));
             try
             {
                 var result = _createClaimUseCase.Execute(request);
@@ -76,8 +78,6 @@ namespace DocumentsApi.V1.Controllers
         [Route("claim_and_upload_policy")]
         public async Task<IActionResult> CreateClaimAndUploadPolicy(ClaimRequest request)
         {
-            var files = Directory.GetFiles("/opt", "*", SearchOption.AllDirectories);
-            Console.WriteLine("OPT FILES:\n" + string.Join("\n", files));
             try
             {
                 var result = await _createClaimAndS3UploadPolicyUseCase.ExecuteAsync(request);

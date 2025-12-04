@@ -56,6 +56,12 @@ commands:
             cd ./DocumentsApi/V1/Node/nodejs
             npm install
       - run:
+          name: Add node executable to node layer
+          command: |
+            cd ./DocumentsApi/V1/Node/nodejs
+            chmod +x ./build-node.sh
+            ./build-node.sh
+      - run:
           name: Build python lambda
           command: |
             cd ./DocumentsApi/python

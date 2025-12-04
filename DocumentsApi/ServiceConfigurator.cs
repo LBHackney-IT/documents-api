@@ -27,7 +27,7 @@ namespace DocumentsApi
                 var runningInLambda = Environment.GetEnvironmentVariable("AWS_LAMBDA_FUNCTION_NAME") != null;
                 if (runningInLambda)
                 {
-                    o.ExecutablePath = "/opt/nodejs";
+                    o.ExecutablePath = "/opt/bin/node";
                 }
             });
             // var serviceProvider = services.BuildServiceProvider();

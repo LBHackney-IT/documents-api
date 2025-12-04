@@ -4,6 +4,7 @@ if [ -f /etc/debian_version ]
 then
   apt -qq update
   apt -qq -y install xz-utils
+  apt-get install bzip2
 fi
 
 # Create bin directory

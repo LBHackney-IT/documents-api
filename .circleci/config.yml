@@ -1,6 +1,6 @@
 version: 2.1
 
-orbs:  
+orbs:
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
 executors:
@@ -53,8 +53,14 @@ commands:
       - run:
           name: Install Node dependencies
           command: |
-            cd ./DocumentsApi/V1/Node
+            cd ./DocumentsApi/V1/Node/nodejs
             npm install
+      - run:
+          name: Add node executable to node layer
+          command: |
+            cd ./DocumentsApi/V1/Node/nodejs
+            chmod +x ./build-node.sh
+            ./build-node.sh
       - run:
           name: Build python lambda
           command: |
@@ -226,7 +232,7 @@ workflows:
           requires:
             - assume-role-staging
       - deploy-to-staging:
-          context: 
+          context:
             - api-nuget-token-context
             - "Serverless Framework"
           requires:
@@ -246,7 +252,7 @@ workflows:
           requires:
             - assume-role-production
       - deploy-to-production:
-          context: 
+          context:
             - api-nuget-token-context
             - "Serverless Framework"
           requires:

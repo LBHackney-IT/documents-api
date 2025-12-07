@@ -7,7 +7,6 @@ const { S3Client } = require("@aws-sdk/client-s3");
  */
 
 module.exports = (callback, bucketName, key, expiry) => {
-    console.log(process.env.NODE_PATH);
     try {
         const expiryInSeconds = parseInt(expiry);
         const client = new S3Client({

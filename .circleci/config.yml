@@ -223,6 +223,10 @@ workflows:
           context: api-assume-role-document-evidence-store-staging-context
           requires:
             - build-and-test
+          filters:
+            branches:
+              only:
+                - main
       - migrate-database-staging:
           context: api-nuget-token-context
           requires:

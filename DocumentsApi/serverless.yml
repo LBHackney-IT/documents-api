@@ -82,7 +82,7 @@ functions:
     package:
       artifact: ./bin/release/net8.0/documents-api.zip
   DocumentsOrchestrator:
-    runtime: python3.7
+    runtime: python3.14
     name: ${self:service}-documents-orchestrator
     handler: lambda-orchestrator.lambda_handler
     lambdaInsights: true

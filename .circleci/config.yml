@@ -294,7 +294,7 @@ workflows:
           filters:
             branches:
               only:
-                - dr-testing
+                - dr-system-test
 
       - preview-terraform-dr-changes:
           requires:

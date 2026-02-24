@@ -17,11 +17,11 @@ provider:
       level: INFO
   environment:
     CONNECTION_STRING: Host=${ssm:/documents-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/documents-api/${self:provider.stage}/postgres-port};Database=${ssm:/documents-api/${self:provider.stage}/postgres-database};Username=${ssm:/documents-api/${self:provider.stage}/postgres-username};Password=${ssm:/documents-api/${self:provider.stage}/postgres-password}
-    BUCKET_NAME: document-evidence-store-${self:provider.stage}-bucket
+    BUCKET_NAME: document-evidence-store-dr-bucket
   s3:
     documentsBucket:
       accessControl: Private
-      name: ${self:provider.environment.BUCKET_NAME}
+      name: "${self:provider.environment.BUCKET_NAME}"
       bucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:

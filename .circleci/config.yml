@@ -117,11 +117,11 @@ commands:
             chmod +x ./build.sh
             ./build.sh
       - run:
-          name: Deploy lambda
+          name: Destroy lambda
           command: |
             cd ./DocumentsApi/
             npm install --save-dev serverless-plugin-lambda-insights
-            sls deploy --stage <<parameters.stage>> --conceal
+            sls remove --stage <<parameters.stage>>
   publish-to-swaggerhub:
     description: "Publishes API docs to SwaggerHub"
     steps:

@@ -184,13 +184,7 @@ Documentation on how to do this can be found [here](https://docs.microsoft.com/e
 
 ### Active Maintainers
 
--   **Selwyn Preston**, Lead Developer at London Borough of Hackney (selwyn.preston@hackney.gov.uk)
--   **Mirela Georgieva**, Lead Developer at London Borough of Hackney (mirela.georgieva@hackney.gov.uk)
--   **Matt Keyworth**, Lead Developer at London Borough of Hackney (matthew.keyworth@hackney.gov.uk)
-
-### Other Contacts
-
--   **Rashmi Shetty**, Product Owner at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
+-   **Shared Services team**, Maintenance team (shared.services@hackney.gov.uk)
 
 [docker-download]: https://www.docker.com/products/docker-desktop
 [made-tech]: https://madetech.com/

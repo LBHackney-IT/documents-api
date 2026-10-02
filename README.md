@@ -4,7 +4,7 @@ Documents API is a Platform API to securely and easily store and retrieve docume
 
 ## Stack
 
--   .NET 8.0 as a web framework.
+-   .NET 10.0 as a web framework.
 -   nUnit v3.12 as a test framework.
 
 ## What does it do?
@@ -114,7 +114,7 @@ This application contains two lambda functions — an API, and a function which 
 
 To test the S3 Lambda function with the staging AWS account, follow these steps:
 
-1. Install [AWS lambda test tool](e18ebff8-2a46-4ee3-8d27-c36706ac006f): `dotnet tool install -g Amazon.Lambda.TestTool-8.0`
+1. Install [AWS lambda test tool](e18ebff8-2a46-4ee3-8d27-c36706ac006f): `dotnet tool install -g Amazon.Lambda.TestTool-10.0`
 2. Create a document in the staging S3 bucket with the key `e18ebff8-2a46-4ee3-8d27-c36706ac006f`
 3. Create the equivalent record in your local database:
     ```shell script
@@ -122,7 +122,7 @@ To test the S3 Lambda function with the staging AWS account, follow these steps:
     ```
 4. Run the test:
     ```shell script
-    bin/dotnet lambda-test-tool-8.0 --no-ui \
+    bin/dotnet lambda-test-tool-10.0 --no-ui \
       --profile AWS_PROFILE_NAME \
       --path `pwd`/DocumentsApi \
       --function-handler DocumentsApi::DocumentsApi.S3EntryPoint::DocumentCreated \

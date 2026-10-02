@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+FROM mcr.microsoft.com/dotnet/sdk:10.0
 
 ARG LBHPACKAGESTOKEN
 ENV LBHPACKAGESTOKEN=$LBHPACKAGESTOKEN
@@ -7,14 +7,11 @@ WORKDIR /app
 
 # Install dotnet-ef globally
 ENV PATH $PATH:/root/.dotnet/tools
-RUN dotnet tool install --global dotnet-ef --version 8.0.12
+RUN dotnet tool install --global dotnet-ef --version 10.0.12
 
-RUN apt-get update
-RUN apt-get install sudo
-RUN sudo apt-get install postgresql -y
-
-RUN apt-get update
-RUN sudo apt-get install net-tools
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy csproj and restore as distinct layers
 COPY ./DocumentsApi/*.csproj ./

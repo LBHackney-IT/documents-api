@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Amazon.XRay.Recorder.Core;
+using Amazon.XRay.Recorder.Core.Strategies;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using DocumentsApi.V1.Controllers.Filters;
 using DocumentsApi.Versioning;
@@ -27,6 +29,7 @@ namespace DocumentsApi
         {
             Configuration = configuration;
 
+            AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
             AWSSDKHandler.RegisterXRayForAllServices();
         }
 

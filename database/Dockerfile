@@ -23,4 +23,4 @@ COPY ./DocumentsApi ./
 COPY ./.editorconfig ./
 RUN dotnet build
 
-CMD ["dotnet", "ef", "database", "update", "--no-build"]
+#CMD ["dotnet", "ef", "database", "update", "--no-build"]

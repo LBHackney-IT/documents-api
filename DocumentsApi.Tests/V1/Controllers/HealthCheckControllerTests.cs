@@ -27,7 +27,7 @@ namespace DocumentsApi.Tests.V1.Controllers
             var response = _classUnderTest.HealthCheck() as OkObjectResult;
 
             response.Should().NotBeNull();
-            response.StatusCode.Should().Be(200);
+            response.StatusCode.Should().Be(400);
             response.Value.Should().BeEquivalentTo(expected);
         }
 

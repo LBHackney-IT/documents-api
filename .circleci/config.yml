@@ -170,13 +170,10 @@ jobs:
           command: docker-compose -f DocumentsApi.Tests/compose.yml build
       - run:
           name: Run tests
-          command: docker-compose -f DocumentsApi.Tests/compose.yml up --build --abort-on-container-exit --exit-code-from test test
+          command: docker-compose -f DocumentsApi.Tests/compose.yml run --rm --service-ports test dotnet test
       - run:
-          name: Clean up test containersk
+          name: Clean up test containers
           command: docker-compose -f DocumentsApi.Tests/compose.yml down --volumes --remove-orphans
-      - run:
-          name: Check if containers are running
-          command: docker container ls
 
   assume-role-staging:
     executor: docker-python

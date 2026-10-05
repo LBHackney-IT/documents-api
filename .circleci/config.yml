@@ -171,6 +171,9 @@ jobs:
       - run:
           name: Run tests
           command: docker-compose -f DocumentsApi.Tests/compose.yml up --build --abort-on-container-exit --exit-code-from test test
+      - run:
+          name: Check if containers are runningg
+          command: docker container ls
 
   assume-role-staging:
     executor: docker-python

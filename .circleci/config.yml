@@ -161,13 +161,13 @@ jobs:
           command: ./dotnet-format-local/dotnet-format --check
 
   build-and-test:
-    executor: docker-dotnet
+    executor: docker-python
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: build
-          command: docker-compose -f DocumentsApi.Tests/compose.yml build
+#      - run:
+#          name: build
+#          command: docker-compose -f DocumentsApi.Tests/compose.yml build
       - run:
           name: Run tests
           command: docker-compose -f DocumentsApi.Tests/compose.yml run test

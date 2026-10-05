@@ -170,7 +170,7 @@ jobs:
           command: docker-compose -f DocumentsApi.Tests/compose.yml build
       - run:
           name: Run tests
-          command: docker-compose up --abort-on-container-exit --exit-code-from test test
+          command: docker-compose -f DocumentsApi.Tests/compose.yml up --build --abort-on-container-exit --exit-code-from test test
       - run:
           name: Clean up test containersk
           command: docker-compose -f DocumentsApi.Tests/compose.yml down --volumes --remove-orphans

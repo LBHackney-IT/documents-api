@@ -26,8 +26,6 @@ RUN dotnet restore ./DocumentsApi.Tests/DocumentsApi.Tests.csproj
 COPY . .
 
 RUN dotnet build -c debug -o out DocumentsApi.Tests/DocumentsApi.Tests.csproj
-CMD dotnet test
-
 RUN cd ./DocumentsApi/V1/Node/nodejs && npm ci
 
-
+CMD dotnet test

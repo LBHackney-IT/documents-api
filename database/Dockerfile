@@ -9,9 +9,9 @@ WORKDIR /app
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet tool install --global dotnet-ef --version 10.0.12
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update \
+#    && apt-get install -y --no-install-recommends postgresql-client \
+#    && rm -rf /var/lib/apt/lists/*
 
 # Copy csproj and restore as distinct layers
 COPY ./DocumentsApi/*.csproj ./

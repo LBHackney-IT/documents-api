@@ -6,7 +6,7 @@ orbs:
 executors:
   docker-python:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.14
   docker-dotnet:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:10.0
@@ -167,10 +167,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose -f DocumentsApi.Tests/compose.yml build
+          command: docker compose -f DocumentsApi.Tests/compose.yml build
       - run:
           name: Run tests
-          command: docker-compose -f DocumentsApi.Tests/compose.yml up --abort-on-container-exit --exit-code-from test test
+          command: docker compose -f DocumentsApi.Tests/compose.yml up --abort-on-container-exit --exit-code-from test test
 
   assume-role-staging:
     executor: docker-python

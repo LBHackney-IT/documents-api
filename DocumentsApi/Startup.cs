@@ -30,7 +30,7 @@ namespace DocumentsApi
             Configuration = configuration;
 
             // X-Ray normally throws an error if an AWS call has no trace to attach to, which happens in tests and locally.
-            // Log that instead, and let the call continue. Traces are created when the lambda is deployed so this specific error will not occur when deployed.
+            // Log that instead and let the call continue. Traces are created when the lambda is deployed so this specific error will not occur when deployed.
             AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
             AWSSDKHandler.RegisterXRayForAllServices();
         }

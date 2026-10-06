@@ -29,6 +29,9 @@ namespace DocumentsApi
         {
             Configuration = configuration;
 
+            // AWS SDK calls are traced as X-Ray subsegments. With no active segment (local runs and tests),
+            // the default strategy throws EntityNotAvailableException. LOG_ERROR records the miss and continues.
+            // Calls made under a Lambda trace segment are still recorded.
             AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
             AWSSDKHandler.RegisterXRayForAllServices();
         }

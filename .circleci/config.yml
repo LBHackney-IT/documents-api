@@ -167,13 +167,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose -f DocumentsApi.Tests/compose.yml build
+          command: docker compose -f DocumentsApi.Tests/compose.yml build
       - run:
           name: Run tests
-          command: docker-compose -f DocumentsApi.Tests/compose.yml up --abort-on-container-exit --exit-code-from test test
-      - run:
-          name: Clean up test containers
-          command: docker-compose -f DocumentsApi.Tests/compose.yml down --volumes --remove-orphans
+          command: docker compose -f DocumentsApi.Tests/compose.yml up --abort-on-container-exit --exit-code-from test test
 
   assume-role-staging:
     executor: docker-python

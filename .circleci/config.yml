@@ -6,7 +6,7 @@ orbs:
 executors:
   docker-python:
     docker:
-      - image: circleci/python:3.14
+      - image: cimg/python:3.14
   docker-dotnet:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:10.0

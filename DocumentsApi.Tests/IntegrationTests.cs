@@ -39,7 +39,7 @@ namespace DocumentsApi.Tests
             MockS3Client = CreateMockS3Client();
             _factory = new MockWebApplicationFactory<TStartup>(_connection, MockS3Client.Object);
             Client = _factory.CreateClient();
-            DatabaseContext = _factory.Server.Host.Services.GetRequiredService<DocumentsContext>();
+            DatabaseContext = _factory.Services.GetRequiredService<DocumentsContext>();
 
             _transaction = _connection.BeginTransaction(IsolationLevel.RepeatableRead);
             DatabaseContext.Database.UseTransaction(_transaction);

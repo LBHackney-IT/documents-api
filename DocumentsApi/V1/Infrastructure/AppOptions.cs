@@ -8,6 +8,7 @@ namespace DocumentsApi.V1.Infrastructure
         public string DocumentsBucketName { get; set; }
         public string AwsS3Endpoint { get; set; }
         public bool S3ForcePathStyle { get; set; }
+        public bool LocalS3MetadataSyncEnabled { get; set; }
 
         public static AppOptions FromEnv()
         {
@@ -18,6 +19,10 @@ namespace DocumentsApi.V1.Infrastructure
                 AwsS3Endpoint = Environment.GetEnvironmentVariable("S3_API_ENDPOINT"),
                 S3ForcePathStyle = string.Equals(
                     Environment.GetEnvironmentVariable("S3_FORCE_PATH_STYLE"),
+                    "true",
+                    StringComparison.OrdinalIgnoreCase),
+                LocalS3MetadataSyncEnabled = string.Equals(
+                    Environment.GetEnvironmentVariable("LOCAL_S3_METADATA_SYNC_ENABLED"),
                     "true",
                     StringComparison.OrdinalIgnoreCase)
             };

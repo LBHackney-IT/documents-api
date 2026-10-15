@@ -73,3 +73,4 @@ tmp/
 .serverless
 
 database/data
+localstack/volume

@@ -6,6 +6,7 @@ using DocumentsApi.V1.Factories;
 using DocumentsApi.V1.Gateways;
 using DocumentsApi.V1.Gateways.Interfaces;
 using DocumentsApi.V1.Infrastructure;
+using DocumentsApi.V1.Services;
 using DocumentsApi.V1.UseCase;
 using DocumentsApi.V1.UseCase.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +68,11 @@ namespace DocumentsApi
             services.AddScoped<IGeneratePreSignedDownloadUrlUseCase, GeneratePreSignedDownloadUrlUseCase>();
             services.AddScoped<IGetClaimsByGroupIdUseCase, GetClaimsByGroupIdUseCase>();
             services.AddScoped<IUpdateClaimsGroupIdUseCase, UpdateClaimsGroupIdUseCase>();
+
+            if (options.LocalS3MetadataSyncEnabled)
+            {
+                services.AddHostedService<LocalS3MetadataSyncService>();
+            }
         }
     }
 }

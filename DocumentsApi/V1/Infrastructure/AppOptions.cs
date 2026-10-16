@@ -7,6 +7,8 @@ namespace DocumentsApi.V1.Infrastructure
         public string DatabaseConnectionString { get; set; }
         public string DocumentsBucketName { get; set; }
         public string AwsS3Endpoint { get; set; }
+        public bool S3ForcePathStyle { get; set; }
+        public bool S3MetadataSyncEnabled { get; set; }
 
         public static AppOptions FromEnv()
         {
@@ -14,7 +16,15 @@ namespace DocumentsApi.V1.Infrastructure
             {
                 DatabaseConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING"),
                 DocumentsBucketName = Environment.GetEnvironmentVariable("BUCKET_NAME"),
-                AwsS3Endpoint = Environment.GetEnvironmentVariable("S3_API_ENDPOINT")
+                AwsS3Endpoint = Environment.GetEnvironmentVariable("S3_API_ENDPOINT"),
+                S3ForcePathStyle = string.Equals(
+                    Environment.GetEnvironmentVariable("S3_FORCE_PATH_STYLE"),
+                    "true",
+                    StringComparison.OrdinalIgnoreCase),
+                S3MetadataSyncEnabled = string.Equals(
+                    Environment.GetEnvironmentVariable("S3_METADATA_SYNC_ENABLED"),
+                    "true",
+                    StringComparison.OrdinalIgnoreCase)
             };
         }
     }

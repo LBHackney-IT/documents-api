@@ -9,10 +9,14 @@ const { S3Client } = require("@aws-sdk/client-s3");
 module.exports = (callback, bucketName, key, expiry) => {
     try {
         const expiryInSeconds = parseInt(expiry);
-        const client = new S3Client({
+        const clientConfig = {
             region: "eu-west-2",
-            endpoint: process.env.S3_API_ENDPOINT,
-        });
+            endpoint: process.env.S3_PUBLIC_ENDPOINT || process.env.S3_API_ENDPOINT,
+        };
+        if (process.env.S3_FORCE_PATH_STYLE?.toLowerCase() === "true") {
+            clientConfig.forcePathStyle = true;
+        }
+        const client = new S3Client(clientConfig);
         const data = createPresignedPost(client, {
             Bucket: bucketName,
             Key: key,

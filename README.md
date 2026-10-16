@@ -47,22 +47,26 @@ The values for all the env vars can be found in the Parameter Store, in `Documen
 
 Next step, to set up the local Documents API container, `cd` into the root of the project
 (same place as the Makefile) and run `make serve-local`. This will set up the database container,
-S3 proxy, run an automatic migration and stand up the API container. There are other Make recipes in the file;
+LocalStack, run an automatic migration and stand up the API container. There are other Make recipes in the file;
 
 ```
-# build the image and start the db, s3 proxy, migration and API containers
+# build the image and start the db, LocalStack, migration and API containers
 $ make serve-local
 
 # build the images
 $ make build-local
 
-# start the db, s3 proxy migration and API containers
+# start the db, LocalStack, migration and API containers
 $ make start-local
 ```
 
 -   The API will run on `http://localhost:3003`
 -   The database will run on `http://localhost:3004`
--   The S3 proxy will run on `http://localhost:5555`
+-   LocalStack S3 will run on `http://localhost:4566`
+
+LocalStack replaces the S3 proxy for the local API. When it is ready, `localstack/init-s3.sh` creates the bucket named by `BUCKET_NAME` and adds the CORS rule the browser needs for a presigned upload. The API container waits until that bucket exists before it starts.
+
+The S3 proxy is still started by `make serve-local`, on `http://localhost:5555`. The test containers use it; the local API does not.
 
 ### 3. Testing
 

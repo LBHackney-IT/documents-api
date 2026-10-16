@@ -8,14 +8,19 @@ services:
     env_file: ../.env
     environment:
       CONNECTION_STRING: Host=db;Port=5432;Database=documents_api;Username=postgres;Password=mypassword
-      S3_API_ENDPOINT: http://s3-mock:80
+      S3_API_ENDPOINT: http://localhost.localstack.cloud:4566
+      S3_PUBLIC_ENDPOINT: http://localhost.localstack.cloud:4566
+      S3_FORCE_PATH_STYLE: "true"
+      S3_UPLOAD_PREFIX: clean/
+    extra_hosts:
+      - "localhost.localstack.cloud:host-gateway"
     ports:
       - "3003:3000"
     depends_on:
       migrate:
         condition: service_completed_successfully
-      s3-mock:
-        condition: service_started
+      localstack:
+        condition: service_healthy
 
   migrate:
     extends:
@@ -33,6 +38,24 @@ services:
       - "3004:5432"
     volumes:
       - ../database/data:/var/lib/postgresql/data
+
+  localstack:
+    image: localstack/localstack:4
+    ports:
+      - "4566:4566"
+    env_file: ../.env
+    environment:
+      - SERVICES=s3
+      - AWS_DEFAULT_REGION=eu-west-2
+    volumes:
+      - ../localstack/init-s3.sh:/etc/localstack/init/ready.d/init-s3.sh:ro
+      - ../localstack/volume:/var/lib/localstack
+    healthcheck:
+      test: ["CMD-SHELL", "awslocal s3api head-bucket --bucket \"$$BUCKET_NAME\""]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
 
   s3-mock:
     image: andrewgaul/s3proxy

@@ -13,7 +13,7 @@ module.exports = (callback, bucketName, key, expiry) => {
             region: "eu-west-2",
             endpoint: process.env.S3_PUBLIC_ENDPOINT || process.env.S3_API_ENDPOINT,
         };
-        if (process.env.S3_FORCE_PATH_STYLE == true) {
+        if (process.env.S3_FORCE_PATH_STYLE?.toLowerCase() === "true") {
             clientConfig.forcePathStyle = true;
         }
         const client = new S3Client(clientConfig);

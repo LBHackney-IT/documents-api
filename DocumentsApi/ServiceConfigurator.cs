@@ -69,7 +69,7 @@ namespace DocumentsApi
             services.AddScoped<IGetClaimsByGroupIdUseCase, GetClaimsByGroupIdUseCase>();
             services.AddScoped<IUpdateClaimsGroupIdUseCase, UpdateClaimsGroupIdUseCase>();
 
-            if (options.LocalS3MetadataSyncEnabled)
+            if (options.S3MetadataSyncEnabled)
             {
                 services.AddHostedService<LocalS3MetadataSyncService>();
             }
